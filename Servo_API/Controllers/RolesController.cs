@@ -19,6 +19,39 @@ namespace Servo_API.Controllers
         static string FromDate = "", ToDate = "";
         App_Start.DbOperations_LATEST.DBUtil dbobj = new App_Start.DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
 
+        [HttpGet]
+        [Route("api/Sales/GetNextRoleID")]
+        public string GetNextRoleID()
+        {
+            string roleID = string.Empty;
+            try
+            {
+
+                #region Fetch Next Role ID
+                string sql = "select max(Role_ID)+1 from Roles";
+                SqlDataReader SqlDtr;
+
+                EmployeeClass obj = new EmployeeClass();
+
+                SqlDtr = obj.GetRecordSet(sql);
+                while (SqlDtr.Read())
+                {
+                    roleID = SqlDtr.GetSqlValue(0).ToString();
+                    //lblRoleID.Text = SqlDtr.GetSqlValue(0).ToString();
+                    //if (lblRoleID.Text == "Null")
+                    //    lblRoleID.Text = "1001";
+                }
+                SqlDtr.Close();
+                #endregion
+                return roleID;
+            }
+            catch (Exception ex)
+            {
+                return roleID;
+            }
+
+        }
+
         [HttpPost]
         [Route("api/Sales/InsertSalesMaster")]
         public bool InsertSalesMaster(SalesSaveDetailsModel obj)
