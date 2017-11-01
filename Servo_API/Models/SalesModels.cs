@@ -63,9 +63,7 @@ namespace Servo_API.Models
         public string Group_Name { get; set; }
         public string BalanceType { get; set; }
         public string Balance { get; set; }
-
-
-        //public List<string> SalesQty { get; set; }
+        
         public List<string> SalesQty { get; set; }
         public List<string> ProdType { get; set; }
         public List<string> ProdCode { get; set; }
@@ -89,8 +87,7 @@ namespace Servo_API.Models
         public List<string> tempSchQty { get; set; }
         public List<string> tmpSchType { get; set; }
         public List<string> stk1 { get; set; }
-        //public List<string> tmpQty { get; set; }
-        //public List<string> tempQty { get; set; }
+        
         public List<string> SchProductType { get; set; }
         public List<string> SchProductName { get; set; }
         public List<string> SchProductPack { get; set; }
