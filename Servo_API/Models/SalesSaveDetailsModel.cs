@@ -1,15 +1,24 @@
-﻿using Servo_API.Models;
-using Servosms.Sysitem.Classes;
+﻿/*
+   Copyright (c) 2005 bbnisys Technologies. All Rights Reserved.
+  
+   No part of this software shall be reproduced, stored in a 
+   retrieval system, or transmitted by any means, electronic 
+   mechanical, photocopying, recording  or otherwise, or for
+   any  purpose  without the express  written  permission of
+   bbnisys Technologies.
+
+*/
+
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
-namespace Servo_API.App_Start
+namespace Servosms.Sysitem.Classes
 {
-    public class InventoryClass
+    /// <summary>
+    /// Summary description for Inventory.
+    /// </summary>
+    public class SalesSaveDetailsModel
     {
         SqlConnection SqlCon;
         SqlConnection SqlCon1;
@@ -1152,52 +1161,16 @@ namespace Servo_API.App_Start
             }
         }
 
-        public string Credit_Limit
-        {
-            get
-            {
-                return _Credit_Limit;
-            }
-            set
-            {
-                _Credit_Limit = value;
-            }
-        }
-        public string schdiscount
-        {
-            get
-            {
-                return _schdiscount;
-            }
-            set
-            {
-                _schdiscount = value;
-            }
-        }
+        public string Credit_Limit { get; set; }
+
+        public string schdiscount { get; set; }
+
         string _foediscount = "";
-        public string foediscount
-        {
-            get
-            {
-                return _foediscount;
-            }
-            set
-            {
-                _foediscount = value;
-            }
-        }
+        public string foediscount { get; set; }
+
         string _foediscounttype = "";
-        public string foediscounttype
-        {
-            get
-            {
-                return _foediscounttype;
-            }
-            set
-            {
-                _foediscounttype = value;
-            }
-        }
+        public string foediscounttype { get; set; }
+
         string _SecSPDiscType = "";
         public string SecSPDiscType
         {
@@ -1211,17 +1184,8 @@ namespace Servo_API.App_Start
             }
         }
         string _foediscountrs = "";
-        public string foediscountrs
-        {
-            get
-            {
-                return _foediscountrs;
-            }
-            set
-            {
-                _foediscountrs = value;
-            }
-        }
+        public string foediscountrs { get; set; }
+
         public string TotalAmount1
         {
             get
@@ -1791,39 +1755,11 @@ namespace Servo_API.App_Start
                 _DfbCharge1 = value;
             }
         }
-        public string ChallanNo
-        {
-            get
-            {
-                return _ChallanNo;
-            }
-            set
-            {
-                _ChallanNo = value;
-            }
-        }
-        public string SecSPDisc
-        {
-            get
-            {
-                return _SecSPDisc;
-            }
-            set
-            {
-                _SecSPDisc = value;
-            }
-        }
-        public string ChallanDate
-        {
-            get
-            {
-                return _ChallanDate;
-            }
-            set
-            {
-                _ChallanDate = value;
-            }
-        }
+        public string ChallanNo { get; set; }
+
+        public string SecSPDisc { get; set; }
+
+        public string ChallanDate { get; set; }
 
         public string DfbCharge2
         {
@@ -2818,17 +2754,7 @@ namespace Servo_API.App_Start
             }
         }
 
-        public string Place
-        {
-            get
-            {
-                return _Place;
-            }
-            set
-            {
-                _Place = value;
-            }
-        }
+        public string Place { get; set; }
 
         public string DueDate
         {
@@ -3012,17 +2938,8 @@ namespace Servo_API.App_Start
 
 
 
-        public string Cr_Plus
-        {
-            get
-            {
-                return _Cr_Plus;
-            }
-            set
-            {
-                _Cr_Plus = value;
-            }
-        }
+        public string Cr_Plus { get; set; }
+
         public string Pre_Amount
         {
             get
@@ -3034,17 +2951,8 @@ namespace Servo_API.App_Start
                 _Pre_Amount = value;
             }
         }
-        public string Dr_Plus
-        {
-            get
-            {
-                return _Dr_Plus;
-            }
-            set
-            {
-                _Dr_Plus = value;
-            }
-        }
+        public string Dr_Plus { get; set; }
+
         public string Vendor_Name
         {
             get
@@ -3213,17 +3121,8 @@ namespace Servo_API.App_Start
                 _SubRec_No = value;
             }
         }
-        public string Slip_No
-        {
-            get
-            {
-                return _Slip_No;
-            }
-            set
-            {
-                _Slip_No = value;
-            }
-        }
+        public string Slip_No { get; set; }
+
         public string schemetype
         {
             get
@@ -3356,39 +3255,21 @@ namespace Servo_API.App_Start
                 _SGST = value;
             }
         }
-        public string Invoice_No
-        {
-            get
-            {
-                return _Invoice_No;
-            }
-            set
-            {
-                _Invoice_No = value;
-            }
-        }
-        public string Order_No
-        {
-            get
-            {
-                return _Order_No;
-            }
-            set
-            {
-                _Order_No = value;
-            }
-        }
-        public DateTime Invoice_Date
-        {
-            get
-            {
-                return _Invoice_Date;
-            }
-            set
-            {
-                _Invoice_Date = value;
-            }
-        }
+        public string Invoice_No { get; set; }
+
+        public string Order_No { get; set; }
+        //      public string Order_No
+        //{
+        //	get
+        //	{
+        //		return _Order_No;
+        //	}
+        //	set
+        //	{
+        //		_Order_No=value;
+        //	}
+        //}
+        public DateTime Invoice_Date { get; set; }
         public DateTime Order_Date
         {
             get
@@ -3400,73 +3281,18 @@ namespace Servo_API.App_Start
                 _Order_Date = value;
             }
         }
-        public string Sales_Type
-        {
-            get
-            {
-                return _Sales_Type;
-            }
-            set
-            {
-                _Sales_Type = value;
-            }
-        }
-        public string Under_SalesMan
-        {
-            get
-            {
-                return _Under_SalesMan;
-            }
-            set
-            {
-                _Under_SalesMan = value;
-            }
-        }
-        public string Customer_Name
-        {
-            get
-            {
-                return _Cust_Name;
-            }
-            set
-            {
-                _Cust_Name = value;
-            }
-        }
+        public string Sales_Type { get; set; }
 
-        public string Vehicle_No
-        {
-            get
-            {
-                return _Vehicle_No;
-            }
-            set
-            {
-                _Vehicle_No = value;
-            }
-        }
-        public string Grand_Total
-        {
-            get
-            {
-                return _Grand_Total;
-            }
-            set
-            {
-                _Grand_Total = value;
-            }
-        }
-        public string Discount
-        {
-            get
-            {
-                return _Discount;
-            }
-            set
-            {
-                _Discount = value;
-            }
-        }
+        public string Under_SalesMan { get; set; }
+
+        public string Customer_Name { get; set; }
+
+        public string Vehicle_No { get; set; }
+
+        public string Grand_Total { get; set; }
+
+        public string Discount { get; set; }
+
         public string CustBankName
         {
             get
@@ -3478,77 +3304,20 @@ namespace Servo_API.App_Start
                 _CustBankName = value;
             }
         }
-        public string Discount_Type
-        {
-            get
-            {
-                return _Disc_Type;
-            }
-            set
-            {
-                _Disc_Type = value;
-            }
-        }
+        public string Discount_Type { get; set; }
 
 
-        public string Cash_Discount
-        {
-            get
-            {
-                return _Cash_Discount;
-            }
-            set
-            {
-                _Cash_Discount = value;
-            }
-        }
+        public string Cash_Discount { get; set; }
 
-        public string Cash_Disc_Type
-        {
-            get
-            {
-                return _Cash_Disc_Type;
-            }
-            set
-            {
-                _Cash_Disc_Type = value;
-            }
-        }
+        public string Cash_Disc_Type { get; set; }
+
         //1111111111111111111111111111111
-        public string VAT_Amount
-        {
-            get
-            {
-                return _VAT_Amount;
-            }
-            set
-            {
-                _VAT_Amount = value;
-            }
-        }
+        public string VAT_Amount { get; set; }
 
-        public string SGST_Amount
-        {
-            get
-            {
-                return _SGST_Amount;
-            }
-            set
-            {
-                _SGST_Amount = value;
-            }
-        }
-        public string CGST_Amount
-        {
-            get
-            {
-                return _CGST_Amount;
-            }
-            set
-            {
-                _CGST_Amount = value;
-            }
-        }
+        public string SGST_Amount { get; set; }
+
+        public string CGST_Amount { get; set; }
+
         public string Tradeval
         {
             get
@@ -3573,17 +3342,8 @@ namespace Servo_API.App_Start
             }
         }
         string _totalqtyltr;
-        public string totalqtyltr
-        {
-            get
-            {
-                return _totalqtyltr;
-            }
-            set
-            {
-                _totalqtyltr = value;
-            }
-        }
+        public string totalqtyltr { get; set; }
+
         public string Ebird
         {
             get
@@ -3700,62 +3460,16 @@ namespace Servo_API.App_Start
                 _Foc_Discount_Type = value;
             }
         }
-        public string Net_Amount
-        {
-            get
-            {
-                return _Net_Amount;
-            }
-            set
-            {
-                _Net_Amount = value;
-            }
-        }
-        public string Promo_Scheme
-        {
-            get
-            {
-                return _Promo_Scheme;
-            }
-            set
-            {
-                _Promo_Scheme = value;
-            }
-        }
-        public string Remerk
-        {
-            get
-            {
-                return _Remark;
-            }
-            set
-            {
-                _Remark = value;
-            }
-        }
-        public string Entry_By
-        {
-            get
-            {
-                return _Entry_By;
-            }
-            set
-            {
-                _Entry_By = value;
-            }
-        }
+        public string Net_Amount { get; set; }
 
-        public DateTime Entry_Time
-        {
-            get
-            {
-                return _Entry_Time;
-            }
-            set
-            {
-                _Entry_Time = value;
-            }
-        }
+        public string Promo_Scheme { get; set; }
+
+        public string Remerk { get; set; }
+
+        public string Entry_By { get; set; }
+
+        public DateTime Entry_Time { get; set; }
+
         public string EntryTime
         {
             get
@@ -4165,12 +3879,713 @@ namespace Servo_API.App_Start
                 _prod_id = value;
             }
         }
+        string _SSA_OR_SSI_NAME = "";
+        public string SSA_OR_SSI_NAME
+        {
+            get
+            {
+                return _SSA_OR_SSI_NAME;
+            }
+            set
+            {
+                _SSA_OR_SSI_NAME = value;
+            }
+        }
+        string _SALES_RETURN_NUMBER = "";
+        public string SALES_RETURN_NUMBER
+        {
+            get
+            {
+                return _SALES_RETURN_NUMBER;
+            }
+            set
+            {
+                _SALES_RETURN_NUMBER = value;
+            }
+        }
+        string _SALES_RETURN_GR_DATE = "";
+        public string SALES_RETURN_GR_DATE
+        {
+            get
+            {
+                return _SALES_RETURN_GR_DATE;
+            }
+            set
+            {
+                _SALES_RETURN_GR_DATE = value;
+            }
+        }
+        string _SECONDARY_CUSTOMER_NUMBER = "";
+        public string SECONDARY_CUSTOMER_NUMBER
+        {
+            get
+            {
+                return _SECONDARY_CUSTOMER_NUMBER;
+            }
+            set
+            {
+                _SECONDARY_CUSTOMER_NUMBER = value;
+            }
+        }
+        string _SEC_CUSTOMER_NAME = "";
+        public string SEC_CUSTOMER_NAME
+        {
+            get
+            {
+                return _SEC_CUSTOMER_NAME;
+            }
+            set
+            {
+                _SEC_CUSTOMER_NAME = value;
+            }
+        }
+        string _STOCKIST_GST_NUM = "";
+        public string STOCKIST_GST_NUM
+        {
+            get
+            {
+                return _STOCKIST_GST_NUM;
+            }
+            set
+            {
+                _STOCKIST_GST_NUM = value;
+            }
+        }
+        string _CUSTOMER_GST_NUM = "";
+        public string CUSTOMER_GST_NUM
+        {
+            get
+            {
+                return _CUSTOMER_GST_NUM;
+            }
+            set
+            {
+                _CUSTOMER_GST_NUM = value;
+            }
+        }
+        string _SEC_CUSTOMER_HIERARCHY = "";
+        public string SEC_CUSTOMER_HIERARCHY
+        {
+            get
+            {
+                return _SEC_CUSTOMER_HIERARCHY;
+            }
+            set
+            {
+                _SEC_CUSTOMER_HIERARCHY = value;
+            }
+        }
+        string _SECONDARY_CUSTOMER_CITY = "";
+        public string SECONDARY_CUSTOMER_CITY
+        {
+            get
+            {
+                return _SECONDARY_CUSTOMER_CITY;
+            }
+            set
+            {
+                _SECONDARY_CUSTOMER_CITY = value;
+            }
+        }
+        string _INVOICE_TYPE = "";
+        public string INVOICE_TYPE
+        {
+            get
+            {
+                return _INVOICE_TYPE;
+            }
+            set
+            {
+                _INVOICE_TYPE = value;
+            }
+        }
+        string _SGST_AMOUNT = "";
+        public string SGST_AMOUNT
+        {
+            get
+            {
+                return _SGST_AMOUNT;
+            }
+            set
+            {
+                _SGST_AMOUNT = value;
+            }
+        }
+        string _CGST_AMOUNT = "";
+        public string CGST_AMOUNT
+        {
+            get
+            {
+                return _CGST_AMOUNT;
+            }
+            set
+            {
+                _CGST_AMOUNT = value;
+            }
+        }
+        string _IGST_AMOUNT = "";
+        public string IGST_AMOUNT
+        {
+            get
+            {
+                return _IGST_AMOUNT;
+            }
+            set
+            {
+                _IGST_AMOUNT = value;
+            }
+        }
+        string _TOTAL_TAX_AMOUNT = "";
+        public string TOTAL_TAX_AMOUNT
+        {
+            get
+            {
+                return _TOTAL_TAX_AMOUNT;
+            }
+            set
+            {
+                _TOTAL_TAX_AMOUNT = value;
+            }
+        }
+        string _NET_AMOUNT = "";
+        public string NET_AMOUNT
+        {
+            get
+            {
+                return _NET_AMOUNT;
+            }
+            set
+            {
+                _NET_AMOUNT = value;
+            }
+        }
+        string _ADHOC_DISCOUNT = "";
+        public string ADHOC_DISCOUNT
+        {
+            get
+            {
+                return _ADHOC_DISCOUNT;
+            }
+            set
+            {
+                _ADHOC_DISCOUNT = value;
+            }
+        }
+        string _HO_AI_DISC_JULY17 = "";
+        public string HO_AI_DISC_JULY17
+        {
+            get
+            {
+                return _HO_AI_DISC_JULY17;
+            }
+            set
+            {
+                _HO_AI_DISC_JULY17 = value;
+            }
+        }
+        string _HYUNDAI_DIS_17_18 = "";
+        public string HYUNDAI_DIS_17_18
+        {
+            get
+            {
+                return _HYUNDAI_DIS_17_18;
+            }
+            set
+            {
+                _HYUNDAI_DIS_17_18 = value;
+            }
+        }
+        string _MGO_VC_DIS_16_17 = "";
+        public string MGO_VC_DIS_16_17
+        {
+            get
+            {
+                return _MGO_VC_DIS_16_17;
+            }
+            set
+            {
+                _MGO_VC_DIS_16_17 = value;
+            }
+        }
+        int _PRODUCT_CODE;
+        public int PRODUCT_CODE
+        {
+            get
+            {
+                return _PRODUCT_CODE;
+            }
+            set
+            {
+                _PRODUCT_CODE = value;
+            }
+        }
+        string _PRODUCT_NAME = "";
+        public string PRODUCT_NAME
+        {
+            get
+            {
+                return _PRODUCT_NAME;
+            }
+            set
+            {
+                _PRODUCT_NAME = value;
+            }
+        }
+        int _HSN_NO;
+        public int HSN_NO
+        {
+            get
+            {
+                return _HSN_NO;
+            }
+            set
+            {
+                _HSN_NO = value;
+            }
+        }
+        int _PACK_CODE;
+        public int PACK_CODE
+        {
+            get
+            {
+                return _PACK_CODE;
+            }
+            set
+            {
+                _PACK_CODE = value;
+            }
+        }
+        string _PACK_NAME = "";
+        public string PACK_NAME
+        {
+            get
+            {
+                return _PACK_NAME;
+            }
+            set
+            {
+                _PACK_NAME = value;
+            }
+        }
+        int _SKU_CODE;
+        public int SKU_CODE
+        {
+            get
+            {
+                return _SKU_CODE;
+            }
+            set
+            {
+                _SKU_CODE = value;
+            }
+        }
+        string _SALEABLE_QTY = "";
+        public string SALEABLE_QTY
+        {
+            get
+            {
+                return _SALEABLE_QTY;
+            }
+            set
+            {
+                _SALEABLE_QTY = value;
+            }
+        }
+        string _FREE_QTY = "";
+        public string FREE_QTY
+        {
+            get
+            {
+                return _FREE_QTY;
+            }
+            set
+            {
+                _FREE_QTY = value;
+            }
+        }
+        string _SAMPLE_QTY = "";
+        public string SAMPLE_QTY
+        {
+            get
+            {
+                return _SAMPLE_QTY;
+            }
+            set
+            {
+                _SAMPLE_QTY = value;
+            }
+        }
+        string _SALEABLE_QTY_IN_LTR_OR_KG = "";
+        public string SALEABLE_QTY_IN_LTR_OR_KG
+        {
+            get
+            {
+                return _SALEABLE_QTY_IN_LTR_OR_KG;
+            }
+            set
+            {
+                _SALEABLE_QTY_IN_LTR_OR_KG = value;
+            }
+        }
+        string _FREE_QTY_IN_LTR_OR_KG = "";
+        public string FREE_QTY_IN_LTR_OR_KG
+        {
+            get
+            {
+                return _FREE_QTY_IN_LTR_OR_KG;
+            }
+            set
+            {
+                _FREE_QTY_IN_LTR_OR_KG = value;
+            }
+        }
+        string _SAMPLE_QTY_IN_LTR_OR_KG = "";
+        public string SAMPLE_QTY_IN_LTR_OR_KG
+        {
+            get
+            {
+                return _SAMPLE_QTY_IN_LTR_OR_KG;
+            }
+            set
+            {
+                _SAMPLE_QTY_IN_LTR_OR_KG = value;
+            }
+        }
+        string _SecInvoiceNo = "";
+        public string SecInvoiceNo
+        {
+            get
+            {
+                return _SecInvoiceNo;
+            }
+            set
+            {
+                _SecInvoiceNo = value;
+            }
+        }
+        string _SALES_TYPE = "";
+        public string SALES_TYPE
+        {
+            get
+            {
+                return _SALES_TYPE;
+            }
+            set
+            {
+                _SALES_TYPE = value;
+            }
+        }
+        string _VEHICLE_NO = "";
+        public string VEHICLE_NO
+        {
+            get
+            {
+                return _VEHICLE_NO;
+            }
+            set
+            {
+                _VEHICLE_NO = value;
+            }
+        }
+        int _CHALLAN_NO;
+        public int CHALLAN_NO
+        {
+            get
+            {
+                return _CHALLAN_NO;
+            }
+            set
+            {
+                _CHALLAN_NO = value;
+            }
+        }
+        int _Challan_Id;
+        public int Challan_Id
+        {
+            get
+            {
+                return _Challan_Id;
+            }
+            set
+            {
+                _Challan_Id = value;
+            }
+        }
+        string _City_Name;
+        public string City_Name
+        {
+            get
+            {
+                return _City_Name;
+            }
+            set
+            {
+                _City_Name = value;
+            }
+        }
+        string _Geopgrophical_State;
+        string _Stockist_SAP_Code;
+        string _Stockist_Name;
+        string _Source_Of_Supply;
+        string _Bill_Type;
+        string _HSN_Code;
+        string _GSTIN;
+
+        int _Item_Qty;
+        string _Qty_Ltr_Kg;
+        int _SKU_Code;
+
+        string _SKU_Name;
+        string _RSP_CDP;
+        string _SGST_Tax;
+        string _CGST_Tax;
+        string _IGST_Tax;
+        string _ZSSD;
+        string _ZCON;
+        string _ZDFI;
+        string _ZDCB;
+        string _NET_AMT_IN_PAISE;
+        public string GSTIN
+        {
+            get
+            {
+                return _GSTIN;
+            }
+            set
+            {
+                _GSTIN = value;
+            }
+        }
+
+        public string HSN_Code
+        {
+            get
+            {
+                return _HSN_Code;
+            }
+            set
+            {
+                _HSN_Code = value;
+            }
+        }
+        public string Geopgrophical_State
+        {
+            get
+            {
+                return _Geopgrophical_State;
+            }
+            set
+            {
+                _Geopgrophical_State = value;
+            }
+        }
+
+        public string Stockist_SAP_Code
+        {
+            get
+            {
+                return _Stockist_SAP_Code;
+            }
+            set
+            {
+                _Stockist_SAP_Code = value;
+            }
+        }
+
+        public string Stockist_Name
+        {
+            get
+            {
+                return _Stockist_Name;
+            }
+            set
+            {
+                _Stockist_Name = value;
+            }
+        }
+
+        public string Source_Of_Supply
+        {
+            get
+            {
+                return _Source_Of_Supply;
+            }
+            set
+            {
+                _Source_Of_Supply = value;
+            }
+        }
+
+        public string Bill_Type
+        {
+            get
+            {
+                return _Bill_Type;
+            }
+            set
+            {
+                _Bill_Type = value;
+            }
+        }
+        public int Item_Qty
+        {
+            get
+            {
+                return _Item_Qty;
+            }
+            set
+            {
+                _Item_Qty = value;
+            }
+        }
+
+        public string Qty_Ltr_Kg
+        {
+            get
+            {
+                return _Qty_Ltr_Kg;
+            }
+            set
+            {
+                _Qty_Ltr_Kg = value;
+            }
+        }
+
+        public int SKU_Code
+        {
+            get
+            {
+                return _SKU_Code;
+            }
+            set
+            {
+                _SKU_Code = value;
+            }
+        }
+        public string NET_AMT_IN_PAISE
+        {
+            get
+            {
+                return _NET_AMT_IN_PAISE;
+            }
+            set
+            {
+                _NET_AMT_IN_PAISE = value;
+            }
+        }
+
+        public string ZDFI
+        {
+            get
+            {
+                return _ZDFI;
+            }
+            set
+            {
+                _ZDFI = value;
+            }
+        }
+
+        public string ZCON
+        {
+            get
+            {
+                return _ZCON;
+            }
+            set
+            {
+                _ZCON = value;
+            }
+        }
+
+        public string ZSSD
+        {
+            get
+            {
+                return _ZSSD;
+            }
+            set
+            {
+                _ZSSD = value;
+            }
+        }
+
+        public string IGST_Tax
+        {
+            get
+            {
+                return _IGST_Tax;
+            }
+            set
+            {
+                _IGST_Tax = value;
+            }
+        }
+
+        public string SGST_Tax
+        {
+            get
+            {
+                return _SGST_Tax;
+            }
+            set
+            {
+                _SGST_Tax = value;
+            }
+        }
+
+        public string CGST_Tax
+        {
+            get
+            {
+                return _CGST_Tax;
+            }
+            set
+            {
+                _CGST_Tax = value;
+            }
+        }
+
+        public string SKU_Name
+        {
+            get
+            {
+                return _SKU_Name;
+            }
+            set
+            {
+                _SKU_Name = value;
+            }
+        }
+
+        public string RSP_CDP
+        {
+            get
+            {
+                return _RSP_CDP;
+            }
+            set
+            {
+                _RSP_CDP = value;
+            }
+        }
+        public string ZDCB
+        {
+            get
+            {
+                return _ZDCB;
+            }
+            set
+            {
+                _ZDCB = value;
+            }
+        }
 
         //*************************************
         #endregion
 
         #region Constructor : Opens the connection with Database Server.
-        public InventoryClass()
+        public SalesSaveDetailsModel()
         {
             SqlCon = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
             SqlCon.Open();
@@ -4360,50 +4775,163 @@ namespace Servo_API.App_Start
         /// and also insert the value in CustomerLedgerTable and AccountsLedgerTable with the help of
         /// ProInsertAccountsLedger procedure.
         /// </summary>
-        public void InsertSalesMaster(SalesSaveDetailsModel obj)
+        public void InsertSalesTemp()
         {
-            SqlCmd = new SqlCommand("ProSalesMasterEntry", SqlCon);
+            SqlCmd = new SqlCommand("ProSalesTempEntry", SqlCon);
             SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@Invoice_No", Int32.Parse(obj.Invoice_No));
-            SqlCmd.Parameters.Add("@Invoice_Date", obj.Invoice_Date);
-            SqlCmd.Parameters.Add("@Sales_Type", obj.Sales_Type);
-            SqlCmd.Parameters.Add("@Under_SalesMan", obj.Under_SalesMan);
-            SqlCmd.Parameters.Add("@Cust_Name", obj.Customer_Name);
-            SqlCmd.Parameters.Add("@Place", obj.Place);
-            SqlCmd.Parameters.Add("@Vehicle_No", obj.Vehicle_No);
-            SqlCmd.Parameters.Add("@Grand_Total", obj.Grand_Total);
+            SqlCmd.Parameters.Add("@SALES_INVOICE_NUMBER", Invoice_No);
+            SqlCmd.Parameters.Add("@INVOICE_DATE", Invoice_Date);
+            SqlCmd.Parameters.Add("@SSA_OR_SSI_NAME", SSA_OR_SSI_NAME);
+            SqlCmd.Parameters.Add("@SALES_RETURN_NUMBER", SALES_RETURN_NUMBER);
+            SqlCmd.Parameters.Add("@SALES_RETURN_GR_DATE", SALES_RETURN_GR_DATE);
+            SqlCmd.Parameters.Add("@SECONDARY_CUSTOMER_NUMBER", SECONDARY_CUSTOMER_NUMBER);
+            SqlCmd.Parameters.Add("@SEC_CUSTOMER_NAME", SEC_CUSTOMER_NAME);
+            SqlCmd.Parameters.Add("@STOCKIST_GST_NUM", STOCKIST_GST_NUM);
+            SqlCmd.Parameters.Add("@CUSTOMER_GST_NUM", CUSTOMER_GST_NUM);
+            SqlCmd.Parameters.Add("@SEC_CUSTOMER_HIERARCHY", SEC_CUSTOMER_HIERARCHY);
+            SqlCmd.Parameters.Add("@SECONDARY_CUSTOMER_CITY", SECONDARY_CUSTOMER_CITY);
+            SqlCmd.Parameters.Add("@INVOICE_TYPE", INVOICE_TYPE);
+            SqlCmd.Parameters.Add("@SGST_AMOUNT", SGST_AMOUNT);
+            SqlCmd.Parameters.Add("@CGST_AMOUNT", CGST_AMOUNT);
+            SqlCmd.Parameters.Add("@IGST_AMOUNT", IGST_AMOUNT);
+            SqlCmd.Parameters.Add("@TOTAL_TAX_AMOUNT", TOTAL_TAX_AMOUNT);
+            SqlCmd.Parameters.Add("@NET_AMOUNT", NET_AMOUNT);
+            SqlCmd.Parameters.Add("@ADHOC_DISCOUNT", ADHOC_DISCOUNT);
+            SqlCmd.Parameters.Add("@HO_AI_DISC_JULY17", HO_AI_DISC_JULY17);
+            SqlCmd.Parameters.Add("@HYUNDAI_DIS_17_18", HYUNDAI_DIS_17_18);
+            SqlCmd.Parameters.Add("@MGO_VC_DIS_16_17", MGO_VC_DIS_16_17);
+            SqlCmd.Parameters.Add("@SALES_TYPE", SALES_TYPE);
+            SqlCmd.Parameters.Add("@CHALLAN_NO", Convert.ToInt32(CHALLAN_NO));
+            SqlCmd.Parameters.Add("@VEHICLE_NO", VEHICLE_NO);
+            SqlCmd.Parameters.Add("@Grand_Total", Grand_Total);
+            SqlCmd.Parameters.Add("@Discount", Discount);
+            SqlCmd.Parameters.Add("@Discount_Type", Discount_Type);
+            SqlCmd.Parameters.Add("@Promo_Scheme", Promo_Scheme);
+            SqlCmd.Parameters.Add("@Slip_No", Slip_No);
+            SqlCmd.Parameters.Add("@Cash_Discount", Cash_Discount);
+            SqlCmd.Parameters.Add("@Cash_Disc_Type", Cash_Disc_Type);
+            SqlCmd.Parameters.Add("@schdiscount", schdiscount);
+            SqlCmd.Parameters.Add("@foediscount", foediscount);
+            SqlCmd.Parameters.Add("@foediscounttype", foediscounttype);
+            SqlCmd.Parameters.Add("@foediscountrs", foediscountrs);
+            SqlCmd.Parameters.Add("@SecSPDisc", SecSPDisc);
+            SqlCmd.Parameters.Add("@SALEABLE_QTY_IN_LTR_OR_KG", float.Parse(SALEABLE_QTY_IN_LTR_OR_KG));
+            SqlCmd.ExecuteNonQuery();
+        }
+        public void InsertSalesTempProd()
+        {
+            SqlCmd = new SqlCommand("ProSalesTempProdEntry", SqlCon);
+            SqlCmd.CommandType = CommandType.StoredProcedure;
+            SqlCmd.Parameters.Add("@SALES_INVOICE_NUMBER", Invoice_No);
+            SqlCmd.Parameters.Add("@PRODUCT_CODE", PRODUCT_CODE);
+            SqlCmd.Parameters.Add("@PRODUCT_NAME", PRODUCT_NAME);
+            SqlCmd.Parameters.Add("@HSN_NO", Convert.ToInt32(HSN_NO));
+            SqlCmd.Parameters.Add("@PACK_CODE", Convert.ToInt32(PACK_CODE));
+            SqlCmd.Parameters.Add("@PACK_NAME", PACK_NAME);
+            SqlCmd.Parameters.Add("@SKU_CODE", Convert.ToInt32(SKU_CODE));
+            SqlCmd.Parameters.Add("@SALEABLE_QTY", float.Parse(SALEABLE_QTY));
+            SqlCmd.Parameters.Add("@FREE_QTY", float.Parse(FREE_QTY));
+            SqlCmd.Parameters.Add("@SAMPLE_QTY", float.Parse(SAMPLE_QTY));
+            SqlCmd.Parameters.Add("@SALEABLE_QTY_IN_LTR_OR_KG", SALEABLE_QTY_IN_LTR_OR_KG);
+            SqlCmd.Parameters.Add("@FREE_QTY_IN_LTR_OR_KG", float.Parse(FREE_QTY_IN_LTR_OR_KG));
+            SqlCmd.Parameters.Add("@SAMPLE_QTY_IN_LTR_OR_KG", float.Parse(SAMPLE_QTY_IN_LTR_OR_KG));
+            SqlCmd.Parameters.Add("@SecInvoiceNo", SecInvoiceNo);
+            SqlCmd.Parameters.Add("@sno", sno);
+            SqlCmd.Parameters.Add("@INVOICE_DATE", Invoice_Date);
+            SqlCmd.Parameters.Add("@scheme1", sch);
+            SqlCmd.Parameters.Add("@foe", foe);
+            SqlCmd.Parameters.Add("@SchType", schtype);
+            SqlCmd.Parameters.Add("@SecSPDisc", SecSPDisc);
+            SqlCmd.Parameters.Add("@SecSPDiscType", SecSPDiscType);
+            SqlCmd.Parameters.Add("@FoeType", foediscounttype);
+            SqlCmd.ExecuteNonQuery();
+        }
+        public void InsertPurchaseMasterTemp()
+        {
+            SqlCmd = new SqlCommand("ProPurchaseMasterTemp", SqlCon);
+            SqlCmd.CommandType = CommandType.StoredProcedure;
+            SqlCmd.Parameters.Add("@INVOICE_NUM", Int32.Parse(Invoice_No));
+            SqlCmd.Parameters.Add("@INVOICE_DATE", Invoice_Date);
+            SqlCmd.Parameters.Add("@CHALLAN_ID", Challan_Id);
+            SqlCmd.Parameters.Add("@CITY_NAME", City_Name);
+            SqlCmd.Parameters.Add("@GEOGRAPHICAL_STATE", Geopgrophical_State);
+            SqlCmd.Parameters.Add("@STOCKIST_SAP_CODE", Int32.Parse(Stockist_SAP_Code));
+            SqlCmd.Parameters.Add("@STOCKIST_NAME", Stockist_Name);
+            SqlCmd.Parameters.Add("@SOURCE_OF_SUPPLY", Source_Of_Supply);
+            //SqlCmd.Parameters .Add("@Grand_Total",float.Parse(Grand_Total) );
+            SqlCmd.Parameters.Add("@GST_IDENTIFICATION_NUM", GSTIN);
             //SqlCmd.Parameters .Add("@Discount",float.Parse(Discount));
-            SqlCmd.Parameters.Add("@Discount", obj.Discount);
-            SqlCmd.Parameters.Add("@Disc_Type", obj.Discount_Type);
-            //SqlCmd.Parameters .Add("@Net_Amount",float.Parse(Net_Amount));
-            SqlCmd.Parameters.Add("@Net_Amount", obj.Net_Amount);
-            SqlCmd.Parameters.Add("@Promo_Scheme", obj.Promo_Scheme);
-            SqlCmd.Parameters.Add("@Remark", obj.Remerk);
-            SqlCmd.Parameters.Add("@Entry_By", obj.Entry_By);
-            SqlCmd.Parameters.Add("@Entry_Time", obj.Entry_Time);
-            SqlCmd.Parameters.Add("@Slip_No", obj.Slip_No);
-            SqlCmd.Parameters.Add("@Cash_Discount", obj.Cash_Discount);
-            SqlCmd.Parameters.Add("@Cash_Disc_Type", obj.Cash_Disc_Type);
-            SqlCmd.Parameters.Add("@IGST_Amount", obj.VAT_Amount);
-            SqlCmd.Parameters.Add("@ChallanNo", obj.ChallanNo);
-            SqlCmd.Parameters.Add("@ChallanDate", System.Convert.ToDateTime(obj.ChallanDate));
-            SqlCmd.Parameters.Add("@Credit_Limit", obj.Credit_Limit);
-            /*bhal*/
-            SqlCmd.Parameters.Add("@schdiscount", obj.schdiscount);
-            //SqlCmd.Parameters .Add("@foediscount",float.Parse(foediscount));
-            SqlCmd.Parameters.Add("@foediscount", obj.foediscount);
-            SqlCmd.Parameters.Add("@foediscounttype", obj.foediscounttype);
-            //SqlCmd.Parameters .Add("@foediscountrs",float.Parse(foediscountrs));
-            SqlCmd.Parameters.Add("@foediscountrs", obj.foediscountrs);
-            //SqlCmd.Parameters .Add("@totalqtyltr",float.Parse(totalqtyltr));
-            SqlCmd.Parameters.Add("@totalqtyltr", obj.totalqtyltr);
-            SqlCmd.Parameters.Add("@Order_No", obj.Order_No);
-            SqlCmd.Parameters.Add("@SecSPDisc", obj.SecSPDisc);
-            SqlCmd.Parameters.Add("@SGST_Amount", obj.SGST_Amount);
-            SqlCmd.Parameters.Add("@CGST_Amount", obj.CGST_Amount);
+            SqlCmd.Parameters.Add("@HSN_CODE", HSN_Code);
+            SqlCmd.Parameters.Add("@BILLTYPE", Bill_Type);
+
+            SqlCmd.ExecuteNonQuery();
+        }
+        public void InsertPurchaseDetailsTemp()
+        {
+            SqlCmd = new SqlCommand("ProPurchaseDetailsTemp", SqlCon);
+            SqlCmd.CommandType = CommandType.StoredProcedure;
+            SqlCmd.Parameters.Add("@INVOICE_NUM", Int32.Parse(Invoice_No));
+            SqlCmd.Parameters.Add("@ITEM_QTY", Item_Qty);
+            SqlCmd.Parameters.Add("@QTY_LTR_KG", float.Parse(Qty_Ltr_Kg));
+            SqlCmd.Parameters.Add("@SKU_CODE", SKU_Code);
+            SqlCmd.Parameters.Add("@SKU_NAME", SKU_Name);
+            SqlCmd.Parameters.Add("@RSP_CDP", float.Parse(RSP_CDP));
+            SqlCmd.Parameters.Add("@SGST_TAX", float.Parse(SGST_Tax));
+            SqlCmd.Parameters.Add("@CGST_TAX", float.Parse(CGST_Tax));
+            SqlCmd.Parameters.Add("@IGST_TAX", float.Parse(IGST_Tax));
+            SqlCmd.Parameters.Add("@TOTAL_TAX", float.Parse(Total_Tax));
+            SqlCmd.Parameters.Add("@ZSSD", float.Parse(ZSSD));
+            SqlCmd.Parameters.Add("@ZCON", float.Parse(ZCON));
+            SqlCmd.Parameters.Add("@ZDFI", float.Parse(ZDFI));
+            SqlCmd.Parameters.Add("@ZDCB", float.Parse(ZDCB));
+            SqlCmd.Parameters.Add("@NET_AMT_IN_PAISE", float.Parse(NET_AMT_IN_PAISE));
+
             SqlCmd.ExecuteNonQuery();
         }
 
+        public void InsertSalesMaster()
+        {
+            SqlCmd = new SqlCommand("ProSalesMasterEntry", SqlCon);
+            SqlCmd.CommandType = CommandType.StoredProcedure;
+            SqlCmd.Parameters.Add("@Invoice_No", Int32.Parse(Invoice_No));
+            SqlCmd.Parameters.Add("@Invoice_Date", Invoice_Date);
+            SqlCmd.Parameters.Add("@Sales_Type", Sales_Type);
+            SqlCmd.Parameters.Add("@Under_SalesMan", Under_SalesMan);
+            SqlCmd.Parameters.Add("@Cust_Name", Customer_Name);
+            SqlCmd.Parameters.Add("@Place", Place);
+            SqlCmd.Parameters.Add("@Vehicle_No", Vehicle_No);
+            SqlCmd.Parameters.Add("@Grand_Total", Grand_Total);
+            //SqlCmd.Parameters .Add("@Discount",float.Parse(Discount));
+            SqlCmd.Parameters.Add("@Discount", Discount);
+            SqlCmd.Parameters.Add("@Disc_Type", Discount_Type);
+            //SqlCmd.Parameters .Add("@Net_Amount",float.Parse(Net_Amount));
+            SqlCmd.Parameters.Add("@Net_Amount", Net_Amount);
+            SqlCmd.Parameters.Add("@Promo_Scheme", Promo_Scheme);
+            SqlCmd.Parameters.Add("@Remark", Remerk);
+            SqlCmd.Parameters.Add("@Entry_By", Entry_By);
+            SqlCmd.Parameters.Add("@Entry_Time", Entry_Time);
+            SqlCmd.Parameters.Add("@Slip_No", Slip_No);
+            SqlCmd.Parameters.Add("@Cash_Discount", Cash_Discount);
+            SqlCmd.Parameters.Add("@Cash_Disc_Type", Cash_Disc_Type);
+            SqlCmd.Parameters.Add("@IGST_Amount", VAT_Amount);
+            SqlCmd.Parameters.Add("@ChallanNo", ChallanNo);
+            SqlCmd.Parameters.Add("@ChallanDate", System.Convert.ToDateTime(ChallanDate));
+            SqlCmd.Parameters.Add("@Credit_Limit", Credit_Limit);
+            /*bhal*/
+            SqlCmd.Parameters.Add("@schdiscount", schdiscount);
+            //SqlCmd.Parameters .Add("@foediscount",float.Parse(foediscount));
+            SqlCmd.Parameters.Add("@foediscount", foediscount);
+            SqlCmd.Parameters.Add("@foediscounttype", foediscounttype);
+            //SqlCmd.Parameters .Add("@foediscountrs",float.Parse(foediscountrs));
+            SqlCmd.Parameters.Add("@foediscountrs", foediscountrs);
+            //SqlCmd.Parameters .Add("@totalqtyltr",float.Parse(totalqtyltr));
+            SqlCmd.Parameters.Add("@totalqtyltr", totalqtyltr);
+            SqlCmd.Parameters.Add("@Order_No", Order_No);
+            SqlCmd.Parameters.Add("@SecSPDisc", SecSPDisc);
+            SqlCmd.Parameters.Add("@SGST_Amount", SGST_Amount);
+            SqlCmd.Parameters.Add("@CGST_Amount", CGST_Amount);
+            SqlCmd.ExecuteNonQuery();
+        }
 
         /// <summary>
         /// Calls the Procedure ProOrderMasterEntry to insert the Order Details in Order_Col_Master.
@@ -4630,48 +5158,46 @@ namespace Servo_API.App_Start
         /// customer table and insert the value in CustomerLedgerTable and AccountLedgerTable with the 
         /// help of ProInsertAccountsLedger procedure.
         /// </summary>
-        public void UpdateSalesMaster(SalesSaveDetailsModel obj)
+        public void UpdateSalesMaster()
         {
             SqlCmd = new SqlCommand("ProSalesMasterUpdate", SqlCon);
             SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@Invoice_No", obj.Invoice_No);
-            SqlCmd.Parameters.Add("@Invoice_Date", obj.Invoice_Date);
-            SqlCmd.Parameters.Add("@Sales_Type", obj.Sales_Type);
-            SqlCmd.Parameters.Add("@Under_SalesMan", obj.Under_SalesMan);
-            SqlCmd.Parameters.Add("@Cust_Name", obj.Customer_Name);
-            SqlCmd.Parameters.Add("@Place", obj.Place);
-            SqlCmd.Parameters.Add("@Vehicle_No", obj.Vehicle_No);
-            SqlCmd.Parameters.Add("@Grand_Total", obj.Grand_Total);
-            SqlCmd.Parameters.Add("@Discount", obj.Discount);
-            SqlCmd.Parameters.Add("@Disc_Type", obj.Discount_Type);
-            SqlCmd.Parameters.Add("@Net_Amount", obj.Net_Amount);
-            SqlCmd.Parameters.Add("@Promo_Scheme", obj.Promo_Scheme);
-            SqlCmd.Parameters.Add("@Remark", obj.Remerk);
-            SqlCmd.Parameters.Add("@Entry_By", obj.Entry_By);
-            SqlCmd.Parameters.Add("@Entry_Time", obj.Entry_Time);
-            SqlCmd.Parameters.Add("@Slip_No", obj.Slip_No);
-            SqlCmd.Parameters.Add("@ChallanNo", obj.ChallanNo);
-            SqlCmd.Parameters.Add("@ChallanDate", System.Convert.ToDateTime(obj.ChallanDate));
-            SqlCmd.Parameters.Add("@Cash_Discount", obj.Cash_Discount);
-            SqlCmd.Parameters.Add("@Cash_Disc_Type", obj.Cash_Disc_Type);
-            SqlCmd.Parameters.Add("@IGST_Amount", obj.VAT_Amount);
-            SqlCmd.Parameters.Add("@Credit_Limit", obj.Credit_Limit);
+            SqlCmd.Parameters.Add("@Invoice_No", Invoice_No);
+            SqlCmd.Parameters.Add("@Invoice_Date", Invoice_Date);
+            SqlCmd.Parameters.Add("@Sales_Type", Sales_Type);
+            SqlCmd.Parameters.Add("@Under_SalesMan", Under_SalesMan);
+            SqlCmd.Parameters.Add("@Cust_Name", Customer_Name);
+            SqlCmd.Parameters.Add("@Place", Place);
+            SqlCmd.Parameters.Add("@Vehicle_No", Vehicle_No);
+            SqlCmd.Parameters.Add("@Grand_Total", Grand_Total);
+            SqlCmd.Parameters.Add("@Discount", Discount);
+            SqlCmd.Parameters.Add("@Disc_Type", Discount_Type);
+            SqlCmd.Parameters.Add("@Net_Amount", Net_Amount);
+            SqlCmd.Parameters.Add("@Promo_Scheme", Promo_Scheme);
+            SqlCmd.Parameters.Add("@Remark", Remerk);
+            SqlCmd.Parameters.Add("@Entry_By", Entry_By);
+            SqlCmd.Parameters.Add("@Entry_Time", Entry_Time);
+            SqlCmd.Parameters.Add("@Slip_No", Slip_No);
+            SqlCmd.Parameters.Add("@ChallanNo", ChallanNo);
+            SqlCmd.Parameters.Add("@ChallanDate", System.Convert.ToDateTime(ChallanDate));
+            SqlCmd.Parameters.Add("@Cash_Discount", Cash_Discount);
+            SqlCmd.Parameters.Add("@Cash_Disc_Type", Cash_Disc_Type);
+            SqlCmd.Parameters.Add("@IGST_Amount", VAT_Amount);
+            SqlCmd.Parameters.Add("@Credit_Limit", Credit_Limit);
             /*bhal*/
-            SqlCmd.Parameters.Add("@schdiscount", obj.schdiscount);
+            SqlCmd.Parameters.Add("@schdiscount", schdiscount);
             //SqlCmd.Parameters .Add("@foediscount",float.Parse(foediscount));
-            SqlCmd.Parameters.Add("@foediscount", obj.foediscount);
-            SqlCmd.Parameters.Add("@foediscounttype", obj.foediscounttype);
+            SqlCmd.Parameters.Add("@foediscount", foediscount);
+            SqlCmd.Parameters.Add("@foediscounttype", foediscounttype);
             //SqlCmd.Parameters .Add("@foediscountrs",float.Parse(foediscountrs));
-            SqlCmd.Parameters.Add("@foediscountrs", obj.foediscountrs);
+            SqlCmd.Parameters.Add("@foediscountrs", foediscountrs);
             //SqlCmd.Parameters .Add("@totalqtyltr",float.Parse(totalqtyltr));
-            SqlCmd.Parameters.Add("@totalqtyltr", obj.totalqtyltr);
-            SqlCmd.Parameters.Add("@SecSPDisc", obj.SecSPDisc);
-            SqlCmd.Parameters.Add("@SGST_Amount", obj.SGST_Amount);
-            SqlCmd.Parameters.Add("@CGST_Amount", obj.CGST_Amount);
+            SqlCmd.Parameters.Add("@totalqtyltr", totalqtyltr);
+            SqlCmd.Parameters.Add("@SecSPDisc", SecSPDisc);
+            SqlCmd.Parameters.Add("@SGST_Amount", SGST_Amount);
+            SqlCmd.Parameters.Add("@CGST_Amount", CGST_Amount);
             SqlCmd.ExecuteNonQuery();
         }
-
-
 
         /// <summary>
         /// Calls the Procedure ProOrderMasterUpdate to Update the Order Details in Order_Col_Master.
@@ -4892,52 +5418,52 @@ namespace Servo_API.App_Start
         /// and insert the value in VendorLedgerTable and also insert the value in AccountsLedgerTable with the 
         /// help of ProInsertAccountsLedger procedure.
         /// </summary>
-        public void InsertPurchaseMaster(PurchaseModels purchase)
+        public void InsertPurchaseMaster()
         {
             SqlCmd = new SqlCommand("ProPurchaseMasterEntry", SqlCon);
             SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@Invoice_No", Int32.Parse(purchase.InvoiceNo));
-            SqlCmd.Parameters.Add("@Invoice_Date", purchase.InvoiceDate);
-            SqlCmd.Parameters.Add("@Mode_of_Payment", purchase.ModeofPayment);
-            SqlCmd.Parameters.Add("@Vendor_Name", purchase.VendorName);
-            SqlCmd.Parameters.Add("@City", purchase.City);
-            SqlCmd.Parameters.Add("@Vehicle_No", purchase.VehicleNo.Length > 0 ? purchase.VehicleNo : "");
-            SqlCmd.Parameters.Add("@Vndr_Invoice_No", purchase.VendorInvoiceNo);
-            SqlCmd.Parameters.Add("@Vndr_Invoice_Date", purchase.VendorInvoiceDate);
+            SqlCmd.Parameters.Add("@Invoice_No", Int32.Parse(Invoice_No));
+            SqlCmd.Parameters.Add("@Invoice_Date", Invoice_Date);
+            SqlCmd.Parameters.Add("@Mode_of_Payment", Mode_of_Payment);
+            SqlCmd.Parameters.Add("@Vendor_Name", Vendor_Name);
+            SqlCmd.Parameters.Add("@City", City);
+            SqlCmd.Parameters.Add("@Vehicle_No", Vehicle_No.Length > 0 ? Vehicle_No : "");
+            SqlCmd.Parameters.Add("@Vndr_Invoice_No", Vendor_Invoice_No);
+            SqlCmd.Parameters.Add("@Vndr_Invoice_Date", Vendor_Invoice_Date);
             //SqlCmd.Parameters .Add("@Grand_Total",float.Parse(Grand_Total) );
-            SqlCmd.Parameters.Add("@Grand_Total", purchase.GrandTotal);
+            SqlCmd.Parameters.Add("@Grand_Total", Grand_Total);
             //SqlCmd.Parameters .Add("@Discount",float.Parse(Discount));
-            SqlCmd.Parameters.Add("@Discount", purchase.Discount);
-            SqlCmd.Parameters.Add("@Disc_Type", purchase.DiscountType);
+            SqlCmd.Parameters.Add("@Discount", Discount);
+            SqlCmd.Parameters.Add("@Disc_Type", Discount_Type);
             //SqlCmd.Parameters .Add("@Net_Amount",float.Parse(Net_Amount));
-            SqlCmd.Parameters.Add("@Net_Amount", purchase.NetAmount);
-            SqlCmd.Parameters.Add("@Promo_Scheme", purchase.PromoScheme);
-            SqlCmd.Parameters.Add("@Remark", purchase.Remark);
-            SqlCmd.Parameters.Add("@Entry_By", purchase.EntryBy);
-            SqlCmd.Parameters.Add("@Entry_Time", purchase.EntryTime);
-            SqlCmd.Parameters.Add("@Cash_Discount", purchase.CashDiscount);
-            SqlCmd.Parameters.Add("@Cash_Disc_Type", purchase.CashDiscType);
-            SqlCmd.Parameters.Add("@IGST_Amount", purchase.VATAmount);
+            SqlCmd.Parameters.Add("@Net_Amount", Net_Amount);
+            SqlCmd.Parameters.Add("@Promo_Scheme", Promo_Scheme);
+            SqlCmd.Parameters.Add("@Remark", Remerk);
+            SqlCmd.Parameters.Add("@Entry_By", Entry_By);
+            SqlCmd.Parameters.Add("@Entry_Time", Entry_Time);
+            SqlCmd.Parameters.Add("@Cash_Discount", Cash_Discount);
+            SqlCmd.Parameters.Add("@Cash_Disc_Type", Cash_Disc_Type);
+            SqlCmd.Parameters.Add("@IGST_Amount", VAT_Amount);
             //****************************
-            SqlCmd.Parameters.Add("@Foc_Discount", purchase.FocDiscount);
-            SqlCmd.Parameters.Add("@Foc_Discount_Type", purchase.FocDiscountType);
+            SqlCmd.Parameters.Add("@Foc_Discount", Foc_Discount);
+            SqlCmd.Parameters.Add("@Foc_Discount_Type", Foc_Discount_Type);
             //SqlCmd.Parameters .Add("@Entry_Tax1",Entry_Tax1);
             //SqlCmd.Parameters .Add("@Entry_Tax_Type",Entry_Tax_Type);
-            SqlCmd.Parameters.Add("@Ebird", purchase.Ebird);
-            SqlCmd.Parameters.Add("@Ebird_Discount", purchase.EbirdDiscount);
-            SqlCmd.Parameters.Add("@Tradeval", purchase.Tradeval);
-            SqlCmd.Parameters.Add("@Trade_Discount", purchase.TradeDiscount);
-            SqlCmd.Parameters.Add("@fixed_Discount", purchase.FixedDiscount);
-            SqlCmd.Parameters.Add("@fixed_Discount_Type", purchase.FixedDiscountType);
-            SqlCmd.Parameters.Add("@totalqtyltr", purchase.Totalqtyltr);
+            SqlCmd.Parameters.Add("@Ebird", Ebird);
+            SqlCmd.Parameters.Add("@Ebird_Discount", Ebird_Discount);
+            SqlCmd.Parameters.Add("@Tradeval", Tradeval);
+            SqlCmd.Parameters.Add("@Trade_Discount", Trade_Discount);
+            SqlCmd.Parameters.Add("@fixed_Discount", fixed_Discount);
+            SqlCmd.Parameters.Add("@fixed_Discount_Type", fixed_Discount_Type);
+            SqlCmd.Parameters.Add("@totalqtyltr", totalqtyltr);
 
             /*******Add by vikas 5.11.2012****************/
-            SqlCmd.Parameters.Add("@New_fixdisc", purchase.NewFixeddisc);
-            SqlCmd.Parameters.Add("@New_fixdamount", purchase.NewFixeddiscAmount);
-            SqlCmd.Parameters.Add("@CGST_Amount", purchase.CGSTAmount);
-            SqlCmd.Parameters.Add("@SGST_Amount", purchase.SGSTAmount);
-            SqlCmd.Parameters.Add("@Tradeless", purchase.Tradeless);
-            SqlCmd.Parameters.Add("@Birdless", purchase.Birdless);
+            SqlCmd.Parameters.Add("@New_fixdisc", New_fixeddisc);
+            SqlCmd.Parameters.Add("@New_fixdamount", New_fixeddiscAmount);
+            SqlCmd.Parameters.Add("@CGST_Amount", CGST_Amount);
+            SqlCmd.Parameters.Add("@SGST_Amount", SGST_Amount);
+            SqlCmd.Parameters.Add("@Tradeless", Tradeless);
+            SqlCmd.Parameters.Add("@Birdless", Birdless);
 
             /********end***************/
 
@@ -4985,48 +5511,48 @@ namespace Servo_API.App_Start
         /// and update the value in VendorLedgerTable and also update the value in AccountsLedgerTable with the 
         /// help of ProUpdateAccountsLedger procedure.
         /// </summary>
-        public void updateMasterPurchase(PurchaseModels purchase)
+        public void updateMasterPurchase()
         {
             SqlCmd = new SqlCommand("MasterUpdatePurchaseMaster", SqlCon);
             SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@Invoice_No", purchase.InvoiceNo);
-            SqlCmd.Parameters.Add("@Invoice_Date", purchase.InvoiceDate);
-            SqlCmd.Parameters.Add("@Vehicle_No", purchase.VehicleNo);
-            SqlCmd.Parameters.Add("@Vndr_Invoice_No", purchase.VendorInvoiceNo);
-            SqlCmd.Parameters.Add("@Vndr_Invoice_Date", purchase.VendorInvoiceDate);
-            SqlCmd.Parameters.Add("@Promo_Scheme", purchase.PromoScheme);
-            SqlCmd.Parameters.Add("@Remarks", purchase.Remark);
-            SqlCmd.Parameters.Add("@Grand_Total", purchase.GrandTotal);
-            SqlCmd.Parameters.Add("@Discount", purchase.Discount);
-            SqlCmd.Parameters.Add("@Discount_Type", purchase.DiscountType);
-            SqlCmd.Parameters.Add("@Net_Amount", purchase.NetAmount);
-            SqlCmd.Parameters.Add("@Cash_Discount", purchase.CashDiscount);
-            SqlCmd.Parameters.Add("@Cash_Disc_Type", purchase.CashDiscType);
-            SqlCmd.Parameters.Add("@IGST_Amount", purchase.VATAmount);
-            SqlCmd.Parameters.Add("@Vendor_Name", purchase.VendorName);
-            SqlCmd.Parameters.Add("@City", purchase.City);
+            SqlCmd.Parameters.Add("@Invoice_No", Invoice_No);
+            SqlCmd.Parameters.Add("@Invoice_Date", Invoice_Date);
+            SqlCmd.Parameters.Add("@Vehicle_No", Vehicle_No);
+            SqlCmd.Parameters.Add("@Vndr_Invoice_No", Vendor_Invoice_No);
+            SqlCmd.Parameters.Add("@Vndr_Invoice_Date", Vendor_Invoice_Date);
+            SqlCmd.Parameters.Add("@Promo_Scheme", Promo_Scheme);
+            SqlCmd.Parameters.Add("@Remarks", Remerk);
+            SqlCmd.Parameters.Add("@Grand_Total", Grand_Total);
+            SqlCmd.Parameters.Add("@Discount", Discount);
+            SqlCmd.Parameters.Add("@Discount_Type", Discount_Type);
+            SqlCmd.Parameters.Add("@Net_Amount", Net_Amount);
+            SqlCmd.Parameters.Add("@Cash_Discount", Cash_Discount);
+            SqlCmd.Parameters.Add("@Cash_Disc_Type", Cash_Disc_Type);
+            SqlCmd.Parameters.Add("@IGST_Amount", VAT_Amount);
+            SqlCmd.Parameters.Add("@Vendor_Name", Vendor_Name);
+            SqlCmd.Parameters.Add("@City", City);
             //*************************
-            SqlCmd.Parameters.Add("@Foc_Discount", purchase.FocDiscount);
-            SqlCmd.Parameters.Add("@Foc_Discount_Type", purchase.FocDiscountType);
+            SqlCmd.Parameters.Add("@Foc_Discount", Foc_Discount);
+            SqlCmd.Parameters.Add("@Foc_Discount_Type", Foc_Discount_Type);
             //SqlCmd.Parameters .Add("@Entry_Tax1",Entry_Tax1);
             //SqlCmd.Parameters .Add("@Entry_Tax_Type",Entry_Tax_Type);
-            SqlCmd.Parameters.Add("@Ebird", purchase.Ebird);
-            SqlCmd.Parameters.Add("@Ebird_Discount", purchase.EbirdDiscount);
-            SqlCmd.Parameters.Add("@Tradeval", purchase.Tradeval);
-            SqlCmd.Parameters.Add("@Trade_Discount", purchase.TradeDiscount);
+            SqlCmd.Parameters.Add("@Ebird", Ebird);
+            SqlCmd.Parameters.Add("@Ebird_Discount", Ebird_Discount);
+            SqlCmd.Parameters.Add("@Tradeval", Tradeval);
+            SqlCmd.Parameters.Add("@Trade_Discount", Trade_Discount);
 
             //			SqlCmd.Parameters .Add("@Birdless",Birdless);
-            SqlCmd.Parameters.Add("@fixed_Discount", purchase.FixedDiscount);
-            SqlCmd.Parameters.Add("@fixed_Discount_Type", purchase.FixedDiscountType);
-            SqlCmd.Parameters.Add("@totalqtyltr", purchase.Totalqtyltr);
-            SqlCmd.Parameters.Add("@Mode_of_Payment", purchase.ModeofPayment);
+            SqlCmd.Parameters.Add("@fixed_Discount", fixed_Discount);
+            SqlCmd.Parameters.Add("@fixed_Discount_Type", fixed_Discount_Type);
+            SqlCmd.Parameters.Add("@totalqtyltr", totalqtyltr);
+            SqlCmd.Parameters.Add("@Mode_of_Payment", Mode_of_Payment);
             /*******Add by vikas 5.11.2012****************/
-            SqlCmd.Parameters.Add("@New_fixdisc", purchase.NewFixeddisc);
-            SqlCmd.Parameters.Add("@New_fixdamount", purchase.NewFixeddiscAmount);
-            SqlCmd.Parameters.Add("@CGST_Amount", purchase.CGSTAmount);
-            SqlCmd.Parameters.Add("@SGST_Amount", purchase.SGSTAmount);
-            SqlCmd.Parameters.Add("@Tradeless", purchase.Tradeless);
-            SqlCmd.Parameters.Add("@Birdless", purchase.Birdless);
+            SqlCmd.Parameters.Add("@New_fixdisc", New_fixeddisc);
+            SqlCmd.Parameters.Add("@New_fixdamount", New_fixeddiscAmount);
+            SqlCmd.Parameters.Add("@CGST_Amount", CGST_Amount);
+            SqlCmd.Parameters.Add("@SGST_Amount", SGST_Amount);
+            SqlCmd.Parameters.Add("@Tradeless", Tradeless);
+            SqlCmd.Parameters.Add("@Birdless", Birdless);
             /********end***************/
 
             //***************************	
@@ -5049,26 +5575,26 @@ namespace Servo_API.App_Start
         /// Calls the Procedure ProPurchaseDetailsEntry to insert the Products value in Purchase Details
         /// table and update the stock in every product with the help of ProStockUpdateAfterSales Procedure.
         /// </summary>
-        public void InsertPurchaseDetail(ProductModels product)
+        public void InsertPurchaseDetail()
         {
             SqlCmd = new SqlCommand("ProPurchaseDetailsEntry", SqlCon);
             SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@Invoice_No", product.Invoice_No);
-            SqlCmd.Parameters.Add("@Prod_Name", product.ProductName);
-            SqlCmd.Parameters.Add("@Pack_Type", product.Package_Type);
-            SqlCmd.Parameters.Add("@Qty", product.Quantity);
-            SqlCmd.Parameters.Add("@Rate", product.Rate);
-            SqlCmd.Parameters.Add("@Amount", product.Amount);
+            SqlCmd.Parameters.Add("@Invoice_No", Invoice_No);
+            SqlCmd.Parameters.Add("@Prod_Name", Product_Name);
+            SqlCmd.Parameters.Add("@Pack_Type", Package_Type);
+            SqlCmd.Parameters.Add("@Qty", Qty);
+            SqlCmd.Parameters.Add("@Rate", Rate);
+            SqlCmd.Parameters.Add("@Amount", Amount);
             //********
-            SqlCmd.Parameters.Add("@foc", product.FOC);
-            SqlCmd.Parameters.Add("@Invoice_Date", product.InvoiceDate);
+            SqlCmd.Parameters.Add("@foc", foc);
+            SqlCmd.Parameters.Add("@Invoice_Date", Invoice_Date);
             //********
-            SqlCmd.Parameters.Add("@SNo", product.Sno);
-            SqlCmd.Parameters.Add("@PerDisc", product.SchPerDisc);
-            SqlCmd.Parameters.Add("@PerDiscType", product.SchPerDiscType);
-            SqlCmd.Parameters.Add("@StktDisc", product.StockDiscount);
-            SqlCmd.Parameters.Add("@StktDiscType", product.SchStktDiscType);
-            SqlCmd.Parameters.Add("@Discount", product.Discount);
+            SqlCmd.Parameters.Add("@SNo", sno);
+            SqlCmd.Parameters.Add("@PerDisc", SchPerDisc);
+            SqlCmd.Parameters.Add("@PerDiscType", SchPerDiscType);
+            SqlCmd.Parameters.Add("@StktDisc", SchStktDisc);
+            SqlCmd.Parameters.Add("@StktDiscType", SchStktDiscType);
+            SqlCmd.Parameters.Add("@Discount", Discount);
             //********
             SqlCmd.ExecuteNonQuery();
         }
@@ -5077,27 +5603,27 @@ namespace Servo_API.App_Start
         /// Calls the Procedure ProPurchaseDetailsUpdate to Update the products details in Purchase Details
         /// table and update the stock in every product with the help of ProStockUpdateAfterSales Procedure.
         /// </summary>
-        public void UpdatePurchaseDetail(ProductModels product)
+        public void UpdatePurchaseDetail()
         {
             SqlCmd = new SqlCommand("ProPurchaseDetailsupdate", SqlCon);
             SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@Invoice_No", product.Invoice_No);
-            SqlCmd.Parameters.Add("@Prod_Name", product.ProductName);
-            SqlCmd.Parameters.Add("@Pack_Type", product.Package_Type);
-            SqlCmd.Parameters.Add("@Qty", product. Quantity);
-            SqlCmd.Parameters.Add("@Rate", product.Rate);
-            SqlCmd.Parameters.Add("@Amount", product.Amount);
-            SqlCmd.Parameters.Add("@Qty1", product.QtyTemp);
-            SqlCmd.Parameters.Add("@Inv_Date", product.InvoiceDate);
+            SqlCmd.Parameters.Add("@Invoice_No", Invoice_No);
+            SqlCmd.Parameters.Add("@Prod_Name", Product_Name);
+            SqlCmd.Parameters.Add("@Pack_Type", Package_Type);
+            SqlCmd.Parameters.Add("@Qty", Qty);
+            SqlCmd.Parameters.Add("@Rate", Rate);
+            SqlCmd.Parameters.Add("@Amount", Amount);
+            SqlCmd.Parameters.Add("@Qty1", QtyTemp);
+            SqlCmd.Parameters.Add("@Inv_Date", Invoice_Date);
             /*bhal*/
-            SqlCmd.Parameters.Add("@foc", product.FOC);
+            SqlCmd.Parameters.Add("@foc", foc);
             //********
-            SqlCmd.Parameters.Add("@SNo", product.Sno);
-            SqlCmd.Parameters.Add("@PerDisc", product.SchPerDisc);
-            SqlCmd.Parameters.Add("@PerDiscType", product.SchPerDiscType);
-            SqlCmd.Parameters.Add("@StktDisc", product.StockDiscount);
-            SqlCmd.Parameters.Add("@StktDiscType", product.SchStktDiscType);
-            SqlCmd.Parameters.Add("@Discount", product.Discount);
+            SqlCmd.Parameters.Add("@SNo", sno);
+            SqlCmd.Parameters.Add("@PerDisc", SchPerDisc);
+            SqlCmd.Parameters.Add("@PerDiscType", SchPerDiscType);
+            SqlCmd.Parameters.Add("@StktDisc", SchStktDisc);
+            SqlCmd.Parameters.Add("@StktDiscType", SchStktDiscType);
+            SqlCmd.Parameters.Add("@Discount", Discount);
             //********
             SqlCmd.ExecuteNonQuery();
         }
@@ -5798,55 +6324,5 @@ namespace Servo_API.App_Start
             SqlCmd.Parameters.Add("@Batch_No", BatchNo);
             SqlCmd.ExecuteNonQuery();
         }
-
-        public void InsertUserMaster(UserModels User)
-        {
-            SqlCmd = new SqlCommand("ProUserMasterEntry", SqlCon);
-            SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@User_ID", User.UserID.Length > 0 ? Int32.Parse(User.UserID) : 0);
-            SqlCmd.Parameters.Add("@Login_Name", User.LoginName);
-            SqlCmd.Parameters.Add("@Password", User.Password);
-            SqlCmd.Parameters.Add("@User_Name", User.UserName);
-            SqlCmd.Parameters.Add("@Role_Name", User.RoleName);
-            SqlCmd.ExecuteNonQuery();
-            SqlCon.Close();
-        }
-
-        public void UpdateUserMaster(UserModels User)
-        {
-            SqlCmd = new SqlCommand("ProUserMasterUpdate", SqlCon);
-            SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@User_ID", User.UserID.Length > 0 ? Int32.Parse(User.UserID) : 0);
-            SqlCmd.Parameters.Add("@Login_Name", User.LoginName);
-            SqlCmd.Parameters.Add("@Password", User.Password);
-            SqlCmd.Parameters.Add("@User_Name", User.UserName);
-            SqlCmd.Parameters.Add("@Role_Name", User.RoleName);
-            SqlCmd.ExecuteNonQuery();
-            SqlCon.Close();
-        }
-
-        public string checkDate(string str)
-        {
-            if (!str.Trim().Equals(""))
-            {
-                if (str.Trim().Equals("1/1/1900"))
-                    str = "";
-            }
-            return str;
-        }
-        public string trimDate(string strDate)
-        {
-            int pos = strDate.IndexOf(" ");
-            if (pos != -1)
-            {
-                strDate = strDate.Substring(0, pos);
-            }
-            else
-            {
-                strDate = "";
-            }
-            return strDate;
-        }
-
     }
 }

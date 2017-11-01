@@ -199,6 +199,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Data\GenUtil.cs" />
+    <Compile Include="App_Data\StringUtil.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\DbOperations_LATEST.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -242,9 +244,11 @@
     <Compile Include="Controllers\LedgerController.cs" />
     <Compile Include="Controllers\OrganizationDetailsController.cs" />
     <Compile Include="Controllers\OrganizationModels.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\PriviligesController.cs" />
     <Compile Include="Controllers\PurchaseController.cs" />
     <Compile Include="Controllers\ReceiptController.cs" />
+    <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -260,10 +264,15 @@
     <Compile Include="Models\LedgerDetailsModels.cs" />
     <Compile Include="Models\LedgerModels.cs" />
     <Compile Include="Models\OrganizationModels.cs" />
+    <Compile Include="Models\PaymentModels.cs" />
     <Compile Include="Models\PaymentReceiptModel.cs" />
     <Compile Include="Models\PriviligesModel.cs" />
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\PurchaseModels.cs" />
+    <Compile Include="Models\RolesModel.cs" />
+    <Compile Include="Models\SalesDetailsModel.cs" />
+    <Compile Include="Models\SalesModels.cs" />
+    <Compile Include="Models\SalesSaveDetailsModel.cs" />
     <Compile Include="Models\UserModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -332,9 +341,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
