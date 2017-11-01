@@ -258,5 +258,414 @@ namespace Servo_API.Controllers
             SqlDtr.Close();
             return discount;
         }
+
+        [HttpPost]
+        [Route("api/ReceiptController/GetCustID")]
+        public string GetCustID(PaymentReceiptModel payment)
+        {
+            int OldCustID = 0;
+            if (payment.PanReceiptNo == true)
+            {
+                dbobj.ExecuteScalar("select cust_id from customer where cust_name=(select ledger_name from ledger_master where ledger_id = '" + payment.CustomerID + "')", ref OldCustID);
+                var customerID = OldCustID.ToString();
+            }
+
+            /****************Add by vikas 12.09.09 ********************************/
+            else
+            {
+                dbobj.ExecuteScalar("select cust_id from customer where cust_name=(select ledger_name from ledger_master where ledger_name= '" + payment.CustomerID + "')", ref OldCustID);
+                var customerID = OldCustID.ToString();
+            }
+
+            return OldCustID.ToString();
+        }
+
+        [HttpPost]
+        [Route("api/ReceiptController/InsertPayment")]
+        public void InsertPayment(PaymentReceiptModel payment)
+        {
+            object op = null;
+            if (payment.PanReceiptNo == true)
+            {
+                //************* Add This code by Mahesh on 05.07.008 ******************
+                int x = 0;
+                dbobj1.Insert_or_Update("delete from AccountsLedgerTable where Particulars = 'Receipt (" + payment.ReceiptNo + ")'", ref x);
+                dbobj1.Insert_or_Update("delete from AccountsLedgerTable where Particulars = 'Receipt_" + payment.Discount1 + " (" + payment.ReceiptNo + ")'", ref x);
+                dbobj1.Insert_or_Update("delete from AccountsLedgerTable where Particulars = 'Receipt_" + payment.Discount2 + " (" + payment.ReceiptNo + ")'", ref x);
+                dbobj1.Insert_or_Update("delete from CustomerLedgerTable where Particular = 'Payment Received(" + payment.ReceiptNo + ")' and CustID='" + payment.CustomerID + "'", ref x);
+                dbobj1.Insert_or_Update("delete from Payment_Receipt where Receipt_No='" + payment.ReceiptNo + "'", ref x);
+                //*********************************************************************
+                //dbobj.ExecProc(OprType.Insert,"InsertPayment",ref op,"@Ledger_ID",Ledger_ID,"@amount",Amount,"@Acc_Type",Acc_Type,"@BankName",Acc_Type,"@ChNo",txtChequeno.Text,"@ChDate",txtDate.Text,"@Mode",DropMode.SelectedItem.Text,"@Narration",txtNar.Text,"@CustBankName",txtCustBankName.Text);
+                if (payment.Mode == "Cash")
+                {
+                    dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "InsertPayment", ref op, "@Ledger_ID", payment.Cust_ID, "@amount", payment.Amount, "@Acc_Type", payment.AccountType, "@BankName", "", "@ChNo", "", "@ChDate", "", "@Mode", payment.Mode, "@Narration", "", "@CustBankName", "", "@RecDate", payment.RecDate, "@Cust_ID", payment.Cust_ID, "@Receipt", "Save", "@Receipt_No", payment.ReceiptNo);
+
+                }
+                else
+                {
+                    dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "InsertPayment", ref op, "@Ledger_ID", payment.Cust_ID, "@amount", payment.Amount, "@Acc_Type", payment.AccountType, "@BankName", payment.AccountType, "@ChNo", payment.ChequeNumber, "@ChDate", payment.ChequeDate, "@Mode", payment.Mode, "@Narration", payment.Narration, "@CustBankName", payment.CustBankName, "@RecDate", payment.RecDate, "@Cust_ID", payment.Cust_ID, "@Receipt", "Save", "@Receipt_No", payment.ReceiptNo);
+                }
+            }
+            else
+            {
+                if (payment.Mode == "Cash")
+                    dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "InsertPayment", ref op, "@Ledger_ID", payment.Cust_ID, "@amount", payment.Amount, "@Acc_Type", payment.AccountType, "@BankName", "", "@ChNo", "", "@ChDate", "", "@Mode", payment.Mode, "@Narration", "", "@CustBankName", "", "@RecDate", payment.RecDate, "@Cust_ID", payment.Cust_ID, "@Receipt", "Save", "@Receipt_No", payment.ReceiptNo);
+                else
+                    dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "InsertPayment", ref op, "@Ledger_ID", payment.Cust_ID, "@amount", payment.Amount, "@Acc_Type", payment.AccountType, "@BankName", payment.AccountType, "@ChNo", payment.ChequeNumber, "@ChDate", payment.ChequeDate, "@Mode", payment.Mode, "@Narration", payment.Narration, "@CustBankName", payment.CustBankName, "@RecDate", payment.RecDate, "@Cust_ID", payment.Cust_ID, "@Receipt", "Save", "@Receipt_No", payment.ReceiptNo);
+            }
+        }
+        //[HttpPost]
+        //[Route("api/ReceiptController/UpdatePayment")]
+        //public void UpdatePayment(PaymentReceiptModel payment)
+        //{
+        //    object op = null;
+        //    InventoryClass obj = new InventoryClass();
+        //    if (payment.PanReceiptNo == true)
+        //    {
+        //        int x = 0;
+        //        dbobj1.Insert_or_Update("delete from AccountsLedgerTable where Particulars = 'Receipt (" + payment.ReceiptNo + ")'", ref x);
+        //        dbobj1.Insert_or_Update("delete from AccountsLedgerTable where Particulars = 'Receipt_" + payment.Discount1 + " (" + payment.ReceiptNo + ")'", ref x);
+        //        dbobj1.Insert_or_Update("delete from AccountsLedgerTable where Particulars = 'Receipt_" + payment.Discount2 + " (" + payment.ReceiptNo + ")'", ref x);
+        //        dbobj1.Insert_or_Update("delete from CustomerLedgerTable where Particular = 'Payment Received(" + payment.ReceiptNo + ")'", ref x);
+        //        dbobj1.Insert_or_Update("delete from Payment_Receipt where Receipt_No='" + payment.ReceiptNo + "'", ref x);
+
+        //        int Curr_Credit = 0;
+        //        int Credit_Limit = 0;
+        //        dbobj.ExecuteScalar("Select Cr_Limit from customer where Cust_ID = '" + payment.CustomerID + "'", ref Credit_Limit);
+        //        dbobj.ExecuteScalar("Select Curr_Credit from customer where Cust_ID = '" + payment.CustomerID + "'", ref Curr_Credit);
+        //        //12.09.09 coment by vikas if(Curr_Credit < Credit_Limit)
+        //        if (Curr_Credit <= Credit_Limit)
+        //        {
+        //            Curr_Credit = Curr_Credit + int.Parse(payment.ReceivedAmount);
+
+        //            Curr_Credit = Curr_Credit - int.Parse(payment.TotalRec);         //Add by vikas 12.09.09
+
+        //            if (@Curr_Credit >= @Credit_Limit)
+        //                dbobj1.Insert_or_Update("update customer set Curr_Credit = '" + Credit_Limit + "' where Cust_ID  = '" + payment.CustomerID + "'", ref x);
+        //            else
+        //                dbobj1.Insert_or_Update("update customer set Curr_Credit = '" + Curr_Credit + "' where Cust_ID  = '" + payment.CustomerID + "'", ref x);
+        //        }
+        //        /****************** Add by vikas 12.09.09 **************************************************/
+        //        else
+        //        {
+        //            Curr_Credit = Curr_Credit + int.Parse(payment.ReceivedAmount);                                   //Add by vikas 12.09.09
+        //            Curr_Credit = Curr_Credit - int.Parse(payment.TotalRec);                                  //Add by vikas 12.09.09
+        //            dbobj1.Insert_or_Update("update customer set Cr_Limit = '" + Curr_Credit + "' where Cust_ID  = '" + payment.CustomerID + "'", ref x);
+        //        }
+        //        /*******************************************************************************************/
+
+        //        obj.InsertPaymentReceived();
+
+        //        //dbobj.ExecProc(OprType.Insert,"ProCustLedgerEntry",ref op,"@Cust_Name",DropCustName.Value,"@City",txtCity.Text.ToString(),"@Amount", TotalAmt,"@Rec_Acc_Type",Acc_Type,"@Receipt",Receipt,"@Receipt_No",DropReceiptNo.SelectedItem.Text,"@ActualAmount",txtRecAmount.Text,"@RecDate",System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(txtReceivedDate.Text)+" "+DateTime.Now.TimeOfDay.ToString())); //Comment by vikas sharma 30.04.09
+        //        dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProCustLedgerEntry", ref op, "@Cust_Name", payment.CustomerName, "@City", payment.City, "@Amount", payment.Amount, "@Rec_Acc_Type", payment.AccountType, "@Receipt", payment.Receipt, "@Receipt_No", payment.ReceiptNo, "@ActualAmount", payment.ReceivedAmount, "@RecDate", payment.RecDate);
+        //        if (payment.Discount1 != "" && payment.Discount1 != "0")
+        //            dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProSpacialDiscountEntry", ref op, "@Cust_ID", payment.Cust_ID, "@Receipt", "Save", "@Receipt_No", payment.ReceiptNo, "@Amount", txtDisc1.Text, "@Ledger_ID", payment.DiscID1, "@RecDate", payment.RecDate, "@DisType", payment.Discount1);
+        //        if (payment.Discount2 != "" && payment.Discount2 != "0")
+        //            dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProSpacialDiscountEntry", ref op, "@Cust_ID", payment.Cust_ID, "@Receipt", "Save", "@Receipt_No", payment.ReceiptNo, "@Amount", txtDisc2.Text, "@Ledger_ID", payment.DiscID2, "@RecDate", payment.RecDate, "@DisType", payment.Discount2);
+        //    }
+        //    else
+        //    {
+        //        obj.InsertPaymentReceived();
+
+        //        //dbobj.ExecProc(OprType.Insert,"ProCustLedgerEntry",ref op,"@Cust_Name",DropCustName.Value,"@City",txtCity.Text.ToString(),"@Amount", TotalAmt,"@Rec_Acc_Type",Acc_Type,"@Receipt",Receipt,"@Receipt_No",ReceiptNo.ToString(),"@ActualAmount",txtRecAmount.Text,"@RecDate",System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(txtReceivedDate.Text)+" "+DateTime.Now.TimeOfDay.ToString())); //Comment by Vikas sharma 30.04.09
+        //        dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProCustLedgerEntry", ref op, "@Cust_Name", _CustName, "@City", txtCity.Text.ToString(), "@Amount", TotalAmt, "@Rec_Acc_Type", Acc_Type, "@Receipt", Receipt, "@Receipt_No", ReceiptNo.ToString(), "@ActualAmount", txtRecAmount.Text, "@RecDate", System.Convert.ToDateTime(GenUtil.str2DDMMYYYY(txtReceivedDate.Text) + " " + DateTime.Now.TimeOfDay.ToString()));
+        //        if (payment.Discount1 != "" && payment.Discount1 != "0")
+        //            dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProSpacialDiscountEntry", ref op, "@Cust_ID", Cust_ID, "@Receipt", "Save", "@Receipt_No", ReceiptNo.ToString(), "@Amount", txtDisc1.Text, "@Ledger_ID", DiscID1, "@RecDate", System.Convert.ToDateTime(GenUtil.str2DDMMYYYY(txtReceivedDate.Text) + " " + DateTime.Now.TimeOfDay.ToString()), "@DisType", DisType1);
+        //        if (payment.Discount2 != "" && payment.Discount2 != "0")
+        //            dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProSpacialDiscountEntry", ref op, "@Cust_ID", Cust_ID, "@Receipt", "Save", "@Receipt_No", ReceiptNo.ToString(), "@Amount", txtDisc2.Text, "@Ledger_ID", DiscID2, "@RecDate", System.Convert.ToDateTime(GenUtil.str2DDMMYYYY(txtReceivedDate.Text) + " " + DateTime.Now.TimeOfDay.ToString()), "@DisType", DisType2);
+
+        //        /******************Add by vikas Sharma 12.09.09**********************************************/
+        //        int x = 0;
+        //        int Curr_Credit = 0;
+        //        int Credit_Limit = 0;
+        //        dbobj.ExecuteScalar("Select Cr_Limit from customer where Cust_ID = '" + OldCustID + "'", ref Credit_Limit);
+        //        dbobj.ExecuteScalar("Select Curr_Credit from customer where Cust_ID = '" + OldCustID + "'", ref Curr_Credit);
+        //        //12.09.09 coment by vikas if(Curr_Credit < Credit_Limit)
+        //        if (Curr_Credit < Credit_Limit)
+        //        {
+        //            Curr_Credit = Curr_Credit + int.Parse(txtRecAmount.Text);
+        //            if (@Curr_Credit >= @Credit_Limit)
+        //                dbobj1.Insert_or_Update("update customer set Curr_Credit = '" + Credit_Limit + "' where Cust_ID  = '" + customerID + "'", ref x);
+        //            else
+        //                dbobj1.Insert_or_Update("update customer set Curr_Credit = '" + Curr_Credit + "' where Cust_ID  = '" + customerID + "'", ref x);
+        //        }
+        //        else
+        //        {
+        //            Curr_Credit = Curr_Credit + int.Parse(txtRecAmount.Text);          //Add by vikas 12.09.09
+        //            Curr_Credit = Curr_Credit - int.Parse(Tot_Rec.ToString());         //Add by vikas 12.09.09
+        //            dbobj1.Insert_or_Update("update customer set Cr_Limit = '" + Curr_Credit + "' where Cust_ID  = '" + customerID + "'", ref x);
+        //        }
+        //        /********************End******************************************************/
+
+
+
+        //    }
+        //}
+
+        [HttpPost]
+        [Route("api/ReceiptController/GetReceiptNos")]
+        public List<string> GetReceiptNos(PaymentReceiptModel payment)
+        {
+            InventoryClass obj = new InventoryClass();
+            SqlDataReader SqlDtr = null;
+            string sql = "select distinct Receipt_No from Payment_Receipt where cast(floor(cast(Receipt_Date as float)) as datetime) >= '" + payment.ReceiptFromDate + "' and cast(floor(cast(Receipt_Date as float)) as datetime) <= '" + payment.ReceiptToDate + "' order by Receipt_No";
+            SqlDtr = obj.GetRecordSet(sql);
+            List<string> Receipts = new List<string>();
+            while (SqlDtr.Read())
+            {
+                Receipts.Add(SqlDtr.GetValue(0).ToString());
+            }
+            SqlDtr.Close();
+            return Receipts;
+        }
+        [HttpGet]
+        [Route("api/ReceiptController/GetLastID")]
+        public string GetLastID()
+        {
+            InventoryClass obj = new InventoryClass();
+            SqlDataReader SqlDtr = null;
+            string Id = null;
+            string sql = "select max(Receipt_No)+1 from Payment_Receipt";
+            SqlDtr = obj.GetRecordSet(sql);
+            while (SqlDtr.Read())
+            {
+                if (SqlDtr.GetValue(0).ToString() != "" && SqlDtr.GetValue(0).ToString() != null)
+                    Id = SqlDtr.GetValue(0).ToString();
+                else
+                    Id = "1";
+            }
+            SqlDtr.Close();
+            return Id;
+        }
+        [HttpGet]
+        [Route("api/ReceiptController/GetSelectedReceipt")]
+        public PaymentReceiptModel GetSelectedReceipt(string ReceiptNo)
+        {
+            PaymentReceiptModel receipt = new PaymentReceiptModel();
+            InventoryClass obj = new InventoryClass();
+            InventoryClass obj1 = new InventoryClass();
+            SqlDataReader SqlDtr;
+
+            string sql;
+            sql = "select * from payment_receipt where Receipt_No=" + ReceiptNo;
+            SqlDtr = obj.GetRecordSet(sql);
+            SqlDataReader rdr = null;
+            double totdisc = 0;
+            //bool Flag=true;
+
+            //*****while(SqlDtr.Read())
+            if (SqlDtr.Read())
+            {
+                receipt.SubReceiptNo = SqlDtr["SubReceiptNo"].ToString();
+
+                receipt.InvoiceNo = SqlDtr.GetValue(3).ToString();
+                receipt.Mode = SqlDtr.GetValue(8).ToString();
+                if (SqlDtr.GetValue(5).ToString() != "")
+                {
+                    dbobj.SelectQuery("select Ledger_Name,Ledger_ID from Ledger_Master where Ledger_ID='" + SqlDtr.GetValue(5).ToString() + "'", ref rdr);
+                    if (rdr.Read())
+                    {
+                        receipt.BankName = rdr["Ledger_Name"].ToString();
+                        receipt.LedgerID = rdr["Ledger_ID"].ToString();
+                    }
+                    rdr.Close();
+                }
+                else
+                {
+                    receipt.BankName = "0";
+                    receipt.LedgerID = "0";
+                }
+                //txtBankName.Text=SqlDtr.GetValue(5).ToString();
+                receipt.ChequeNumber = SqlDtr.GetValue(6).ToString();
+                receipt.ChequeDate = SqlDtr.GetValue(7).ToString();
+                receipt.RecDate = SqlDtr["Receipt_Date"].ToString();
+                //Invoice_Date=txtReceivedDate.Text.ToString();
+                receipt.Invoice_Date = SqlDtr["Receipt_Date"].ToString();
+                //********
+                receipt.ReceivedAmount = SqlDtr["Received_Amount"].ToString();
+                if (SqlDtr["Discount1"].ToString() != "")
+                    receipt.Discount1= SqlDtr["Discount1"].ToString();
+                if (SqlDtr["Discount2"].ToString() != "")
+                    receipt.Discount2=SqlDtr["Discount2"].ToString();
+                //********
+                //str = SqlDtr.GetValue(4).ToString();
+                //str=System.Convert.ToString(double.Parse(SqlDtr.GetValue(4).ToString())-totdisc);
+                //Cache["RecAmt"] = SqlDtr.GetValue(4).ToString();
+                //Cache["RecAmt"]=System.Convert.ToString(double.Parse(SqlDtr.GetValue(4).ToString())-totdisc);
+                receipt.Cust_ID = SqlDtr["Cust_ID"].ToString();
+                receipt.CustomerID = SqlDtr["Cust_ID"].ToString();
+                receipt.Narration = SqlDtr["Narration"].ToString();
+                receipt.ReceivedAmount = SqlDtr["Received_Amount"].ToString();
+                receipt.CustBankName = SqlDtr["CustBankName"].ToString();
+                //Textbox1.Text = totdisc.ToString();
+
+                //Tot_Rec = Convert.ToDouble(totdisc.ToString());                       //Add by vikas 12.09.09
+
+                dbobj.SelectQuery("select Ledger_Name from Ledger_Master where Ledger_ID='" + SqlDtr["DiscLedgerID1"].ToString() + "'", ref rdr);
+                if (rdr.Read())
+                {
+                    receipt.DiscLedgerID1 = rdr["Ledger_Name"].ToString();
+                    //DiscLedgerName1 = rdr["Ledger_Name"].ToString();
+                }
+                else
+                {
+                    receipt.DiscLedgerID1 = "0";
+                    //DiscLedgerName1 = "";
+                }
+                rdr.Close();
+                dbobj.SelectQuery("select Ledger_Name from Ledger_Master where Ledger_ID='" + SqlDtr["DiscLedgerID2"].ToString() + "'", ref rdr);
+                if (rdr.Read())
+                {
+                    receipt.DiscLedgerID2 = rdr["Ledger_Name"].ToString();
+                    //DiscLedgerName2 = rdr["Ledger_Name"].ToString();
+                }
+                else
+                {
+                    receipt.DiscLedgerID2 = "0";
+                    //DiscLedgerName2 = "";
+                }
+                rdr.Close();
+                //if (DropDiscount1.SelectedIndex == 0)
+                //    txtDisc1.Enabled = false;
+                //else
+                //    txtDisc1.Enabled = true;
+                //if (DropDiscount2.SelectedIndex == 0)
+                //    txtDisc2.Enabled = false;
+                //else
+                //    txtDisc2.Enabled = true;
+                //if (double.Parse(SqlDtr["Discount1"].ToString()) > 0)
+                //    TempDiscAmt1 = double.Parse(SqlDtr["Discount1"].ToString());
+                //else
+                //    TempDiscAmt1 = 0;
+                //if (double.Parse(SqlDtr["Discount2"].ToString()) > 0)
+                //    TempDiscAmt2 = double.Parse(SqlDtr["Discount2"].ToString());
+                //else
+                //    TempDiscAmt2 = 0;
+                //txtDisc1.Text = SqlDtr["Discount1"].ToString();
+                //txtDisc2.Text = SqlDtr["Discount2"].ToString();
+                //DropCustName.Disabled = false;
+
+            }
+            SqlDtr.Close();
+            return receipt;
+        }
+        [HttpGet]
+        [Route("api/ReceiptController/GetCustomerPlaceByName")]
+        public CustomerModels GetCustomerPlaceByName(string CustomerID)
+        {
+            InventoryClass obj = new InventoryClass();
+            CustomerModels custmer = new CustomerModels();
+            string OldCustomerID = "";
+            int FlagFlag = 0;
+            string City_Name = "";
+            string sql = "";
+            sql = "select Cust_Name,City,cust_id from Ledger_Master l,Customer c where l.ledger_name=c.cust_name and Ledger_ID='" + CustomerID + "'";
+            var SqlDtr = obj.GetRecordSet(sql);
+            if (SqlDtr.Read())
+            {
+                custmer.CustomerName = SqlDtr.GetValue(0).ToString();
+                if (SqlDtr.GetValue(1).ToString().Equals(""))
+                {
+                    custmer.City = "";
+                    City_Name = "";
+                }
+                else
+                {
+                    custmer.City = SqlDtr.GetValue(1).ToString();
+                    City_Name = SqlDtr.GetValue(1).ToString();
+                }
+                OldCustomerID = SqlDtr.GetValue(2).ToString();
+                custmer.CustomerID = OldCustomerID;
+                FlagFlag = 1;
+                custmer.Flag = 1;
+            }
+            SqlDtr.Close();
+            if (FlagFlag == 0)
+            {
+                sql = "select Ledger_Name,city,Ledger_ID from Ledger_Master l,Employee e where l.ledger_name=e.Emp_name and Ledger_ID='" + CustomerID + "'";
+                SqlDtr = obj.GetRecordSet(sql);
+                if (SqlDtr.Read())
+                {
+                    custmer.CustomerName = SqlDtr.GetValue(0).ToString() + ":" + SqlDtr.GetValue(2).ToString();
+                    if (SqlDtr.GetValue(1).ToString().Equals(""))
+                        custmer.City = "";
+                    else
+                        custmer.City = SqlDtr.GetValue(1).ToString();
+                    FlagFlag = 1;
+                    custmer.Flag = 1;
+                    //DropDiscount1.Enabled = false;
+                    //DropDiscount2.Enabled = false;
+                    //txtDisc1.Enabled = false;
+                    //txtDisc2.Enabled = false;
+                }
+                SqlDtr.Close();
+            }
+            if (FlagFlag == 0)
+            {
+                sql = "select Ledger_Name,Ledger_ID from Ledger_Master where Ledger_ID='" + CustomerID + "'";
+                SqlDtr = obj.GetRecordSet(sql);
+                if (SqlDtr.Read())
+                {
+                    custmer.CustomerName = SqlDtr.GetValue(0).ToString() + ":" + SqlDtr.GetValue(1).ToString();
+                    custmer.City = "";
+                    //DropDiscount1.Enabled = false;
+                    //DropDiscount2.Enabled = false;
+
+                }
+                SqlDtr.Close();
+            }
+            return custmer;
+        }
+        [HttpGet]
+        [Route("api/ReceiptController/GetNextReceiptNo")]
+        public string GetNextReceiptNo()
+        {
+            SqlDataReader rdr = null;
+            string ReceiptNo = "";
+            dbobj.SelectQuery("select max(Receipt_No)+1 from payment_receipt", ref rdr);
+            if (rdr.Read())
+            {
+                if (rdr.GetValue(0).ToString() != null && rdr.GetValue(0).ToString() != "")
+                    ReceiptNo = rdr.GetValue(0).ToString();
+                else
+                    ReceiptNo = "1001";
+            }
+            return ReceiptNo;
+        }
+        [HttpGet]
+        [Route("api/ReceiptController/GetBank")]
+        public List<string> GetBank()
+        {
+            InventoryClass obj = new InventoryClass();
+            SqlDataReader rdr;
+            List<string> Banks = new List<string>();
+            string str = "select Ledger_Name from Ledger_Master where sub_grp_id='117' or sub_grp_id='126' or sub_grp_id='127' order by Ledger_Name";
+            rdr = obj.GetRecordSet(str);
+            while (rdr.Read())
+            {
+                Banks.Add(rdr.GetValue(0).ToString());
+            }
+            rdr.Close();
+            return Banks;
+        }
+        [HttpPost]
+        [Route("api/ReceiptController/DeleteReceipt")]
+        public string DeleteReceipt(PaymentReceiptModel payment)
+        {
+            int x = 0, Cust_ID = 0;
+            object obj = null;
+            dbobj.Insert_or_Update("delete from AccountsLedgerTable where particulars = 'Receipt (" + payment.ReceiptNo + ")'", ref x);
+            dbobj1.Insert_or_Update("delete from AccountsLedgerTable where Particulars = 'Receipt_" + payment.DiscountType1 + " (" + payment.ReceiptNo + ")'", ref x);
+            dbobj1.Insert_or_Update("delete from AccountsLedgerTable where Particulars = 'Receipt_" + payment.DiscountType2 + " (" + payment.ReceiptNo + ")'", ref x);
+            dbobj.Insert_or_Update("delete from CustomerLedgerTable where particular = 'Payment Received(" + payment.ReceiptNo + ")'", ref x);
+            dbobj.Insert_or_Update("delete from Payment_Receipt where Receipt_No='" + payment.ReceiptNo + "'", ref x);
+            dbobj.Insert_or_Update("insert into payment_receipt values(" + payment.ReceiptNo + ",'Deleted','" + payment.Invoice_Date + "','','','','','','','','','','','','','')", ref x);
+
+            dbobj.ExecuteScalar("select cust_id from customer where cust_name=(select ledger_name from ledger_master where ledger_id = '" + payment.CustomerID + "')", ref Cust_ID);
+            dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "UpdateAccountsLedgerForCustomer", ref obj, "@Ledger_ID", payment.CustomerID, "@Invoice_Date", payment.RecDate);
+            dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "UpdateCustomerLedgerForCustomer", ref obj, "@Cust_ID", Cust_ID, "@Invoice_Date", payment.RecDate);
+            string message ="Receipt Cancellation Successfully";
+            return message;
+        }
     }
 }

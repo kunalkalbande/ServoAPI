@@ -260,6 +260,7 @@
     <Compile Include="Models\LedgerDetailsModels.cs" />
     <Compile Include="Models\LedgerModels.cs" />
     <Compile Include="Models\OrganizationModels.cs" />
+    <Compile Include="Models\PaymentReceiptModel.cs" />
     <Compile Include="Models\PriviligesModel.cs" />
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\PurchaseModels.cs" />
