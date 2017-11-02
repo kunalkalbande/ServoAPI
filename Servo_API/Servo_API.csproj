@@ -249,6 +249,7 @@
     <Compile Include="Controllers\PriviligesController.cs" />
     <Compile Include="Controllers\PurchaseController.cs" />
     <Compile Include="Controllers\ReceiptController.cs" />
+    <Compile Include="Controllers\VehicleEntryController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -271,6 +272,7 @@
     <Compile Include="Models\PriviligesModel.cs" />
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\PurchaseModels.cs" />
+    <Compile Include="Models\VehicleEntryModel.cs" />
     <Compile Include="Models\RolesModel.cs" />
     <Compile Include="Models\SalesDetailsModel.cs" />
     <Compile Include="Models\SalesModels.cs" />
