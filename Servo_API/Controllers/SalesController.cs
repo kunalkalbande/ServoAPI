@@ -2877,7 +2877,7 @@ namespace Servo_API.Controllers
                 sales.Invoice_Date = GenUtil.str2DDMMYYYY(strDate);
                 //tempInvoiceDate.Value = GenUtil.str2DDMMYYYY(strDate);
                 sales.Sales_Type = (SqlDtr.GetValue(2).ToString());
-                sales.Under_SalesMan = SqlDtr.GetValue(4).ToString();
+                sales.Under_SalesMan = SqlDtr["Emp_Name"].ToString();
                 //DropUnderSalesMan.SelectedIndex=(DropUnderSalesMan.Items.IndexOf((DropUnderSalesMan.Items.FindByValue(SqlDtr.GetValue(4).ToString()))));
 
                 sales.Vehicle_No = SqlDtr.GetValue(5).ToString();
