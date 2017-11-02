@@ -21,8 +21,8 @@ namespace Servo_API.Controllers
 
 
         [HttpGet]
-        [Route("api/payment/btnEdit1_Click")]
-        public List<string> btnEdit1_Click()
+        [Route("api/payment/FillLedgerName")]
+        public List<string> FillLedgerName()
         {
             List<string> LedgerName = new List<string>();
             string sql = "select Ledger_Name+';'+cast(Ledger_ID_Dr as varchar)+':'+cast(voucher_id as varchar) from Payment_transaction pt, Ledger_Master lm where pt.Ledger_ID_Dr = lm.Ledger_ID  order by Voucher_id";
@@ -36,9 +36,9 @@ namespace Servo_API.Controllers
         }
 
         [HttpGet]
-        [Route("api/payment/DropLedgerName1_SelectedIndexChanged")]
+        [Route("api/payment/LedgerName_SelectedIndexChanged")]
 
-        public PaymentModels DropLedgerName1_SelectedIndexChanged(string VoucherId)
+        public PaymentModels LedgerName_SelectedIndexChanged(string VoucherId)
         {
             SqlDataReader SqlDtr, SqlDtr1;
             SqlCommand SqlCmd;
@@ -79,9 +79,9 @@ namespace Servo_API.Controllers
         }
 
         [HttpGet]
-        [Route("api/payment/btnDelete_Click")]
+        [Route("api/payment/DeletePayment")]
 
-        public PaymentModels btnDelete_Click(string CustName, string VoucherId)
+        public PaymentModels DeletePayment(string CustName, string VoucherId)
         {
             SqlDataReader SqlDtr;
             string sql = "select Cust_id from Customer where Cust_Name='" + CustName + "' ";
@@ -105,9 +105,9 @@ namespace Servo_API.Controllers
         }
 
         [HttpPost]
-        [Route("api/payment/btnSave_Click")]
+        [Route("api/payment/SavePayment")]
 
-        public PaymentModels btnSave_Click(PaymentModels payment)
+        public PaymentModels SavePayment(PaymentModels payment)
         {
             SqlDataReader SqlDtr;
             string Vouch_ID;
@@ -144,9 +144,9 @@ namespace Servo_API.Controllers
         }
 
         [HttpGet]
-        [Route("api/payment/btnEdit_Click")]
+        [Route("api/payment/SelectLedgerId")]
 
-        public string btnEdit_Click(string Ledger_Name1)
+        public string SelectLedgerId(string Ledger_Name1)
         {
             SqlDataReader SqlDtr;
             string pay = "";
@@ -162,9 +162,9 @@ namespace Servo_API.Controllers
         }
 
         [HttpGet]
-        [Route("api/payment/btnEdit_Click2")]
+        [Route("api/payment/SelectCustId")]
 
-        public PaymentModels btnEdit_Click2(string Ledger_ID1, string OldLedger_ID)
+        public PaymentModels SelectCustId(string Ledger_ID1, string OldLedger_ID)
         {
             SqlDataReader SqlDtr;
             string sql = "select Cust_ID from Customer,Ledger_Master where Ledger_Name = Cust_Name and Ledger_ID ='" + Ledger_ID1 + "' ";
@@ -186,9 +186,9 @@ namespace Servo_API.Controllers
         }
 
         [HttpPost]
-        [Route("api/payment/btnEdit_Click3")]
+        [Route("api/payment/UpdatePayment")]
 
-        public PaymentModels btnEdit_Click3(PaymentModels payment)
+        public PaymentModels UpdatePayment(PaymentModels payment)
         {
             SqlDataReader SqlDtr;
             SqlCommand SqlCmd;
@@ -231,9 +231,9 @@ namespace Servo_API.Controllers
         }
 
         [HttpPost]
-        [Route("api/payment/btnEdit_Click4")]
+        [Route("api/payment/DeleteAndUpdatePayment")]
 
-        public PaymentModels btnEdit_Click4(PaymentModels payment)
+        public PaymentModels DeleteAndUpdatePayment(PaymentModels payment)
         {
             SqlDataReader SqlDtr;
             string sql;
@@ -262,5 +262,324 @@ namespace Servo_API.Controllers
             //dbobj.ExecProc(DBOperations.OprType.Insert, "ProCustomerLedgerEntry", ref obj1, "@Voucher_ID", payment.Vouch_ID, "@Ledger_ID", payment.By_ID1, "@Amount", payment.Amount1, "@Type", "Cr.", "@Invoice_Date", payment.Entry_Date);
             return payment;
         }
+
+        [HttpGet]
+        [Route("api/payment/page_load")]
+
+        public string page_load()
+        {
+            SqlDataReader SqlDtr;
+            string sql, str = "";
+            sql = "select Acc_Date_from from Organisation";
+            SqlDtr = obj.GetRecordSet(sql);
+            while (SqlDtr.Read())
+            {
+                str = GenUtil.trimDate(SqlDtr["Acc_Date_from"].ToString());
+            }
+            SqlDtr.Close();
+            return str;
+        }
+
+        [HttpGet]
+        [Route("api/payment/fillCombo")]
+
+        public string fillCombo()
+        {
+            SqlDataReader SqlDtr;
+            string sql, texthiddenprod = "";
+            sql = "Select Ledger_Name,Ledger_ID from Ledger_Master lm,Ledger_master_sub_grp lmsg  where  lm.sub_grp_id = lmsg.sub_grp_id and lmsg.sub_grp_name not like 'Bank%' and lmsg.sub_grp_name <> 'Cash in hand' and lmsg.sub_grp_name <> 'Discount' Order by Ledger_Name";
+            SqlDtr = obj.GetRecordSet(sql);
+            if (SqlDtr.HasRows)
+            {
+                texthiddenprod = "Select,";
+                while (SqlDtr.Read())
+                {
+                    texthiddenprod += SqlDtr["Ledger_Name"].ToString() + ";" + SqlDtr["Ledger_ID"].ToString() + ",";
+                }
+            }
+            SqlDtr.Close();
+            return texthiddenprod;
+        }
+
+        [HttpGet]
+        [Route("api/payment/fillCombo2")]
+
+        public PaymentModels fillCombo2()
+        {
+            SqlDataReader SqlDtr;
+            List<string> DropBy = new List<string>();
+
+            string sql, str, strCash;
+            strCash = "";
+            sql = "Select Ledger_Name,sub_grp_name from Ledger_Master lm,Ledger_master_sub_grp lmsg  where  lm.sub_grp_id = lmsg.sub_grp_id  and (sub_grp_name='Cash in hand' or sub_grp_name like'Bank%')  Order by Ledger_Name";
+            SqlDtr = obj.GetRecordSet(sql);
+            while (SqlDtr.Read())
+            {
+                str = SqlDtr["sub_grp_name"].ToString();
+                if (str.Equals("Cash in hand") || str.IndexOf("Bank") > -1)
+                {
+                    DropBy.Add(SqlDtr["Ledger_Name"].ToString());
+                    if (str.Equals("Cash in hand"))
+                        strCash = SqlDtr["Ledger_Name"].ToString();
+                }
+            }
+            SqlDtr.Close();
+            payment.DropBy1 = DropBy;
+            payment.strCash = strCash;
+            return payment;
+        }
+
+        [HttpGet]
+        [Route("api/payment/makingReport")]
+        public PaymentModels makingReport(string str)
+        {
+            SqlDataReader SqlDtr;
+            string sql;
+            sql = "select address,city from customer,ledger_master where ledger_name=cust_name and ledger_id='" + str + "'";
+            SqlDtr = obj.GetRecordSet(sql);
+            if (SqlDtr.Read())
+            {
+                payment.addr = SqlDtr.GetValue(0).ToString();
+                payment.city = SqlDtr.GetValue(1).ToString();
+            }
+            SqlDtr.Close();
+            return payment;
+        }
+
+        [HttpGet]
+        [Route("api/payment/SeqCashAccount")]
+
+        public PaymentModels SeqCashAccount(string Invoice_Date)
+        {
+            SqlDataReader SqlDtr;
+            SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
+            SqlCommand cmd;
+            string sql;
+            sql = "select * from AccountsLedgerTable where Ledger_ID=(select Ledger_ID from Ledger_Master where sub_grp_id=118) and Entry_Date>='" + Invoice_Date + "' order by entry_date";
+            SqlDtr = obj.GetRecordSet(sql);
+
+
+            int i = 0;
+            while (SqlDtr.Read())
+            {
+                if (i == 0)
+                {
+                    payment.BalType = SqlDtr["Bal_Type"].ToString();
+                    i++;
+                }
+                else
+                {
+                    if (double.Parse(SqlDtr["Credit_Amount"].ToString()) != 0)
+                    {
+                        if (payment.BalType == "Cr")
+                        {
+                            payment.Bal += double.Parse(SqlDtr["Credit_Amount"].ToString());
+                            payment.BalType = "Cr";
+                        }
+                        else
+                        {
+                            payment.Bal -= double.Parse(SqlDtr["Credit_Amount"].ToString());
+                            if (payment.Bal < 0)
+                            {
+                                payment.Bal = double.Parse(payment.Bal.ToString().Substring(1));
+                                payment.BalType = "Cr";
+                            }
+                            else
+                                payment.BalType = "Dr";
+                        }
+                    }
+                    else if (double.Parse(SqlDtr["Debit_Amount"].ToString()) != 0)
+                    {
+                        if (payment.BalType == "Dr")
+                            payment.Bal += double.Parse(SqlDtr["Debit_Amount"].ToString());
+                        else
+                        {
+                            payment.Bal -= double.Parse(SqlDtr["Debit_Amount"].ToString());
+                            if (payment.Bal < 0)
+                            {
+                                payment.Bal = double.Parse(payment.Bal.ToString().Substring(1));
+                                payment.BalType = "Dr";
+                            }
+                            else
+                                payment.BalType = "Cr";
+                        }
+                    }
+                    Con.Open();
+                    cmd = new SqlCommand("update AccountsLedgerTable set Balance='" + payment.Bal.ToString() + "',Bal_Type='" + payment.BalType + "' where Ledger_ID='" + SqlDtr["Ledger_ID"].ToString() + "' and Particulars='" + SqlDtr["Particulars"].ToString() + "' ", Con);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    Con.Close();
+                }
+            }
+            SqlDtr.Close();
+            return payment;
+        }
+
+        [HttpGet]
+        [Route("api/payment/CustomerUpdate")]
+
+        public void CustomerUpdate(string str,string Invoice_Date)
+        {
+            SqlDataReader SqlDtr;
+            string sql;
+            object obj1 = null;
+            dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "UpdateAccountsLedgerForCustomer", ref obj1, "@Ledger_ID", str, "@Invoice_Date", Invoice_Date);
+            sql = "select cust_id from customer,ledger_master where ledger_name=cust_name and ledger_id='" + str + "'";
+            SqlDtr = obj.GetRecordSet(sql);
+            if (SqlDtr.Read())
+            {
+                dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "UpdateCustomerLedgerForCustomer", ref obj1, "@Cust_ID", SqlDtr["Cust_ID"].ToString(), "@Invoice_Date", Convert.ToDateTime(Invoice_Date));
+            }
+        }
+
+        [HttpGet]
+        [Route("api/payment/CustomerInsertUpdate")]
+
+        public void CustomerInsertUpdate(string Ledger_ID1,string Invoice_Date)
+        {
+            SqlDataReader SqlDtr=null;
+            SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
+            SqlCommand cmd;
+            string sql,str;
+            int i = 0;
+            sql = "select top 1 Entry_Date from AccountsLedgerTable where Ledger_ID='" + Ledger_ID1 + "' and Entry_Date<=Convert(datetime,'" + Invoice_Date + "',103) order by entry_date desc";
+            SqlDtr = obj.GetRecordSet(sql);
+            if (SqlDtr.Read())
+            {
+                var entry_date = GenUtil.str2MMDDYYYY(SqlDtr.GetValue(0).ToString());
+                str = "select * from AccountsLedgerTable where Ledger_ID='" + Ledger_ID1 + "' and Entry_Date>='" + entry_date + "' order by entry_date";
+            }
+            else
+                str = "select * from AccountsLedgerTable where Ledger_ID='" + Ledger_ID1 + "' order by entry_date";
+            SqlDtr.Close();
+
+            SqlDtr = obj.GetRecordSet(str);
+            while (SqlDtr.Read())
+            {
+                if (i == 0)
+                {
+                    payment.BalType = SqlDtr["Bal_Type"].ToString();
+                    payment.Bal = double.Parse(SqlDtr["Balance"].ToString());
+                    i++;
+                }
+                else
+                {
+                    if (double.Parse(SqlDtr["Credit_Amount"].ToString()) != 0)
+                    {
+                        if (payment.BalType == "Cr")
+                        {
+                            string ss = SqlDtr["Credit_Amount"].ToString();
+                            payment.Bal += double.Parse(SqlDtr["Credit_Amount"].ToString());
+                            payment.BalType = "Cr";
+                        }
+                        else
+                        {
+                            string ss = SqlDtr["Credit_Amount"].ToString();
+                            payment.Bal -= double.Parse(SqlDtr["Credit_Amount"].ToString());
+                            if (payment.Bal < 0)
+                            {
+                                payment.Bal = double.Parse(payment.Bal.ToString().Substring(1));
+                                payment.BalType = "Cr";
+                            }
+                            else
+                                payment.BalType = "Dr";
+                        }
+                    }
+                    else if (double.Parse(SqlDtr["Debit_Amount"].ToString()) != 0)
+                    {
+                        if (payment.BalType == "Dr")
+                        {
+                            string ss = SqlDtr["Debit_Amount"].ToString();
+                            payment.Bal += double.Parse(SqlDtr["Debit_Amount"].ToString());
+                        }
+                        else
+                        {
+                            string ss = SqlDtr["Debit_Amount"].ToString();
+                            payment.Bal -= double.Parse(SqlDtr["Debit_Amount"].ToString());
+                            if (payment.Bal < 0)
+                            {
+                                payment.Bal = double.Parse(payment.Bal.ToString().Substring(1));
+                                payment.BalType = "Dr";
+                            }
+                            else
+                                payment.BalType = "Cr";
+                        }
+                    }
+                    Con.Open();
+                    string str11 = "update AccountsLedgerTable set Balance='" + payment.Bal.ToString() + "',Bal_Type='" + payment.BalType + "' where Ledger_ID='" + SqlDtr["Ledger_ID"].ToString() + "' and Particulars='" + SqlDtr["Particulars"].ToString() + "'";
+                    cmd = new SqlCommand("update AccountsLedgerTable set Balance='" + payment.Bal.ToString() + "',Bal_Type='" + payment.BalType + "' where Ledger_ID='" + SqlDtr["Ledger_ID"].ToString() + "' and Particulars='" + SqlDtr["Particulars"].ToString() + "'", Con);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    Con.Close();
+                }
+            }
+            SqlDtr.Close();
+
+            sql = "select top 1 EntryDate from CustomerLedgerTable where CustID = (select Cust_ID from Customer,Ledger_Master where Ledger_Name = Cust_Name and Ledger_ID = '" + Ledger_ID1 + "') and EntryDate<= Convert(datetime, '" + Invoice_Date + "', 103) order by entrydate desc";
+            SqlDtr = obj.GetRecordSet(sql);
+            if (SqlDtr.Read())
+                str = "select * from CustomerLedgerTable where CustID=(select Cust_ID from Customer,Ledger_Master where Ledger_Name=Cust_Name and Ledger_ID='" + Ledger_ID1 + "') and  EntryDate>=Convert(datetime,'" + SqlDtr.GetValue(0).ToString() + "',103) order by entrydate";
+            else
+                str = "select * from CustomerLedgerTable where CustID=(select Cust_ID from Customer c,Ledger_Master l where Ledger_Name=Cust_Name and Ledger_ID='" + Ledger_ID1 + "') order by entrydate";
+            SqlDtr.Close();
+
+            SqlDtr = obj.GetRecordSet(str);
+            while (SqlDtr.Read())
+            {
+                if (i == 0)
+                {
+                    payment.BalType = SqlDtr["BalanceType"].ToString();
+                    payment.Bal = double.Parse(SqlDtr["Balance"].ToString());
+                    i++;
+                }
+                else
+                {
+                    if (double.Parse(SqlDtr["CreditAmount"].ToString()) != 0)
+                    {
+                        if (payment.BalType == "Cr.")
+                        {
+                            payment.Bal += double.Parse(SqlDtr["CreditAmount"].ToString());
+                            payment.BalType = "Cr.";
+                        }
+                        else
+                        {
+                            payment.Bal -= double.Parse(SqlDtr["CreditAmount"].ToString());
+                            if (payment.Bal < 0)
+                            {
+                                payment.Bal = double.Parse(payment.Bal.ToString().Substring(1));
+                                payment.BalType = "Cr.";
+                            }
+                            else
+                                payment.BalType = "Dr.";
+                        }
+                    }
+                    else if (double.Parse(SqlDtr["DebitAmount"].ToString()) != 0)
+                    {
+                        if (payment.BalType == "Dr.")
+                            payment.Bal += double.Parse(SqlDtr["DebitAmount"].ToString());
+                        else
+                        {
+                            payment.Bal -= double.Parse(SqlDtr["DebitAmount"].ToString());
+                            if (payment.Bal < 0)
+                            {
+                                payment.Bal = double.Parse(SqlDtr.ToString().Substring(1));
+                                payment.BalType = "Dr.";
+                            }
+                            else
+                                payment.BalType = "Cr.";
+                        }
+                    }
+                    Con.Open();
+                    cmd = new SqlCommand("update CustomerLedgerTable set Balance='" + payment.Bal.ToString() + "',BalanceType='" + payment.BalType + "' where CustID='" + SqlDtr["CustID"].ToString() + "' and Particular='" + SqlDtr["Particular"].ToString() + "'", Con);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    Con.Close();
+                }
+            }
+            SqlDtr.Close();
+        }
+
+       
+
     }
 }

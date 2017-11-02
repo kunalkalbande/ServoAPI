@@ -43,6 +43,15 @@ namespace Servo_API.Models
         public string DropBy { get; set; }
         public string Vouch_ID { get; set; }
         public string OldCust_ID { get; set; }
+        public List<string> DropBy1 { get; set; }
+        public string strCash { get; set; }
+
+        public string addr { get; set; }
+        public string city { get; set; }
+        public string BalType { get; set; }
+        public double Bal { get; set; }
+        public string Particulars { get; set; }
+        public double Bal1 { get; set; }
 
     }
 }
