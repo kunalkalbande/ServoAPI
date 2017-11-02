@@ -165,7 +165,7 @@ namespace Servo_API.Controllers
             try
             {
 
-                #region Fetch Next Role ID                
+                #region Fetch Next Vehicle ID                
                 SqlDataReader SqlDtr = null;
                 dbobj.SelectQuery("Select max(vehicledetail_id) from vehicleentry", ref SqlDtr);
                 if (SqlDtr.Read())
@@ -383,6 +383,152 @@ namespace Servo_API.Controllers
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        [HttpGet]
+        [Route("api/VehicleEntry/GetDropVehicleID_SelectedData")]
+        public VehicleEntryModel GetDropVehicleID_SelectedData(string VehicleID)
+        {
+
+            VehicleEntryModel vehEntryModel = null;
+            
+            try
+            {
+                
+                SqlDataReader SqlDtr = null;
+                SqlDataReader SqlDtr1 = null;
+                dbobj.SelectQuery("Select * from vehicleentry where vehicledetail_id = " + VehicleID.Trim(), ref SqlDtr);
+                if (SqlDtr.Read())
+                {
+                    vehEntryModel = new VehicleEntryModel();
+                    vehEntryModel.VehicleType2 = SqlDtr["Vehicle_Type"].ToString().Trim();
+                    vehEntryModel.Vehicleno = SqlDtr["Vehicle_No"].ToString().Trim();
+                    vehEntryModel.Vehiclenm = SqlDtr["Vehicle_Name"].ToString().Trim();
+                    vehEntryModel.RTO_Reg_Val_yrs = SqlDtr["RTO_Reg_Val_Yrs"].ToString().Trim();
+                    vehEntryModel.Model_name = SqlDtr["Model_Name"].ToString().Trim();
+                    vehEntryModel.RTO_Reg_No = SqlDtr["RTO_Reg_No"].ToString().Trim();
+                    vehEntryModel.Vehicle_Man_Date = SqlDtr["Vehicle_man_date"].ToString().Trim();
+                    vehEntryModel.Insurance_No = SqlDtr["Insurance_No"].ToString().Trim();
+                    vehEntryModel.Meter_Reading = SqlDtr["Meter_Reading"].ToString().Trim();
+                    vehEntryModel.Insurance_validity = SqlDtr["Insurance_Validity"].ToString().Trim();
+
+                    string route_name = "";
+                    dbobj.SelectQuery("Select route_name from route where route_id=" + SqlDtr["Vehicle_Route"].ToString().Trim(), ref SqlDtr1);
+                    if (SqlDtr1.Read())
+                    {
+                        route_name = SqlDtr1.GetValue(0).ToString();
+                    }
+                    SqlDtr1.Close();
+
+                    vehEntryModel.RouteName = route_name;
+
+                    vehEntryModel.Insurance_Comp_name = SqlDtr["Insurance_Comp_Name"].ToString().Trim();
+                    //					string fuel_used = "";
+                    //					dbobj.SelectQuery("Select Fuel_used from vehicleentry where vehicledetail_id='"+DropVehicleID.SelectedItem.Text+"'",ref SqlDtr1); 
+                    //					if(SqlDtr1.Read())
+                    //					{
+                    //						fuel_used = SqlDtr1.GetValue(0).ToString();  
+                    //
+                    //					}
+                    //					SqlDtr1.Close();
+                    vehEntryModel.Fuel_Used = SqlDtr["Fuel_Used"].ToString().Trim();
+                    vehEntryModel.Fuel_Used_Qty = SqlDtr["Fuel_Used_Qty"].ToString().Trim();
+                    vehEntryModel.Start_Fuel_Qty = SqlDtr["Start_Fuel_Qty"].ToString().Trim();
+
+                    string engine_oil = "";
+                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where Category like 'Engine Oil%' and  prod_id=" + SqlDtr["Engine_Oil"].ToString().Trim(), ref SqlDtr1);
+                    if (SqlDtr1.Read())
+                    {
+                        engine_oil = SqlDtr1.GetValue(0).ToString();
+
+                    }
+                    SqlDtr1.Close();
+
+                    vehEntryModel.EngineOil = engine_oil;
+                    vehEntryModel.Engine_Oil_Qty = SqlDtr["Engine_Oil_Qty"].ToString().Trim();
+                    vehEntryModel.Engine_Oil_Dt = SqlDtr["Engine_Oil_Dt"].ToString().Trim();
+                    vehEntryModel.Engine_Oil_km = SqlDtr["Engine_OIl_Km"].ToString().Trim();
+
+                    string gear_oil = "";
+                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where Category like 'Gear Oil%' and  prod_id=" + SqlDtr["Gear_Oil"].ToString().Trim(), ref SqlDtr1);
+                    if (SqlDtr1.Read())
+                    {
+                        gear_oil = SqlDtr1.GetValue(0).ToString();
+
+                    }
+                    SqlDtr1.Close();
+
+                    vehEntryModel.Gear_Oil = gear_oil;
+                    vehEntryModel.Gear_Oil_Qty = SqlDtr["Gear_Oil_Qty"].ToString().Trim();
+                    vehEntryModel.Gear_Oil_Dt = SqlDtr["Gear_Oil_Dt"].ToString().Trim();
+                    vehEntryModel.Gear_Oil_km = SqlDtr["Gear_OIl_Km"].ToString().Trim();
+
+                    string brake_oil = "";
+                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where Category like 'Brake Oil%' and  prod_id=" + SqlDtr["Brake_Oil"].ToString().Trim(), ref SqlDtr1);
+                    if (SqlDtr1.Read())
+                    {
+                        brake_oil = SqlDtr1.GetValue(0).ToString();
+
+                    }
+                    SqlDtr1.Close();
+
+                    vehEntryModel.Brake_Oil = brake_oil;
+                    vehEntryModel.Brake_Oil_Qty = SqlDtr["Brake_Oil_Qty"].ToString().Trim();
+                    vehEntryModel.Brake_Oil_Dt = SqlDtr["Brake_Oil_Dt"].ToString().Trim();
+                    vehEntryModel.Brake_Oil_km = SqlDtr["Brake_OIl_Km"].ToString().Trim();
+
+                    string coolent = "";
+                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where Category like 'Collent%' and  prod_id=" + SqlDtr["Coolent"].ToString().Trim(), ref SqlDtr1);
+                    if (SqlDtr1.Read())
+                    {
+                        coolent = SqlDtr1.GetValue(0).ToString();
+
+                    }
+                    SqlDtr1.Close();
+
+                    vehEntryModel.Coolent = coolent;
+                    vehEntryModel.Coolent_Oil_Qty = SqlDtr["Coolent_Qty"].ToString().Trim();
+                    vehEntryModel.Coolent_Oil_Dt = SqlDtr["Coolent_Dt"].ToString().Trim();
+                    vehEntryModel.Coolent_km = SqlDtr["Coolent_Km"].ToString().Trim();
+
+                    string grease = "";
+                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where Category like 'Grease%' and  prod_id=" + SqlDtr["Grease"].ToString().Trim(), ref SqlDtr1);
+                    if (SqlDtr1.Read())
+                    {
+                        grease = SqlDtr1.GetValue(0).ToString();
+
+                    }
+                    SqlDtr1.Close();
+                    vehEntryModel.Grease = grease;
+                    vehEntryModel.Grease_Qty = SqlDtr["Grease_Qty"].ToString().Trim();
+                    vehEntryModel.Grease_Dt = SqlDtr["Grease_Dt"].ToString().Trim();
+                    vehEntryModel.Grease_km = SqlDtr["grease_Km"].ToString().Trim();
+
+                    string trans_oil = "";
+                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where Category like 'Transmission Oil%' and  prod_id=" + SqlDtr["Trans_OIl"].ToString().Trim(), ref SqlDtr1);
+                    if (SqlDtr1.Read())
+                    {
+                        trans_oil = SqlDtr1.GetValue(0).ToString();
+
+                    }
+                    SqlDtr1.Close();
+
+                    vehEntryModel.Trans_Oil= trans_oil;
+                    vehEntryModel.Trans_Oil_Qty = SqlDtr["Trans_OIl_Qty"].ToString().Trim();
+                    vehEntryModel.Trans_Oil_Dt = SqlDtr["Trans_OIl_Dt"].ToString().Trim();
+                    vehEntryModel.Trans_Oil_km = SqlDtr["Trans_Oil_Km"].ToString().Trim();
+
+                    vehEntryModel.Vehicle_Avg = SqlDtr["Vehicle_Avg"].ToString();
+                    //checkPrevileges();
+
+                }
+                SqlDtr.Close();
+                return vehEntryModel;
+            }
+            catch (Exception ex)
+            {
+                return vehEntryModel;
             }
         }
 
@@ -635,7 +781,7 @@ namespace Servo_API.Controllers
         public int DeleteVehicleEntry(string vehicleID)
         {
             int count = 0;
-            string roleID = string.Empty;
+            
             try
             {                                
                 dbobj.Insert_or_Update("Delete from vehicleentry where vehicledetail_id = " + vehicleID.Trim(), ref count);
@@ -648,111 +794,28 @@ namespace Servo_API.Controllers
         }
 
         [HttpGet]
-        [Route("api/Roles/GetCheckRoleExists")]
-        public int GetCheckRoleExists(string txtRoleName)
+        [Route("api/VehicleEntry/FillDropVehicleID")]
+        public List<string> FillDropVehicleID()
         {
-            int count = 0;
-            string roleID = string.Empty;
-            try
-            {
-                dbobj.ExecuteScalar("select count(*) from Roles where Role_Name='" + txtRoleName.Trim() + "'", ref count);
-
-                return count;
-            }
-            catch (Exception ex)
-            {
-                return count;
-            }
-        }
-
-        [HttpGet]
-        [Route("api/Roles/GetCheckRoleExistsUser_master")]
-        public int GetCheckRoleExistsUser_master(string txtRoleName)
-        {
-            int count = 0;
-            string roleID = string.Empty;
-            try
-            {
-                dbobj.ExecuteScalar("select count(*) from User_master where Role_ID='" + txtRoleName + "'", ref count);
-
-                return count;
-            }
-            catch (Exception ex)
-            {
-                return count;
-            }
-        }
-
-        
-
-        
-
-        [HttpPost]
-        [Route("api/Roles/UpdateRole")]
-        public bool UpdateRole(EmployeeClass obj)
-        {
-            SqlCommand cmd;
-            SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
-            //EmployeeClass obj1 = new EmployeeClass();
-            try
-            {
-                obj.UpdateRoles();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        [HttpGet]
-        [Route("api/Roles/FillDropRoleID")]
-        public List<string> FillDropRoleID()
-        {            
-            List<string> dropRoleID = new List<string>();
+            List<string> dropVehicleID = new List<string>();
             try
             {
                 //DBOperations.DBUtil obj = new DBOperations.DBUtil();
                 SqlDataReader SqlDtr = null;
 
-                dbobj.SelectQuery("select Role_ID from Roles", ref SqlDtr);
+                dbobj.SelectQuery("Select vehicledetail_id from vehicleentry ", ref SqlDtr);
                 while (SqlDtr.Read())
                 {
-                    dropRoleID.Add(SqlDtr.GetValue(0).ToString());
+                    dropVehicleID.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropRoleID;
+                return dropVehicleID;
             }
             catch (Exception ex)
             {
-                return dropRoleID;
+                return dropVehicleID;
             }
         }
-
-        [HttpGet]
-        [Route("api/Roles/GetSelectedRoleIDData")]
-        public RolesModel GetSelectedRoleIDData(string RoleID)
-        {
-            RolesModel role = new RolesModel();
-
-            List<string> dropRoleID = new List<string>();
-            try
-            {
-                //DBOperations.DBUtil obj = new DBOperations.DBUtil();
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("select * from roles where Role_Id='" + RoleID + "'", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    role.Role_Name = SqlDtr.GetValue(1).ToString();
-                    role.Description = SqlDtr.GetValue(2).ToString();
-                }
-                return role;
-            }
-            catch (Exception ex)
-            {
-                return role;
-            }
-        }
+        
     }
 }
