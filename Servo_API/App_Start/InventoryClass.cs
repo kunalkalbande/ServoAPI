@@ -5848,5 +5848,44 @@ namespace Servo_API.App_Start
             return strDate;
         }
 
+        /// <summary>
+		/// Calls the Procedure ProBeatMasterEntry to insert the Beat Details
+		/// </summary>
+		public void InsertBeatMaster(BeatMasterModel BeatMaster)
+        {
+            SqlCmd = new SqlCommand("ProBeatMasterEntry", SqlCon);
+            SqlCmd.CommandType = CommandType.StoredProcedure;
+            SqlCmd.Parameters.Add("@Beat_No", BeatMaster.BeatNo);
+            SqlCmd.Parameters.Add("@City", BeatMaster.City);
+            SqlCmd.Parameters.Add("@State", BeatMaster.State);
+            SqlCmd.Parameters.Add("@Country", BeatMaster.Country);
+            SqlCmd.ExecuteNonQuery();
+        }
+
+        /// <summary>
+		/// Calls the Procedure ProBeatMasterDelete to Delete the Beat Details
+		/// </summary>
+		public void DeleteBeatMaster(string Beat_No)
+        {
+            SqlCmd = new SqlCommand("ProBeatMasterDelete", SqlCon);
+            SqlCmd.CommandType = CommandType.StoredProcedure;
+            SqlCmd.Parameters.Add("@Beat_No", Beat_No);
+            SqlCmd.ExecuteNonQuery();
+        }
+
+        /// <summary>
+		/// Calls the Procedure ProBeatMasterUpdate to Update the Beat Details
+		/// </summary>
+		public void UpdateBeatMaster(BeatMasterModel beat)
+        {
+            SqlCmd = new SqlCommand("ProBeatMasterUpdate", SqlCon);
+            SqlCmd.CommandType = CommandType.StoredProcedure;
+            SqlCmd.Parameters.Add("@Beat_No", beat.BeatNo);
+            SqlCmd.Parameters.Add("@City", beat.City);
+            SqlCmd.Parameters.Add("@State", beat.State);
+            SqlCmd.Parameters.Add("@Country", beat.Country);
+            SqlCmd.ExecuteNonQuery();
+        }
+
     }
 }
