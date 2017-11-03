@@ -12,7 +12,7 @@ namespace Servo_API.Models
         public string Credit { get; set; }
         public string Debit { get; set; }
         public string Journal { get; set; }
-        public string VoucherID { get; set; }
+        public int VoucherID { get; set; }
         public string VoucherType { get; set; }
         public string VoucherDate { get; set; }
         public string LedgerIDCr { get; set; }

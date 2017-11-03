@@ -11,5 +11,7 @@ namespace Servo_API.Models
         public string City { get; set; }
         public string CustomerID { get; set; }
         public int Flag { get; set; }
+
+        public string Address { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace Servo_API.Controllers
         {
             VoucherModel voucher = new VoucherModel();
             SqlDataReader SqlDtr = null;
+            voucher.VoucherID = 0;
             dbobj.SelectQuery("Select max(Voucher_ID) from Voucher_Transaction where Voucher_Type ='Contra'", ref SqlDtr);
             if (SqlDtr.Read())
             {
@@ -205,10 +206,10 @@ namespace Servo_API.Controllers
             int c = 0;
             dbobj.Insert_or_Update("Insert into Voucher_Transaction values(" + Voucher.VoucherID + ",'" + Voucher.VoucherType + "',Convert(datetime,'" + Voucher.VoucherDate + "',103)," + Voucher.LedgerIDCr + "," + Voucher.Amount1 + "," + Voucher.LedgerIDDr + "," + Voucher.Amount2 + ",'" + Voucher.Narration + "','" + Voucher.LType + "')", ref c);
             object obj = null;
-            dbobj.ExecProc(App_Start.DbOperations_LATEST.OprType.Insert, "ProInsertAccountsLedger", ref obj, "@Ledger_ID", Voucher.LedgerIDDr, "@Particulars", Voucher.VoucherType + " (" + Voucher.VoucherID + ")", "@Debit_Amount", Voucher.Amount2, "@Credit_Amount", "0.0", "@type", "Dr", "@Invoice_Date", Voucher.InvoiceDate);
-            dbobj.ExecProc(App_Start.DbOperations_LATEST.OprType.Insert, "ProInsertAccountsLedger", ref obj, "@Ledger_ID", Voucher.LedgerIDCr, "@Particulars", Voucher.VoucherType + " (" + Voucher.VoucherID + ")", "@Debit_Amount", "0.0", "@Credit_Amount", Voucher.Amount1, "@type", "Cr", "@Invoice_Date", Voucher.InvoiceDate);
-            dbobj.ExecProc(App_Start.DbOperations_LATEST.OprType.Insert, "ProCustomerLedgerEntry", ref obj, "@Voucher_ID", Voucher.VoucherID, "@Ledger_ID", Voucher.LedgerIDDr, "@Amount", Voucher.Amount2, "@Type", "Dr.", "@Invoice_Date", Voucher.InvoiceDate);
-            dbobj.ExecProc(App_Start.DbOperations_LATEST.OprType.Insert, "ProCustomerLedgerEntry", ref obj, "@Voucher_ID", Voucher.VoucherID, "@Ledger_ID", Voucher.LedgerIDDr, "@Amount", Voucher.Amount1, "@Type", "Cr.", "@Invoice_Date", Voucher.InvoiceDate);
+            dbobj.ExecProc(App_Start.DbOperations_LATEST.OprType.Insert, "ProInsertAccountsLedger", ref obj, "@Ledger_ID", Voucher.LedgerIDDr, "@Particulars", Voucher.VoucherType + " (" + Voucher.VoucherID + ")", "@Debit_Amount", Voucher.Amount2, "@Credit_Amount", "0.0", "@type", "Dr", "@Invoice_Date", Convert.ToDateTime(Voucher.InvoiceDate));
+            dbobj.ExecProc(App_Start.DbOperations_LATEST.OprType.Insert, "ProInsertAccountsLedger", ref obj, "@Ledger_ID", Voucher.LedgerIDCr, "@Particulars", Voucher.VoucherType + " (" + Voucher.VoucherID + ")", "@Debit_Amount", "0.0", "@Credit_Amount", Voucher.Amount1, "@type", "Cr", "@Invoice_Date", Convert.ToDateTime(Voucher.InvoiceDate));
+            dbobj.ExecProc(App_Start.DbOperations_LATEST.OprType.Insert, "ProCustomerLedgerEntry", ref obj, "@Voucher_ID", Voucher.VoucherID, "@Ledger_ID", Voucher.LedgerIDDr, "@Amount", Voucher.Amount2, "@Type", "Dr.", "@Invoice_Date", Convert.ToDateTime(Voucher.InvoiceDate));
+            dbobj.ExecProc(App_Start.DbOperations_LATEST.OprType.Insert, "ProCustomerLedgerEntry", ref obj, "@Voucher_ID", Voucher.VoucherID, "@Ledger_ID", Voucher.LedgerIDDr, "@Amount", Voucher.Amount1, "@Type", "Cr.", "@Invoice_Date", Convert.ToDateTime(Voucher.InvoiceDate));
             return Created(new Uri(Request.RequestUri + ""), "Voucher Created");
         }
 
@@ -248,7 +249,7 @@ namespace Servo_API.Controllers
         }
         [HttpGet]
         [Route("api/VoucherController/FetchVoucherByVoucherID")]
-        public IHttpActionResult FetchVoucherByVoucherID(string VoucherID)
+        public IHttpActionResult FetchVoucherByVoucherID(int VoucherID)
         {
             SqlDataReader SqlDtr = null;
             SqlDataReader SqlDtr1 = null;
@@ -313,21 +314,73 @@ namespace Servo_API.Controllers
             SqlDtr.Close();
             return Ok(voucher);
         }
-
-        //public IHttpActionResult UpdateVoucherEntry(VoucherModel voucher)
-        //{
-        //    int c = 0;
-        //    dbobj.Insert_or_Update("delete from voucher_Transaction where voucher_id =" + voucher.VoucherID, ref c);
-        //    if (DropVoucherName.SelectedItem.Text.Equals("Contra"))
-        //        dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Contra (" + DropDownID.SelectedItem.Text.Trim() + ")'", ref c);
-        //    else if (DropVoucherName.SelectedItem.Text.Equals("Journal"))
-        //        dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Journal (" + DropDownID.SelectedItem.Text.Trim() + ")'", ref c);
-        //    else if (DropVoucherName.SelectedItem.Text.Equals("Credit Note"))
-        //        dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Credit Note (" + DropDownID.SelectedItem.Text.Trim() + ")'", ref c);
-        //    else if (DropVoucherName.SelectedItem.Text.Equals("Debit Note"))
-        //        dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Debit Note (" + DropDownID.SelectedItem.Text.Trim() + ")'", ref c);
-        //    dbobj.Insert_or_Update("delete from CustomerLedgerTable where Particular ='Voucher(" + DropDownID.SelectedItem.Text.Trim() + ")'", ref c);
-
-        //}
+        [HttpPost]
+        [Route("api/VoucherController/UpdateVoucherEntry")]
+        public IHttpActionResult UpdateVoucherEntry(VoucherModel voucher)
+        {
+            int c = 0;
+            dbobj.Insert_or_Update("delete from voucher_Transaction where voucher_id =" + voucher.VoucherID, ref c);
+            if (voucher.VoucherType.Equals("Contra"))
+                dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Contra (" + voucher.VoucherID + ")'", ref c);
+            else if (voucher.VoucherType.Equals("Journal"))
+                dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Journal (" + voucher.VoucherID + ")'", ref c);
+            else if (voucher.VoucherType.Equals("Credit Note"))
+                dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Credit Note (" + voucher.VoucherID + ")'", ref c);
+            else if (voucher.VoucherType.Equals("Debit Note"))
+                dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Debit Note (" + voucher.VoucherID + ")'", ref c);
+            dbobj.Insert_or_Update("delete from CustomerLedgerTable where Particular ='Voucher(" + voucher.VoucherID + ")'", ref c);
+            return Created(new Uri(Request.RequestUri + ""), "Updated Voucher Entry");
+        }
+        [HttpPost]
+        [Route("api/VoucherController/UpdateVoucher")]
+        public IHttpActionResult UpdateVoucher(VoucherModel voucher)
+        {
+            int c = 0;
+            dbobj.Insert_or_Update("Update voucher_transaction set voucher_date =Convert(datetime,'" + voucher.VoucherDate + "',103),Ledg_ID_Cr =" + voucher.LedgerIDCr + ",Amount1=" + voucher.Amount1 + ",Ledg_ID_Dr=" + voucher.LedgerIDDr + ",Amount2=" + voucher.Amount2 + ",Narration='" + voucher.Narration + "',L_Type='" + voucher.LType + "' where Voucher_ID =" + voucher.VoucherID, ref c);
+            object obj = null;
+            dbobj.ExecProc(DbOperations_LATEST.OprType.Update, "ProUpdateAccountsLedger", ref obj, "@Voucher_ID", voucher.VoucherID, "@Ledger_ID", voucher.LedgerIDDr, "@Amount", voucher.Amount2, "@Type", "Dr", "@Invoice_Date", voucher.VoucherDate);
+            dbobj.ExecProc(DbOperations_LATEST.OprType.Update, "ProUpdateAccountsLedger", ref obj, "@Voucher_ID", voucher.VoucherID, "@Ledger_ID", voucher.LedgerIDCr, "@Amount", voucher.Amount1, "@Type", "Cr", "@Invoice_Date", voucher.VoucherDate);
+            if (c > 0)
+                return Ok(c);
+            else
+                return Content(HttpStatusCode.NotFound, "Voucher is not updated");
+        }
+        [HttpPost]
+        [Route("api/VoucherController/DeleteVoucher")]
+        public IHttpActionResult DeleteVoucher(VoucherModel voucher)
+        {
+            int c = 0;
+            dbobj.Insert_or_Update("delete from voucher_Transaction where voucher_id =" + voucher.VoucherID, ref c);
+            if (voucher.VoucherType.Equals("Contra"))
+                dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Contra (" + voucher.VoucherID + ")'", ref c);
+            else if (voucher.VoucherType.Equals("Journal"))
+                dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Journal (" + voucher.VoucherID + ")'", ref c);
+            else if (voucher.VoucherType.Equals("Credit Note"))
+                dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Credit Note (" + voucher.VoucherID + ")'", ref c);
+            else if (voucher.VoucherType.Equals("Debit Note"))
+                dbobj.Insert_or_Update("delete from AccountsLedgerTable where Particulars ='Debit Note (" + voucher.VoucherID + ")'", ref c);
+            dbobj.Insert_or_Update("delete from CustomerLedgerTable where Particular ='Voucher(" + voucher.VoucherID + ")'", ref c);
+            if (c > 0)
+                return Ok(c);
+            else
+                return Content(HttpStatusCode.NotFound, "Voucher is not deleted");
+        }
+        [HttpGet]
+        [Route("api/VoucherController/Report")]
+        public IHttpActionResult Report(string VoucherName)
+        {
+            InventoryClass obj = new InventoryClass();
+            SqlDataReader rdr = null;
+            CustomerModels customer = new CustomerModels();
+            string str = "select address,city from customer,ledger_master where ledger_name=cust_name and ledger_id='" + VoucherName + "'";
+            rdr = obj.GetRecordSet(str);
+            if (rdr.Read())
+            {
+                customer.Address = rdr.GetValue(0).ToString();
+                customer.City = rdr.GetValue(1).ToString();
+            }
+            rdr.Close();
+            return Ok(customer);
+        }
     }
 }
