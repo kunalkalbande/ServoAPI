@@ -5370,28 +5370,28 @@ namespace Servo_API.App_Start
         /// <summary>
         /// Calls the Procedure ProPaymentReceiptEntry to insert the Payment Receipt Details.
         /// </summary>
-        public void InsertPaymentReceived()
+        public void InsertPaymentReceived(PaymentReceiptModel payment)
         {
             SqlCmd = new SqlCommand("ProPaymentReceiptEntry", SqlCon1);
             SqlCmd.CommandType = CommandType.StoredProcedure;
-            SqlCmd.Parameters.Add("@Receipt_No", Received_No);
-            SqlCmd.Parameters.Add("@Invoice_No", Invoice_No);
-            SqlCmd.Parameters.Add("@Received_Amount", Received_Amount);
-            SqlCmd.Parameters.Add("@Actual_Amount", Actual_Amount);
-            SqlCmd.Parameters.Add("@BankName", BankName);
-            SqlCmd.Parameters.Add("@ChequeNo", ChequeNo);
-            SqlCmd.Parameters.Add("@ChequeDate", System.Convert.ToDateTime(ChequeDate));
-            SqlCmd.Parameters.Add("@Mode", Mode);
-            SqlCmd.Parameters.Add("@Receipt", Receipt);
-            SqlCmd.Parameters.Add("@Cust_ID", cust_id);
-            SqlCmd.Parameters.Add("@Narration", Narration);
-            SqlCmd.Parameters.Add("@Discount1", discount);
-            SqlCmd.Parameters.Add("@Discount2", Discount);
-            SqlCmd.Parameters.Add("@DiscountID1", discountid1);
-            SqlCmd.Parameters.Add("@DiscountID2", discountid2);
-            SqlCmd.Parameters.Add("@SubReceiptNo", SubReceived_No);
-            SqlCmd.Parameters.Add("@RecDate", Invoice_Date);
-            SqlCmd.Parameters.Add("@CustBankName", CustBankName);
+            SqlCmd.Parameters.Add("@Receipt_No", payment.ReceiptNo);
+            SqlCmd.Parameters.Add("@Invoice_No", payment.InvoiceNo);
+            SqlCmd.Parameters.Add("@Received_Amount", payment.ReceivedAmount);
+            SqlCmd.Parameters.Add("@Actual_Amount", payment.ActualAmount);
+            SqlCmd.Parameters.Add("@BankName", payment.BankName);
+            SqlCmd.Parameters.Add("@ChequeNo", payment.ChequeNumber);
+            SqlCmd.Parameters.Add("@ChequeDate", System.Convert.ToDateTime(payment.ChequeDate));
+            SqlCmd.Parameters.Add("@Mode", payment.Mode);
+            SqlCmd.Parameters.Add("@Receipt", payment.Receipt);
+            SqlCmd.Parameters.Add("@Cust_ID", payment.Cust_ID);
+            SqlCmd.Parameters.Add("@Narration", payment.Narration);
+            SqlCmd.Parameters.Add("@Discount1", payment.Discount1);
+            SqlCmd.Parameters.Add("@Discount2", payment.Discount2);
+            SqlCmd.Parameters.Add("@DiscountID1", payment.DiscountID1);
+            SqlCmd.Parameters.Add("@DiscountID2", payment.DiscountID2);
+            SqlCmd.Parameters.Add("@SubReceiptNo", payment.SubReceiptNo);
+            SqlCmd.Parameters.Add("@RecDate", payment.Invoice_Date);
+            SqlCmd.Parameters.Add("@CustBankName", payment.CustBankName);
             SqlCmd.ExecuteNonQuery();
         }
         //*******
