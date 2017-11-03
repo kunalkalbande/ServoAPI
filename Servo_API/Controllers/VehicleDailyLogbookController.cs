@@ -21,8 +21,8 @@ namespace Servo_API.Controllers
         App_Start.DbOperations_LATEST.DBUtil dbobj = new App_Start.DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
 
         [HttpGet]
-        [Route("api/VehicleDailyLogbook/GetNextVehicledetailID")]
-        public string GetNextVehicleLogbookID()
+        [Route("api/VehicleDailyLogbook/GetNextVehicleLogbookID")]
+        public IHttpActionResult GetNextVehicleLogbookID()
         {
             string vehicleDetailID = string.Empty;
             try
@@ -52,17 +52,17 @@ namespace Servo_API.Controllers
                     vehicleDetailID = "1001";
                 }
                 #endregion
-                return vehicleDetailID;
+                return Ok(vehicleDetailID);
             }
             catch (Exception ex)
             {
-                return vehicleDetailID;
+                return Content(HttpStatusCode.NotFound, "Next Vehicle Logbook ID Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleDailyLogbook/GetFillVehicleNo")]
-        public List<string> GetFillVehicleNo()
+        public IHttpActionResult GetFillVehicleNo()
         {
             List<string> dropVehicleNo = new List<string>();
             try
@@ -75,21 +75,24 @@ namespace Servo_API.Controllers
                     dropVehicleNo.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropVehicleNo;
+                if (dropVehicleNo == null || dropVehicleNo.Count == 0)
+                    return Content(HttpStatusCode.NotFound, "Vehicle No data Not found");
+
+                return Ok(dropVehicleNo);
             }
             catch (Exception ex)
             {
-                return dropVehicleNo;
+                return Content(HttpStatusCode.NotFound, "Vehicle No data Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleDailyLogbook/GetVehicleInfo")]
-        public string GetVehicleInfo()
+        public IHttpActionResult GetVehicleInfo()
         {
             string s = "";
             try
-            {                
+            {
                 SqlDataReader SqlDtr = null;
                 SqlDataReader SqlDtr1 = null;
                 string meter_reading = "";
@@ -118,22 +121,25 @@ namespace Servo_API.Controllers
                     s = s + SqlDtr.GetValue(0).ToString() + "~" + SqlDtr.GetValue(1).ToString() + "~" + emp_name + "~" + meter_reading + "#";
                 }
                 SqlDtr.Close();
-                
-                return s;
+
+                if (s == null || s == "")
+                    return Content(HttpStatusCode.NotFound, "Vehicle Info data Not found");
+
+                return Ok(s);
             }
             catch (Exception ex)
             {
-                return s;
+                return Content(HttpStatusCode.NotFound, "Vehicle Info data Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntryLogbook/FillDropEngineOil")]
-        public List<string> FillDropEngineOil()
+        public IHttpActionResult FillDropEngineOil()
         {
             List<string> dropEngineOil = new List<string>();
             try
-            {                
+            {
                 SqlDataReader SqlDtr = null;
 
                 dbobj.SelectQuery("Select prod_name+':'+pack_type from products where category like 'Engine Oil%'", ref SqlDtr);
@@ -142,17 +148,20 @@ namespace Servo_API.Controllers
                     dropEngineOil.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropEngineOil;
+                if (dropEngineOil == null || dropEngineOil.Count == 0)
+                    return Content(HttpStatusCode.NotFound, "Engine Oil data Not found");
+
+                return Ok(dropEngineOil);
             }
             catch (Exception ex)
             {
-                return dropEngineOil;
+                return Content(HttpStatusCode.NotFound, "Engine Oil data Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntryLogbook/FillVehicleEntryLogbookID")]
-        public List<string> FillVehicleEntryLogbookID()
+        public IHttpActionResult FillVehicleEntryLogbookID()
         {
             List<string> dropVehicleEntryLogbookID = new List<string>();
             try
@@ -165,17 +174,17 @@ namespace Servo_API.Controllers
                     dropVehicleEntryLogbookID.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropVehicleEntryLogbookID;
+                return Ok(dropVehicleEntryLogbookID);
             }
             catch (Exception ex)
             {
-                return dropVehicleEntryLogbookID;
+                return Content(HttpStatusCode.NotFound, "Vehicle Entry Logbook ID data Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntryLogbook/FillDropbreak")]
-        public List<string> FillDropbreak()
+        public IHttpActionResult FillDropbreak()
         {
             List<string> dropBreak = new List<string>();
             try
@@ -188,17 +197,20 @@ namespace Servo_API.Controllers
                     dropBreak.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropBreak;
+                if (dropBreak == null || dropBreak.Count == 0)
+                    return Content(HttpStatusCode.NotFound, "Brake Oil data Not found");
+
+                return Ok(dropBreak);
             }
             catch (Exception ex)
             {
-                return dropBreak;
+                return Content(HttpStatusCode.NotFound, "Brake Oil data Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntryLogbook/FillDropGear")]
-        public List<string> FillDropGear()
+        public IHttpActionResult FillDropGear()
         {
             List<string> dropGear = new List<string>();
             try
@@ -211,17 +223,20 @@ namespace Servo_API.Controllers
                     dropGear.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropGear;
+                if (dropGear == null || dropGear.Count == 0)
+                    return Content(HttpStatusCode.NotFound, "Gear data Not found");
+
+                return Ok(dropGear);
             }
             catch (Exception ex)
             {
-                return dropGear;
+                return Content(HttpStatusCode.NotFound, "Gear data Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntryLogbook/FillDropCoolent")]
-        public List<string> FillDropCoolent()
+        public IHttpActionResult FillDropCoolent()
         {
             List<string> dropCoolent = new List<string>();
             try
@@ -234,17 +249,20 @@ namespace Servo_API.Controllers
                     dropCoolent.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropCoolent;
+                if (dropCoolent == null || dropCoolent.Count == 0)
+                    return Content(HttpStatusCode.NotFound, "Coolent data Not found");
+
+                return Ok(dropCoolent);
             }
             catch (Exception ex)
             {
-                return dropCoolent;
+                return Content(HttpStatusCode.NotFound, "Coolent data Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntryLogbook/FillDropGrease")]
-        public List<string> FillDropGrease()
+        public IHttpActionResult FillDropGrease()
         {
             List<string> dropGrease = new List<string>();
             try
@@ -257,17 +275,20 @@ namespace Servo_API.Controllers
                     dropGrease.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropGrease;
+                if (dropGrease == null || dropGrease.Count == 0)
+                    return Content(HttpStatusCode.NotFound, "Grease data Not found");
+
+                return Ok(dropGrease);
             }
             catch (Exception ex)
             {
-                return dropGrease;
+                return Content(HttpStatusCode.NotFound, "Grease data Not found");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntryLogbook/FillDropTransmission")]
-        public List<string> FillDropTransmission()
+        public IHttpActionResult FillDropTransmission()
         {
             List<string> dropTransmission = new List<string>();
             try
@@ -280,21 +301,27 @@ namespace Servo_API.Controllers
                     dropTransmission.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropTransmission;
+
+                if (dropTransmission == null || dropTransmission.Count == 0)
+                    return Content(HttpStatusCode.NotFound, "Trans Oil Not found");
+
+                return Ok(dropTransmission);
             }
             catch (Exception ex)
             {
-                return dropTransmission;
+                return Content(HttpStatusCode.NotFound, "Trans Oil Not found");
             }
         }
 
+
         [HttpGet]
         [Route("api/VehicleEntryLogbook/FillDropvehicleroute")]
-        public List<string> FillDropvehicleroute()
+        public IHttpActionResult FillDropvehicleroute()
         {
-            List<string> dropvehicleroute = new List<string>();
             try
             {
+                List<string> dropvehicleroute = new List<string>();
+
                 SqlConnection con11;
                 SqlCommand cmdselect11;
                 SqlDataReader dtrdrive11;
@@ -309,17 +336,20 @@ namespace Servo_API.Controllers
                 }
                 dtrdrive11.Close();
                 con11.Close();
-                return dropvehicleroute;
+
+                if (dropvehicleroute == null || dropvehicleroute.Count == 0)
+                    return Content(HttpStatusCode.NotFound, "vehicle Route Not found");
+                return Ok(dropvehicleroute);
             }
-            catch (Exception ex)
+            catch
             {
-                return dropvehicleroute;
+                return Content(HttpStatusCode.NotFound, "vehicle Route Not found");
             }
         }
 
         [HttpPost]
         [Route("api/VehicleEntryLogbook/InsertVehicleDailyLogbook")]
-        public bool InsertVehicleDailyLogbook(VehicleDailyLogbookModel vehDLB)
+        public IHttpActionResult InsertVehicleDailyLogbook(VehicleDailyLogbookModel vehDLB)
         {
 
             try
@@ -329,18 +359,17 @@ namespace Servo_API.Controllers
                 // calls the procedure proVDLBEntry to insert the vehicle log details
                 dbobj.ExecProc(Servo_API.App_Start.DbOperations_LATEST.OprType.Insert, "proVDLBEntry", ref op, "@VDLB_ID", vehDLB.VDLB_ID, "@vehicle_no", vehDLB.Vehicle_no, "@DOE", vehDLB.DOE, "@Meter_Reading_Pre", vehDLB.Meter_reading_pre, "@Meter_Reading_Cur", vehDLB.Meter_reading_cur, "@vehicle_route", vehDLB.Vehicle_route, "@Fuel_Used", vehDLB.Fuel_Used, "@Fuel_Used_Qty", vehDLB.Fuel_Used_Qty, "@Engine_Oil", vehDLB.EngineOil, "@Engine_pack", vehDLB.Engine_Oil_Pack, "@Engine_Oil_Qty", vehDLB.Engine_Oil_Qty, "@Gear_Oil", vehDLB.Gear_Oil, "@Gear_pack", vehDLB.Gear_Oil_Pack, "@Gear_Oil_Qty", vehDLB.Gear_Oil_Qty, "@Grease", vehDLB.Grease, "@Grease_pack", vehDLB.Grease_Pack, "@Grease_Qty", vehDLB.Grease_Qty,
                     "@Brake_Oil", vehDLB.Brake_Oil, "@Brake_pack", vehDLB.Brake_Oil_Pack, "@Brake_Oil_Qty", vehDLB.Brake_Oil_Qty, "@Coolent", vehDLB.Coolent, "@Coolent_Pack", vehDLB.Coolent_Oil_Pack, "@Coolent_Qty", vehDLB.Coolent_Oil_Qty, "@Trans_Oil", vehDLB.Trans_Oil, "@Trans_pack", vehDLB.Trans_Oil_Pack, "@Trans_Oil_Qty", vehDLB.Trans_Oil_Qty, "@Toll", vehDLB.Toll, "@Police", vehDLB.Police, "@Food", vehDLB.Food, "@Misc", vehDLB.Misc);
-                //MessageBox.Show("Vehicle Log Book Saved");
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Vehicle Logbbok ID could not insert data");
             }
         }
 
         [HttpPost]
         [Route("api/VehicleEntry/UpdateVehicleDailyLogbook")]
-        public bool UpdateVehicleDailyLogbook(VehicleDailyLogbookModel vehDLB)
+        public IHttpActionResult UpdateVehicleDailyLogbook(VehicleDailyLogbookModel vehDLB)
         {
 
             try
@@ -350,22 +379,21 @@ namespace Servo_API.Controllers
                 // calls the procedure proVDLBEntry to insert the vehicle log details
                 dbobj.ExecProc(Servo_API.App_Start.DbOperations_LATEST.OprType.Insert, "proVDLBUpdate", ref op, "@VDLB_ID", vehDLB.VDLB_ID, "@vehicle_no", vehDLB.Vehicle_no, "@DOE", vehDLB.DOE, "@Meter_Reading_Pre", vehDLB.Meter_reading_pre, "@Meter_Reading_Cur", vehDLB.Meter_reading_cur, "@vehicle_route", vehDLB.Vehicle_route, "@Fuel_Used", vehDLB.Fuel_Used, "@Fuel_Used_Qty", vehDLB.Fuel_Used_Qty, "@Engine_Oil", vehDLB.EngineOil, "@Engine_pack", vehDLB.Engine_Oil_Pack, "@Engine_Oil_Qty", vehDLB.Engine_Oil_Qty, "@Gear_Oil", vehDLB.Gear_Oil, "@Gear_pack", vehDLB.Gear_Oil_Pack, "@Gear_Oil_Qty", vehDLB.Gear_Oil_Qty, "@Grease", vehDLB.Grease, "@Grease_pack", vehDLB.Grease_Pack, "@Grease_Qty", vehDLB.Grease_Qty,
                     "@Brake_Oil", vehDLB.Brake_Oil, "@Brake_pack", vehDLB.Brake_Oil_Pack, "@Brake_Oil_Qty", vehDLB.Brake_Oil_Qty, "@Coolent", vehDLB.Coolent, "@Coolent_Pack", vehDLB.Coolent_Oil_Pack, "@Coolent_Qty", vehDLB.Coolent_Oil_Qty, "@Trans_Oil", vehDLB.Trans_Oil, "@Trans_pack", vehDLB.Trans_Oil_Pack, "@Trans_Oil_Qty", vehDLB.Trans_Oil_Qty, "@Toll", vehDLB.Toll, "@Police", vehDLB.Police, "@Food", vehDLB.Food, "@Misc", vehDLB.Misc);
-                //MessageBox.Show("Vehicle Log Book Saved");
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Vehicle Logbbok ID could not update data");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntryLogbook/GetDropVehicleID_SelectedData")]
-        public VehicleDailyLogbookModel GetDropVehicleID_SelectedData(string VehicleID)
+        public IHttpActionResult GetDropVehicleID_SelectedData(string VehicleID)
         {
 
             VehicleDailyLogbookModel vehDLB = new VehicleDailyLogbookModel();
-            
+
             try
             {
                 SqlDataReader SqlDtr = null;
@@ -382,7 +410,7 @@ namespace Servo_API.Controllers
 
                     }
                     SqlDtr1.Close();
-                    
+
                     vehDLB.Vehicle_no = SqlDtr["v_no"].ToString().Trim();
                     // DropVehicleNo.SelectedIndex = DropVehicleNo.Items.IndexOf(DropVehicleNo.Items.FindByText(vehicle_no));
                     vehDLB.Vehicle_Name = SqlDtr["vehicle_name"].ToString().Trim();
@@ -458,56 +486,35 @@ namespace Servo_API.Controllers
                     vehDLB.Misc = SqlDtr["misc"].ToString().Trim();
                 }
                 SqlDtr.Close();
-                return vehDLB;
+                if (vehDLB == null)
+                    return Content(HttpStatusCode.NotFound, "Vehicle Logbbok ID Data Not found");
+                return Ok(vehDLB);
             }
-            catch (Exception ex)
+            catch
             {
-                return vehDLB;
+                return Content(HttpStatusCode.NotFound, "Vehicle Logbbok ID Data Not found");
             }
         }
 
-        
+
 
         [HttpPost]
         [Route("api/VehicleEntryLogbook/DeleteVehicleEntryLogbook")]
-        public int DeleteVehicleEntryLogbook(string vehicleLogbookID)
+        public IHttpActionResult DeleteVehicleEntryLogbook(string vehicleLogbookID)
         {
             int count = 0;
-            
+
             try
             {
                 dbobj.Insert_or_Update("Delete from vdlb where vdlb_id = " + vehicleLogbookID, ref count);
-                return count;
+                if (count < 1)
+                    return Content(HttpStatusCode.NotFound, "vehicle Route Not found");
+                return Ok(count);
             }
-            catch (Exception ex)
+            catch
             {
-                return count;
+                return Content(HttpStatusCode.NotFound, "Could not delete Vehicle Entry Logbook");
             }
         }
-
-        [HttpGet]
-        [Route("api/VehicleEntry/FillDropVehicleID")]
-        public List<string> FillDropVehicleID()
-        {
-            List<string> dropVehicleID = new List<string>();
-            try
-            {
-                //DBOperations.DBUtil obj = new DBOperations.DBUtil();
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("Select vehicledetail_id from vehicleentry ", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    dropVehicleID.Add(SqlDtr.GetValue(0).ToString());
-                }
-                SqlDtr.Close();
-                return dropVehicleID;
-            }
-            catch (Exception ex)
-            {
-                return dropVehicleID;
-            }
-        }
-        
     }
-}
+ }
