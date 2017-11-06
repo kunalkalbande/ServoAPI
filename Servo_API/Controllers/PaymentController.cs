@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Http;
 
@@ -22,7 +23,7 @@ namespace Servo_API.Controllers
 
         [HttpGet]
         [Route("api/payment/FillLedgerName")]
-        public List<string> FillLedgerName()
+        public IHttpActionResult FillLedgerName()
         {
             List<string> LedgerName = new List<string>();
             string sql = "select Ledger_Name+';'+cast(Ledger_ID_Dr as varchar)+':'+cast(voucher_id as varchar) from Payment_transaction pt, Ledger_Master lm where pt.Ledger_ID_Dr = lm.Ledger_ID  order by Voucher_id";
@@ -32,19 +33,21 @@ namespace Servo_API.Controllers
                 LedgerName.Add(SqlDtr.GetValue(0).ToString());
             }
             SqlDtr.Close();
-            return LedgerName;
+            if (LedgerName.Count == 0 || LedgerName == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Ledger Name Not Found");
+            }
+            return Ok(LedgerName);
         }
 
         [HttpGet]
         [Route("api/payment/LedgerName_SelectedIndexChanged")]
 
-        public PaymentModels LedgerName_SelectedIndexChanged(string VoucherId)
+        public IHttpActionResult LedgerName_SelectedIndexChanged(string VoucherId)
         {
             SqlDataReader SqlDtr, SqlDtr1;
             SqlCommand SqlCmd;
-            string sql, sql2;
-            string str = "";
-            //PaymentModels payment = new PaymentModels();
+            string sql, sql2;                       
             using (SqlCon = new SqlConnection())
             {
 
@@ -75,13 +78,17 @@ namespace Servo_API.Controllers
                 }
                 SqlDtr.Close();
             }
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Ledger Name Not Found");
+            }
+            return Ok(payment);
         }
 
         [HttpGet]
         [Route("api/payment/DeletePayment")]
 
-        public PaymentModels DeletePayment(string CustName, string VoucherId)
+        public IHttpActionResult DeletePayment(string CustName, string VoucherId)
         {
             SqlDataReader SqlDtr;
             string sql = "select Cust_id from Customer where Cust_Name='" + CustName + "' ";
@@ -101,13 +108,17 @@ namespace Servo_API.Controllers
             {
                 sql = "delete from CustomerLedgerTable where Particular = 'Voucher(" + VoucherId + ")'";
             }
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Payment Not Deleted");
+            }
+            return Ok(payment);
         }
 
         [HttpPost]
         [Route("api/payment/SavePayment")]
 
-        public PaymentModels SavePayment(PaymentModels payment)
+        public IHttpActionResult SavePayment(PaymentModels payment)
         {
             SqlDataReader SqlDtr;
             string Vouch_ID;
@@ -140,13 +151,17 @@ namespace Servo_API.Controllers
             dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProInsertAccountsLedger", ref obj1, "@Ledger_ID", By_ID, "@Particulars", "Payment (" + Vouch_ID + ")", "@Debit_Amount", "0.0", "@Credit_Amount", payment.Amount, "@type", "Cr", "@Invoice_Date", System.Convert.ToDateTime(payment.Entry_Date));
             dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProCustomerLedgerEntry", ref obj1, "@Voucher_ID", Vouch_ID, "@Ledger_ID", payment.Ledger_ID, "@Amount", payment.Amount, "@Type", "Dr.", "@Invoice_Date", System.Convert.ToDateTime(payment.Entry_Date));
             dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProCustomerLedgerEntry", ref obj1, "@Voucher_ID", Vouch_ID, "@Ledger_ID", By_ID, "@Amount", payment.Amount, "@Type", "Cr.", "@Invoice_Date", System.Convert.ToDateTime(payment.Entry_Date));
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Payment Not Saved");
+            }
+            return Ok(payment);
         }
 
         [HttpGet]
         [Route("api/payment/SelectLedgerId")]
 
-        public string SelectLedgerId(string Ledger_Name1)
+        public IHttpActionResult SelectLedgerId(string Ledger_Name1)
         {
             SqlDataReader SqlDtr;
             string pay = "";
@@ -158,13 +173,17 @@ namespace Servo_API.Controllers
                 pay = SqlDtr["Ledger_ID"].ToString();
             }
             SqlDtr.Close();
-            return pay;
+            if (pay == null || pay == "")
+            {
+                return Content(HttpStatusCode.NotFound, "Data Not Found");
+            }
+            return Ok(pay);
         }
 
         [HttpGet]
         [Route("api/payment/SelectCustId")]
 
-        public PaymentModels SelectCustId(string Ledger_ID1, string OldLedger_ID)
+        public IHttpActionResult SelectCustId(string Ledger_ID1, string OldLedger_ID)
         {
             SqlDataReader SqlDtr;
             string sql = "select Cust_ID from Customer,Ledger_Master where Ledger_Name = Cust_Name and Ledger_ID ='" + Ledger_ID1 + "' ";
@@ -182,13 +201,17 @@ namespace Servo_API.Controllers
                 payment.OldLedger_ID = SqlDtr["Cust_ID"].ToString();
             }
             SqlDtr.Close();
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Customer ID Not Found");
+            }
+            return Ok(payment);
         }
 
         [HttpPost]
         [Route("api/payment/UpdatePayment")]
 
-        public PaymentModels UpdatePayment(PaymentModels payment)
+        public IHttpActionResult UpdatePayment(PaymentModels payment)
         {
             SqlDataReader SqlDtr;
             SqlCommand SqlCmd;
@@ -227,13 +250,17 @@ namespace Servo_API.Controllers
                 dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProCustomerLedgerEntry", ref obj1, "@Voucher_ID", payment.Vouch_ID, "@Ledger_ID", payment.Ledger_ID1, "@Amount", payment.Amount1, "@Type", "Dr.", "@Invoice_Date", System.Convert.ToDateTime(payment.Entry_Date));
                 //dbobj.ExecProc(DBOperations.OprType.Insert, "ProCustomerLedgerEntry", ref obj1, "@Voucher_ID", payment.Vouch_ID, "@Ledger_ID", payment.By_ID1, "@Amount", payment.Amount1, "@Type", "Cr.", "@Invoice_Date", System.Convert.ToDateTime(payment.Entry_Date));
             }
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Payment Not Updated");
+            }
+            return Ok(payment);
         }
 
         [HttpPost]
         [Route("api/payment/DeleteAndUpdatePayment")]
 
-        public PaymentModels DeleteAndUpdatePayment(PaymentModels payment)
+        public IHttpActionResult DeleteAndUpdatePayment(PaymentModels payment)
         {
             SqlDataReader SqlDtr;
             string sql;
@@ -260,13 +287,17 @@ namespace Servo_API.Controllers
             //dbobj.ExecProc(DBOperations.OprType.Insert, "ProInsertAccountsLedger", ref obj1, "@Ledger_ID", payment.By_ID1, "@Particulars", "Payment (" + payment.Vouch_ID + ")", "@Debit_Amount", "0.0", "@Credit_Amount", payment.Amount1, "@type", "Cr", "@Invoice_Date", payment.Entry_Date);
             dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "ProCustomerLedgerEntry", ref obj1, "@Voucher_ID", payment.Vouch_ID, "@Ledger_ID", payment.Ledger_ID1, "@Amount", payment.Amount1, "@Type", "Dr.", "@Invoice_Date", payment.Entry_Date);
             //dbobj.ExecProc(DBOperations.OprType.Insert, "ProCustomerLedgerEntry", ref obj1, "@Voucher_ID", payment.Vouch_ID, "@Ledger_ID", payment.By_ID1, "@Amount", payment.Amount1, "@Type", "Cr.", "@Invoice_Date", payment.Entry_Date);
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Payment Not Updated");
+            }
+            return Ok(payment);
         }
 
         [HttpGet]
         [Route("api/payment/page_load")]
 
-        public string page_load()
+        public IHttpActionResult page_load()
         {
             SqlDataReader SqlDtr;
             string sql, str = "";
@@ -277,13 +308,17 @@ namespace Servo_API.Controllers
                 str = GenUtil.trimDate(SqlDtr["Acc_Date_from"].ToString());
             }
             SqlDtr.Close();
-            return str;
+            if (str == null || str == "")
+            {
+                return Content(HttpStatusCode.NotFound, "Date Not Found");
+            }
+            return Ok(str);
         }
 
         [HttpGet]
         [Route("api/payment/fillCombo")]
 
-        public string fillCombo()
+        public IHttpActionResult fillCombo()
         {
             SqlDataReader SqlDtr;
             string sql, texthiddenprod = "";
@@ -298,13 +333,17 @@ namespace Servo_API.Controllers
                 }
             }
             SqlDtr.Close();
-            return texthiddenprod;
+            if (texthiddenprod == null || texthiddenprod == "")
+            {
+                return Content(HttpStatusCode.NotFound, "Data Not Found");
+            }
+            return Ok(texthiddenprod);            
         }
 
         [HttpGet]
         [Route("api/payment/fillCombo2")]
 
-        public PaymentModels fillCombo2()
+        public IHttpActionResult fillCombo2()
         {
             SqlDataReader SqlDtr;
             List<string> DropBy = new List<string>();
@@ -326,12 +365,16 @@ namespace Servo_API.Controllers
             SqlDtr.Close();
             payment.DropBy1 = DropBy;
             payment.strCash = strCash;
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Data Not Found");
+            }
+            return Ok(payment);
         }
 
         [HttpGet]
         [Route("api/payment/makingReport")]
-        public PaymentModels makingReport(string str)
+        public IHttpActionResult makingReport(string str)
         {
             SqlDataReader SqlDtr;
             string sql;
@@ -343,13 +386,17 @@ namespace Servo_API.Controllers
                 payment.city = SqlDtr.GetValue(1).ToString();
             }
             SqlDtr.Close();
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Data Not Found");
+            }
+            return Ok(payment);
         }
 
         [HttpGet]
         [Route("api/payment/SeqCashAccount")]
 
-        public PaymentModels SeqCashAccount(string Invoice_Date)
+        public IHttpActionResult SeqCashAccount(string Invoice_Date)
         {
             SqlDataReader SqlDtr;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -412,13 +459,17 @@ namespace Servo_API.Controllers
                 }
             }
             SqlDtr.Close();
-            return payment;
+            if (payment.Equals(0) || payment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Data Not Found");
+            }
+            return Ok(payment);
         }
 
         [HttpGet]
         [Route("api/payment/CustomerUpdate")]
 
-        public void CustomerUpdate(string str,string Invoice_Date)
+        public IHttpActionResult CustomerUpdate(string str,string Invoice_Date)
         {
             SqlDataReader SqlDtr;
             string sql;
@@ -430,12 +481,13 @@ namespace Servo_API.Controllers
             {
                 dbobj.ExecProc(DbOperations_LATEST.OprType.Insert, "UpdateCustomerLedgerForCustomer", ref obj1, "@Cust_ID", SqlDtr["Cust_ID"].ToString(), "@Invoice_Date", Convert.ToDateTime(Invoice_Date));
             }
+            return Ok();
         }
 
         [HttpGet]
         [Route("api/payment/CustomerInsertUpdate")]
 
-        public void CustomerInsertUpdate(string Ledger_ID1,string Invoice_Date)
+        public IHttpActionResult CustomerInsertUpdate(string Ledger_ID1,string Invoice_Date)
         {
             SqlDataReader SqlDtr=null;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -577,9 +629,7 @@ namespace Servo_API.Controllers
                 }
             }
             SqlDtr.Close();
+            return Ok();
         }
-
-       
-
     }
 }

@@ -8,8 +8,7 @@ using Servo_API.Models;
 using Servosms.Sysitem.Classes;
 using System.Data;
 using System.Data.SqlClient;
-
-
+using System.Net;
 
 namespace Servo_API.Controllers
 {
@@ -21,8 +20,8 @@ namespace Servo_API.Controllers
         DbOperations_LATEST.DBUtil dbobj = new DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
 
         [HttpGet]
-        [Route("api/payment/FetchCity")]
-        public List<string> FetchCity()
+        [Route("api/EmployeeEntry/FetchCity")]
+        public IHttpActionResult FetchCity()
         {
             SqlDataReader SqlDtr;
             string sql;
@@ -34,12 +33,17 @@ namespace Servo_API.Controllers
                 DropCity.Add(SqlDtr.GetValue(0).ToString());
             }
             SqlDtr.Close();
-            return DropCity;
+            if (DropCity.Count == 0 || DropCity == null)
+            {
+                return Content(HttpStatusCode.NotFound, "City Not Found");
+            }
+            return Ok(DropCity);
+            
         }
 
         [HttpGet]
-        [Route("api/payment/FetchState")]
-        public List<string> FetchState()
+        [Route("api/EmployeeEntry/FetchState")]
+        public IHttpActionResult FetchState()
         {
             SqlDataReader SqlDtr;
             string sql;
@@ -51,12 +55,16 @@ namespace Servo_API.Controllers
                 DropState.Add(SqlDtr.GetValue(0).ToString());
             }
             SqlDtr.Close();
-            return DropState;
+            if (DropState.Count == 0 || DropState == null)
+            {
+                return Content(HttpStatusCode.NotFound, "State Not Found");
+            }
+            return Ok(DropState);
         }
 
         [HttpGet]
-        [Route("api/payment/FetchCountry")]
-        public List<string> FetchCountry()
+        [Route("api/EmployeeEntry/FetchCountry")]
+        public IHttpActionResult FetchCountry()
         {
             SqlDataReader SqlDtr;
             string sql;
@@ -68,12 +76,16 @@ namespace Servo_API.Controllers
                 DropCountry.Add(SqlDtr.GetValue(0).ToString());
             }
             SqlDtr.Close();
-            return DropCountry;
+            if (DropCountry.Count == 0 || DropCountry == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Country Not Found");
+            }
+            return Ok(DropCountry);
         }
 
         [HttpGet]
-        [Route("api/payment/FetchData")]
-        public string FetchData()
+        [Route("api/EmployeeEntry/FetchData")]
+        public IHttpActionResult FetchData()
         {
             SqlDataReader SqlDtr;
             string sql,str="";            
@@ -86,12 +98,16 @@ namespace Servo_API.Controllers
                 str = str + SqlDtr.GetValue(2).ToString() + "#";
             }              
             SqlDtr.Close();
-            return str;
+            if (str == "" || str == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Data Not Found");
+            }
+            return Ok(str);
         }
 
         [HttpGet]
-        [Route("api/payment/FetchVehicle")]
-        public List<string> FetchVehicle()
+        [Route("api/EmployeeEntry/FetchVehicle")]
+        public IHttpActionResult FetchVehicle()
         {
             SqlDataReader SqlDtr;
             string sql;
@@ -103,7 +119,11 @@ namespace Servo_API.Controllers
                 Vehicle.Add(SqlDtr.GetValue(0).ToString());
             }
             SqlDtr.Close();
-            return Vehicle;
+            if (Vehicle.Count == 0 || Vehicle == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Data Not Found");
+            }
+            return Ok(Vehicle);
         }
     }
 }
