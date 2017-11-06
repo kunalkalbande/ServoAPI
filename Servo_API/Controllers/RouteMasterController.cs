@@ -21,500 +21,230 @@ namespace Servo_API.Controllers
         App_Start.DbOperations_LATEST.DBUtil dbobj = new App_Start.DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
 
         [HttpGet]
-        [Route("api/VehicleDailyLogbook/GetNextVehicleLogbookID")]
-        public IHttpActionResult GetNextVehicleLogbookID()
+        [Route("api/RouteMaster/GetNextRouteID")]
+        public IHttpActionResult GetNextRouteID()
         {
-            string vehicleDetailID = string.Empty;
+            string Route_ID = string.Empty;
             try
             {
 
-                #region Fetch Next Vehicle ID                
-                SqlDataReader SqlDtr = null;
-                dbobj.SelectQuery("Select max(VDLB_id) from VDLB", ref SqlDtr);
+                InventoryClass obj = new InventoryClass();
+                SqlDataReader SqlDtr;
+                string sql;
+
+                #region Fetch the Next Route ID
+                sql = "select Max(Route_ID)+1 from Route";
+                SqlDtr = obj.GetRecordSet(sql);
                 if (SqlDtr.Read())
                 {
-                    string str = SqlDtr.GetValue(0).ToString();
-                    if (!str.Trim().Equals(""))
+                    Route_ID = SqlDtr.GetValue(0).ToString();
+                    if (Route_ID == "")
                     {
-                        int id = System.Convert.ToInt32(str.Trim());
-                        id = id + 1;
-                        str = id.ToString();
+                        Route_ID = "1";
                     }
-                    else
-                    {
-                        str = "1001";
-                    }
-                    vehicleDetailID = str;
-
                 }
                 else
-                {
-                    vehicleDetailID = "1001";
-                }
+                    Route_ID = "1";
+                SqlDtr.Close();
                 #endregion
-                return Ok(vehicleDetailID);
+                return Ok(Route_ID);
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.NotFound, "Next Vehicle Logbook ID Not found");
+                return Content(HttpStatusCode.NotFound, "Failed to get Next Route ID");
             }
         }
 
         [HttpGet]
-        [Route("api/VehicleDailyLogbook/GetFillVehicleNo")]
-        public IHttpActionResult GetFillVehicleNo()
+        [Route("api/RouteMaster/GetFillRouteNames")]
+        public IHttpActionResult GetFillRouteNames()
         {
-            List<string> dropVehicleNo = new List<string>();
+            List<string> dropRouteNames = new List<string>();
             try
             {
-                SqlDataReader SqlDtr = null;
+                SqlConnection con;
+                SqlCommand cmdselect;
+                SqlDataReader dtrdrive;
+                con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
+                con.Open();
+                cmdselect = new SqlCommand("Select Route_name  From Route", con);
+                dtrdrive = cmdselect.ExecuteReader();
 
-                dbobj.SelectQuery("Select vehicle_no+' VID '+cast(vehicledetail_id as varchar) from vehicleentry", ref SqlDtr);
-                while (SqlDtr.Read())
+                dropRouteNames.Add("Select");
+                while (dtrdrive.Read())
                 {
-                    dropVehicleNo.Add(SqlDtr.GetValue(0).ToString());
+                    dropRouteNames.Add(dtrdrive.GetString(0));
                 }
-                SqlDtr.Close();
-                if (dropVehicleNo == null || dropVehicleNo.Count == 0)
-                    return Content(HttpStatusCode.NotFound, "Vehicle No data Not found");
+                dtrdrive.Close();
+                con.Close();
 
-                return Ok(dropVehicleNo);
+                if (dropRouteNames == null)
+                    return Content(HttpStatusCode.NotFound, "Route Names data Not found");
+
+                return Ok(dropRouteNames);
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.NotFound, "Vehicle No data Not found");
+                return Content(HttpStatusCode.NotFound, "Route Names data Not found");
             }
         }
 
         [HttpGet]
-        [Route("api/VehicleDailyLogbook/GetVehicleInfo")]
-        public IHttpActionResult GetVehicleInfo()
+        [Route("api/RouteMaster/GetRouteInfo")]
+        public IHttpActionResult GetRouteInfo(string selectedRoute)
         {
-            string s = "";
+            //string s = "";
+            RouteMasterModel route = new RouteMasterModel();
+
             try
             {
-                SqlDataReader SqlDtr = null;
-                SqlDataReader SqlDtr1 = null;
-                string meter_reading = "";
-                dbobj.SelectQuery("select ve.vehicle_no+' VID '+cast(vehicledetail_id as varchar),vehicle_name,meter_reading,vehicledetail_id from vehicleentry ve", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    string emp_name = "";
-                    dbobj.SelectQuery("Select emp_name from employee where vehicle_id = " + SqlDtr.GetValue(3).ToString().Trim() + " and designation = 'Driver'", ref SqlDtr1);
-                    if (SqlDtr1.HasRows)
-                    {
-                        if (SqlDtr1.Read())
-                            emp_name = SqlDtr1.GetValue(0).ToString();
-
-                    }
-                    SqlDtr1.Close();
-
-                    meter_reading = SqlDtr.GetValue(2).ToString();
-                    dbobj.SelectQuery("Select top 1 meter_reading_cur from VDLB where vehicle_no = " + SqlDtr.GetValue(3).ToString().Trim() + " order by DOE desc", ref SqlDtr1);
-                    if (SqlDtr1.HasRows)
-                    {
-                        if (SqlDtr1.Read())
-                            meter_reading = SqlDtr1.GetValue(0).ToString();
-
-                    }
-                    SqlDtr1.Close();
-                    s = s + SqlDtr.GetValue(0).ToString() + "~" + SqlDtr.GetValue(1).ToString() + "~" + emp_name + "~" + meter_reading + "#";
+                SqlConnection con;
+                SqlCommand cmdselect;
+                SqlDataReader dtrdrive;
+                con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
+                con.Open();
+                cmdselect = new SqlCommand("Select Route_name,Route_km  From Route where Route_name=@Route_name", con);
+                cmdselect.Parameters.AddWithValue("@Route_name", selectedRoute.ToString().Trim());
+                dtrdrive = cmdselect.ExecuteReader();
+                while (dtrdrive.Read())
+                {                    
+                    route.Route_Name= dtrdrive.GetString(0);
+                    route.Route_Km = dtrdrive.GetString(1);
                 }
-                SqlDtr.Close();
+                dtrdrive.Close();
+                con.Close();
 
-                if (s == null || s == "")
-                    return Content(HttpStatusCode.NotFound, "Vehicle Info data Not found");
+                if (route == null)
+                    return Content(HttpStatusCode.NotFound, "Route data Not found.");
 
-                return Ok(s);
+                return Ok(route);
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.NotFound, "Vehicle Info data Not found");
+                return Content(HttpStatusCode.NotFound, "Route data Not found.");
             }
         }
 
         [HttpGet]
-        [Route("api/VehicleEntryLogbook/FillDropEngineOil")]
-        public IHttpActionResult FillDropEngineOil()
+        [Route("api/RouteMaster/CheckIfRouteNameExists")]
+        public IHttpActionResult CheckIfRouteNameExists(string routeName)
         {
-            List<string> dropEngineOil = new List<string>();
+            int iCount = 0;
+
             try
             {
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("Select prod_name+':'+pack_type from products where category like 'Engine Oil%'", ref SqlDtr);
-                while (SqlDtr.Read())
+                SqlConnection con2;
+                SqlCommand cmdselect2;
+                SqlDataReader dtredit2;
+                con2 = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
+                con2.Open();
+                cmdselect2 = new SqlCommand("Select Count(Route_name) from Route where Route_name='" + routeName + "'", con2);
+                dtredit2 = cmdselect2.ExecuteReader();
+                if (dtredit2.Read())
                 {
-                    dropEngineOil.Add(SqlDtr.GetValue(0).ToString());
+                    iCount = Convert.ToInt32(dtredit2.GetSqlValue(0).ToString());
                 }
-                SqlDtr.Close();
-                if (dropEngineOil == null || dropEngineOil.Count == 0)
-                    return Content(HttpStatusCode.NotFound, "Engine Oil data Not found");
+                dtredit2.Close();
+                con2.Close();
+                return Ok(iCount);
 
-                return Ok(dropEngineOil);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Engine Oil data Not found");
-            }
-        }
-
-        [HttpGet]
-        [Route("api/VehicleEntryLogbook/FillVehicleEntryLogbookID")]
-        public IHttpActionResult FillVehicleEntryLogbookID()
-        {
-            List<string> dropVehicleEntryLogbookID = new List<string>();
-            try
-            {
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("Select VDLB_id from vdlb order by VDLB_ID", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    dropVehicleEntryLogbookID.Add(SqlDtr.GetValue(0).ToString());
-                }
-                SqlDtr.Close();
-                return Ok(dropVehicleEntryLogbookID);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Vehicle Entry Logbook ID data Not found");
-            }
-        }
-
-        [HttpGet]
-        [Route("api/VehicleEntryLogbook/FillDropbreak")]
-        public IHttpActionResult FillDropbreak()
-        {
-            List<string> dropBreak = new List<string>();
-            try
-            {
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("Select prod_name+':'+pack_type from products where category like 'Brake Oil%'", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    dropBreak.Add(SqlDtr.GetValue(0).ToString());
-                }
-                SqlDtr.Close();
-                if (dropBreak == null || dropBreak.Count == 0)
-                    return Content(HttpStatusCode.NotFound, "Brake Oil data Not found");
-
-                return Ok(dropBreak);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Brake Oil data Not found");
-            }
-        }
-
-        [HttpGet]
-        [Route("api/VehicleEntryLogbook/FillDropGear")]
-        public IHttpActionResult FillDropGear()
-        {
-            List<string> dropGear = new List<string>();
-            try
-            {
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("Select prod_name+':'+pack_type from products where category like 'Gear Oil%'", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    dropGear.Add(SqlDtr.GetValue(0).ToString());
-                }
-                SqlDtr.Close();
-                if (dropGear == null || dropGear.Count == 0)
-                    return Content(HttpStatusCode.NotFound, "Gear data Not found");
-
-                return Ok(dropGear);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Gear data Not found");
-            }
-        }
-
-        [HttpGet]
-        [Route("api/VehicleEntryLogbook/FillDropCoolent")]
-        public IHttpActionResult FillDropCoolent()
-        {
-            List<string> dropCoolent = new List<string>();
-            try
-            {
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("Select prod_name+':'+pack_type from products where category like 'Collent%'", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    dropCoolent.Add(SqlDtr.GetValue(0).ToString());
-                }
-                SqlDtr.Close();
-                if (dropCoolent == null || dropCoolent.Count == 0)
-                    return Content(HttpStatusCode.NotFound, "Coolent data Not found");
-
-                return Ok(dropCoolent);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Coolent data Not found");
-            }
-        }
-
-        [HttpGet]
-        [Route("api/VehicleEntryLogbook/FillDropGrease")]
-        public IHttpActionResult FillDropGrease()
-        {
-            List<string> dropGrease = new List<string>();
-            try
-            {
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("Select prod_name+':'+pack_type from products where category like 'Grease%'", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    dropGrease.Add(SqlDtr.GetValue(0).ToString());
-                }
-                SqlDtr.Close();
-                if (dropGrease == null || dropGrease.Count == 0)
-                    return Content(HttpStatusCode.NotFound, "Grease data Not found");
-
-                return Ok(dropGrease);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Grease data Not found");
-            }
-        }
-
-        [HttpGet]
-        [Route("api/VehicleEntryLogbook/FillDropTransmission")]
-        public IHttpActionResult FillDropTransmission()
-        {
-            List<string> dropTransmission = new List<string>();
-            try
-            {
-                SqlDataReader SqlDtr = null;
-
-                dbobj.SelectQuery("Select prod_name+':'+pack_type from products where category like 'Transmission Oil%'", ref SqlDtr);
-                while (SqlDtr.Read())
-                {
-                    dropTransmission.Add(SqlDtr.GetValue(0).ToString());
-                }
-                SqlDtr.Close();
-
-                if (dropTransmission == null || dropTransmission.Count == 0)
-                    return Content(HttpStatusCode.NotFound, "Trans Oil Not found");
-
-                return Ok(dropTransmission);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Trans Oil Not found");
-            }
-        }
-
-
-        [HttpGet]
-        [Route("api/VehicleEntryLogbook/FillDropvehicleroute")]
-        public IHttpActionResult FillDropvehicleroute()
-        {
-            try
-            {
-                List<string> dropvehicleroute = new List<string>();
-
-                SqlConnection con11;
-                SqlCommand cmdselect11;
-                SqlDataReader dtrdrive11;
-                con11 = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
-                con11.Open();
-                cmdselect11 = new SqlCommand("Select Route_name  From Route", con11);
-                dtrdrive11 = cmdselect11.ExecuteReader();
-                dropvehicleroute.Add("Select");
-                while (dtrdrive11.Read())
-                {
-                    dropvehicleroute.Add(dtrdrive11.GetString(0));
-                }
-                dtrdrive11.Close();
-                con11.Close();
-
-                if (dropvehicleroute == null || dropvehicleroute.Count == 0)
-                    return Content(HttpStatusCode.NotFound, "vehicle Route Not found");
-                return Ok(dropvehicleroute);
-            }
-            catch
-            {
-                return Content(HttpStatusCode.NotFound, "vehicle Route Not found");
-            }
-        }
-
-        [HttpPost]
-        [Route("api/VehicleEntryLogbook/InsertVehicleDailyLogbook")]
-        public IHttpActionResult InsertVehicleDailyLogbook(VehicleDailyLogbookModel vehDLB)
-        {
-
-            try
-            {
-
-                object op = null;
-                // calls the procedure proVDLBEntry to insert the vehicle log details
-                dbobj.ExecProc(Servo_API.App_Start.DbOperations_LATEST.OprType.Insert, "proVDLBEntry", ref op, "@VDLB_ID", vehDLB.VDLB_ID, "@vehicle_no", vehDLB.Vehicle_no, "@DOE", vehDLB.DOE, "@Meter_Reading_Pre", vehDLB.Meter_reading_pre, "@Meter_Reading_Cur", vehDLB.Meter_reading_cur, "@vehicle_route", vehDLB.Vehicle_route, "@Fuel_Used", vehDLB.Fuel_Used, "@Fuel_Used_Qty", vehDLB.Fuel_Used_Qty, "@Engine_Oil", vehDLB.EngineOil, "@Engine_pack", vehDLB.Engine_Oil_Pack, "@Engine_Oil_Qty", vehDLB.Engine_Oil_Qty, "@Gear_Oil", vehDLB.Gear_Oil, "@Gear_pack", vehDLB.Gear_Oil_Pack, "@Gear_Oil_Qty", vehDLB.Gear_Oil_Qty, "@Grease", vehDLB.Grease, "@Grease_pack", vehDLB.Grease_Pack, "@Grease_Qty", vehDLB.Grease_Qty,
-                    "@Brake_Oil", vehDLB.Brake_Oil, "@Brake_pack", vehDLB.Brake_Oil_Pack, "@Brake_Oil_Qty", vehDLB.Brake_Oil_Qty, "@Coolent", vehDLB.Coolent, "@Coolent_Pack", vehDLB.Coolent_Oil_Pack, "@Coolent_Qty", vehDLB.Coolent_Oil_Qty, "@Trans_Oil", vehDLB.Trans_Oil, "@Trans_pack", vehDLB.Trans_Oil_Pack, "@Trans_Oil_Qty", vehDLB.Trans_Oil_Qty, "@Toll", vehDLB.Toll, "@Police", vehDLB.Police, "@Food", vehDLB.Food, "@Misc", vehDLB.Misc);
-                return Ok(true);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Vehicle Logbbok ID could not insert data");
-            }
-        }
-
-        [HttpPost]
-        [Route("api/VehicleEntry/UpdateVehicleDailyLogbook")]
-        public IHttpActionResult UpdateVehicleDailyLogbook(VehicleDailyLogbookModel vehDLB)
-        {
-
-            try
-            {
-
-                object op = null;
-                // calls the procedure proVDLBEntry to insert the vehicle log details
-                dbobj.ExecProc(Servo_API.App_Start.DbOperations_LATEST.OprType.Insert, "proVDLBUpdate", ref op, "@VDLB_ID", vehDLB.VDLB_ID, "@vehicle_no", vehDLB.Vehicle_no, "@DOE", vehDLB.DOE, "@Meter_Reading_Pre", vehDLB.Meter_reading_pre, "@Meter_Reading_Cur", vehDLB.Meter_reading_cur, "@vehicle_route", vehDLB.Vehicle_route, "@Fuel_Used", vehDLB.Fuel_Used, "@Fuel_Used_Qty", vehDLB.Fuel_Used_Qty, "@Engine_Oil", vehDLB.EngineOil, "@Engine_pack", vehDLB.Engine_Oil_Pack, "@Engine_Oil_Qty", vehDLB.Engine_Oil_Qty, "@Gear_Oil", vehDLB.Gear_Oil, "@Gear_pack", vehDLB.Gear_Oil_Pack, "@Gear_Oil_Qty", vehDLB.Gear_Oil_Qty, "@Grease", vehDLB.Grease, "@Grease_pack", vehDLB.Grease_Pack, "@Grease_Qty", vehDLB.Grease_Qty,
-                    "@Brake_Oil", vehDLB.Brake_Oil, "@Brake_pack", vehDLB.Brake_Oil_Pack, "@Brake_Oil_Qty", vehDLB.Brake_Oil_Qty, "@Coolent", vehDLB.Coolent, "@Coolent_Pack", vehDLB.Coolent_Oil_Pack, "@Coolent_Qty", vehDLB.Coolent_Oil_Qty, "@Trans_Oil", vehDLB.Trans_Oil, "@Trans_pack", vehDLB.Trans_Oil_Pack, "@Trans_Oil_Qty", vehDLB.Trans_Oil_Qty, "@Toll", vehDLB.Toll, "@Police", vehDLB.Police, "@Food", vehDLB.Food, "@Misc", vehDLB.Misc);
-                return Ok(true);
-            }
-            catch (Exception ex)
-            {
-                return Content(HttpStatusCode.NotFound, "Vehicle Logbbok ID could not update data");
-            }
-        }
-
-        [HttpGet]
-        [Route("api/VehicleEntryLogbook/GetDropVehicleID_SelectedData")]
-        public IHttpActionResult GetDropVehicleID_SelectedData(string VehicleID)
-        {
-
-            VehicleDailyLogbookModel vehDLB = new VehicleDailyLogbookModel();
-
-            try
-            {
-                SqlDataReader SqlDtr = null;
-                SqlDataReader SqlDtr1 = null;
-                dbobj.SelectQuery("select v.*,(ve.vehicle_no+' VID '+cast(ve.vehicledetail_id as varchar)) as v_no,ve.vehicle_name,ve.vehicledetail_id from vdlb v,vehicleentry ve where  ve.vehicledetail_id = v.vehicle_no and  vdlb_id =" + VehicleID, ref SqlDtr);
-                if (SqlDtr.Read())
-                {
-                    string emp_name = "";
-                    dbobj.SelectQuery("Select emp_name from employee where vehicle_id = " + SqlDtr["vehicledetail_id"].ToString().Trim() + " and designation = 'Driver'", ref SqlDtr1);
-                    if (SqlDtr1.HasRows)
-                    {
-                        if (SqlDtr1.Read())
-                            emp_name = SqlDtr1.GetValue(0).ToString().Trim();
-
-                    }
-                    SqlDtr1.Close();
-
-                    vehDLB.Vehicle_no = SqlDtr["v_no"].ToString().Trim();
-                    // DropVehicleNo.SelectedIndex = DropVehicleNo.Items.IndexOf(DropVehicleNo.Items.FindByText(vehicle_no));
-                    vehDLB.Vehicle_Name = SqlDtr["vehicle_name"].ToString().Trim();
-                    vehDLB.DOE = SqlDtr["DOE"].ToString().Trim();
-                    vehDLB.DriverName = emp_name;
-                    vehDLB.Meter_reading_pre = SqlDtr["meter_reading_pre"].ToString().Trim();
-                    vehDLB.Meter_reading_cur = SqlDtr["meter_reading_cur"].ToString().Trim();
-                    dbobj.SelectQuery("Select route_name From route where route_id =" + SqlDtr["vehicle_route"].ToString().Trim(), ref SqlDtr1);
-                    if (SqlDtr1.Read())
-                    {
-                        vehDLB.Vehicle_route = SqlDtr1.GetValue(0).ToString().Trim();
-                    }
-                    SqlDtr1.Close();
-
-                    vehDLB.Fuel_Used = SqlDtr["Fuel_Used"].ToString().Trim();
-                    vehDLB.Fuel_Used_Qty = SqlDtr["Fuel_Used_Qty"].ToString().Trim();
-                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where prod_id =" + SqlDtr["Engine_Oil"].ToString().Trim() + " and Category like 'Engine Oil%'", ref SqlDtr1);
-                    if (SqlDtr1.Read())
-                    {
-                        vehDLB.EngineOil = SqlDtr1.GetValue(0).ToString().Trim();
-                    }
-                    SqlDtr1.Close();
-
-                    vehDLB.Engine_Oil_Qty = SqlDtr["Engine_Oil_Qty"].ToString().Trim();
-
-                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where prod_id =" + SqlDtr["Gear_Oil"].ToString().Trim() + " and Category like 'Gear Oil%'", ref SqlDtr1);
-                    if (SqlDtr1.Read())
-                    {
-                        vehDLB.Gear_Oil = SqlDtr1.GetValue(0).ToString().Trim();
-                    }
-                    SqlDtr1.Close();
-
-                    vehDLB.Gear_Oil_Qty = SqlDtr["Gear_Oil_Qty"].ToString().Trim();
-
-                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where prod_id =" + SqlDtr["Grease"].ToString().Trim() + " and Category like 'Grease%'", ref SqlDtr1);
-                    if (SqlDtr1.Read())
-                    {
-                        vehDLB.Grease = SqlDtr1.GetValue(0).ToString().Trim();
-                    }
-                    SqlDtr1.Close();
-
-                    vehDLB.Grease_Qty = SqlDtr["Grease_Qty"].ToString().Trim();
-
-                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where prod_id =" + SqlDtr["Brake_Oil"].ToString().Trim() + " and Category like 'Brake Oil%'", ref SqlDtr1);
-                    if (SqlDtr1.Read())
-                    {
-                        vehDLB.Brake_Oil = SqlDtr1.GetValue(0).ToString().Trim();
-                    }
-                    SqlDtr1.Close();
-
-                    vehDLB.Brake_Oil_Qty = SqlDtr["Brake_Oil_Qty"].ToString().Trim();
-
-                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where prod_id =" + SqlDtr["Coolent"].ToString().Trim() + " and Category like 'Collents%'", ref SqlDtr1);
-                    if (SqlDtr1.Read())
-                    {
-                        vehDLB.Coolent = SqlDtr1.GetValue(0).ToString().Trim();
-                    }
-                    SqlDtr1.Close();
-
-                    vehDLB.Coolent_Oil_Qty = SqlDtr["Coolent_Qty"].ToString().Trim();
-
-                    dbobj.SelectQuery("Select prod_name+':'+pack_type from products where prod_id =" + SqlDtr["Trans_Oil"].ToString().Trim() + " and Category like 'Transmission Oil%'", ref SqlDtr1);
-                    if (SqlDtr1.Read())
-                    {
-                        vehDLB.Trans_Oil = SqlDtr1.GetValue(0).ToString().Trim();
-                    }
-                    SqlDtr1.Close();
-                    vehDLB.Trans_Oil_Qty = SqlDtr["Trans_Oil_Qty"].ToString().Trim();
-
-                    vehDLB.Toll = SqlDtr["Toll"].ToString().Trim();
-                    vehDLB.Police = SqlDtr["Police"].ToString().Trim();
-                    vehDLB.Food = SqlDtr["Food"].ToString().Trim();
-                    vehDLB.Misc = SqlDtr["misc"].ToString().Trim();
-                }
-                SqlDtr.Close();
-                if (vehDLB == null)
-                    return Content(HttpStatusCode.NotFound, "Vehicle Logbbok ID Data Not found");
-                return Ok(vehDLB);
-            }
-            catch
-            {
-                return Content(HttpStatusCode.NotFound, "Vehicle Logbbok ID Data Not found");
-            }
-        }
-
-
-
-        [HttpPost]
-        [Route("api/VehicleEntryLogbook/DeleteVehicleEntryLogbook")]
-        public IHttpActionResult DeleteVehicleEntryLogbook(string vehicleLogbookID)
-        {
-            int count = 0;
-
-            try
-            {
-                dbobj.Insert_or_Update("Delete from vdlb where vdlb_id = " + vehicleLogbookID, ref count);
-                if (count < 1)
-                    return Content(HttpStatusCode.NotFound, "vehicle Route Not found");
-                return Ok(count);
             }
             catch
             {
                 return Content(HttpStatusCode.NotFound, "Could not delete Vehicle Entry Logbook");
             }
         }
+
+        [HttpPost]
+        [Route("api/RouteMaster/DeleteRoute")]
+        public IHttpActionResult DeleteRoute(string route)
+        {
+            int count = 0;
+
+            try
+            {
+                SqlConnection con10;
+                SqlCommand cmdselect10;
+                SqlDataReader dtredit10;
+                string strdelete10;
+                con10 = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings["Servosms"]);
+                con10.Open();
+
+                strdelete10 = "Delete Route where Route_name =@Route_name";
+                cmdselect10 = new SqlCommand(strdelete10, con10);
+                cmdselect10.Parameters.AddWithValue("@Route_name", route);
+                dtredit10 = cmdselect10.ExecuteReader();
+                
+                return Ok(count);
+            }
+            catch
+            {
+                return Content(HttpStatusCode.NotFound, "Could not delete Route");
+            }
+        }
+
+        [HttpPost]
+        [Route("api/RouteMaster/UpdateRoute")]
+        public IHttpActionResult UpdateRoute(RouteMasterModel route)
+        {
+
+            try
+            {
+                SqlConnection con2;
+                string strUpdate;
+                SqlCommand cmdselect2;
+                SqlDataReader dtredit2;
+
+                con2 = new SqlConnection(System.Configuration.ConfigurationManager.AppSettings["Servosms"]);
+                con2.Open();
+
+                strUpdate = "Update Route set Route_name=@Route_name,Route_km=@Route_km where Route_name=@Route2";
+                cmdselect2 = new SqlCommand(strUpdate, con2);
+                if (route.Route_Name == "")
+                    cmdselect2.Parameters.AddWithValue("@Route_name", "");
+                else
+                    cmdselect2.Parameters.AddWithValue("@Route_name", route.Route_Name.Trim());
+                if (route.Route_Km == "")
+                    cmdselect2.Parameters.AddWithValue("@Route_km", "");
+                else
+                    cmdselect2.Parameters.AddWithValue("@Route_km", route.Route_Km.Trim());
+                if (route.Index_Route_Name == "0")
+                    cmdselect2.Parameters.AddWithValue("@Route2", "");
+                else
+                    cmdselect2.Parameters.AddWithValue("@Route2", route.Selected_Route_Name.ToString());
+                dtredit2 = cmdselect2.ExecuteReader();
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Route could not update.");
+            }
+        }
+
+        [HttpPost]
+        [Route("api/RouteMaster/InsertRoute")]
+        public IHttpActionResult InsertRoute(RouteMasterModel route)
+        {
+
+            try
+            {
+                SqlConnection con4;
+                string strInsert4;
+                SqlCommand cmdInsert4;
+                con4 = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
+                con4.Open();
+                strInsert4 = "Insert Route(Route_name,Route_km)values (@Route_name,@Route_km)";
+                cmdInsert4 = new SqlCommand(strInsert4, con4);
+                cmdInsert4.Parameters.AddWithValue("@Route_name", route.Route_Name.Trim());
+                cmdInsert4.Parameters.AddWithValue("@Route_km", route.Route_Km.Trim());
+                cmdInsert4.ExecuteNonQuery();
+                con4.Close();
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Route could not update.");
+            }
+        }        
     }
  }
