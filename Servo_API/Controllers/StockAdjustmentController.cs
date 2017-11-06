@@ -15,7 +15,7 @@ using System.Web.Http;
 
 namespace Servo_API.Controllers
 {
-    public class RouteMasterController : ApiController
+    public class StockAdjustmentController : ApiController
     {
         static string FromDate = "", ToDate = "";
         App_Start.DbOperations_LATEST.DBUtil dbobj = new App_Start.DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);

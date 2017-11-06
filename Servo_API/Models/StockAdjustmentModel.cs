@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Servo_API.Models
 {
-    public class RouteMasterModel
+    public class StockAdjustmentModel
     {
         public string Route_ID { get; set; }
 
