@@ -11,10 +11,10 @@ namespace Servo_API.Models
 
         public string Route_Name { get; set; }
 
-        public string Route_Km { get; set; }
+        public string product_info { get; set; }
 
-        public string Index_Route_Name { get; set; }
+        public string product_info1 { get; set; }
 
-        public string Selected_Route_Name { get; set; }
+        public string product_info2 { get; set; }
     }
 }
