@@ -252,6 +252,7 @@
     <Compile Include="Controllers\PriviligesController.cs" />
     <Compile Include="Controllers\PurchaseController.cs" />
     <Compile Include="Controllers\ReceiptController.cs" />
+    <Compile Include="Controllers\StockAdjustmentController.cs" />
     <Compile Include="Controllers\RouteMasterController.cs" />
     <Compile Include="Controllers\VehicleDailyLogbookController.cs" />
     <Compile Include="Controllers\VehicleEntryController.cs" />
@@ -279,6 +280,7 @@
     <Compile Include="Models\PriviligesModel.cs" />
     <Compile Include="Models\ProductModels.cs" />
     <Compile Include="Models\PurchaseModels.cs" />
+    <Compile Include="Models\StockAdjustmentModel.cs" />
     <Compile Include="Models\RouteMasterModel.cs" />
     <Compile Include="Models\VehicleDailyLogbookModel.cs" />
     <Compile Include="Models\VehicleEntryModel.cs" />
