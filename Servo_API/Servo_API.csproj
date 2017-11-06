@@ -242,6 +242,7 @@
     <Compile Include="Controllers\AttandanceRegisterController.cs" />
     <Compile Include="Controllers\BackupRestoreController.cs" />
     <Compile Include="Controllers\BeatMasterEntryController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\EmployeeEntryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

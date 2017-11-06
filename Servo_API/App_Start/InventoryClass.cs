@@ -5887,5 +5887,130 @@ namespace Servo_API.App_Start
             SqlCmd.ExecuteNonQuery();
         }
 
+        /// <summary>
+		/// Calls the Procedure ProCustomerEntry to insert the Customer Details
+		/// and also insert CustomerLedgerTable,Ledger_Master with get max Ledger ID, AccountsLedgerTable
+		/// and Customer_Balance table.
+		/// </summary>
+		public void InsertCustomer(CustomerModels customer)
+        {
+            SqlCmd = new SqlCommand("ProCustomerEntry", SqlCon);
+            SqlCmd.CommandType = CommandType.StoredProcedure;
+            SqlCmd.Parameters.Add("@Cust_ID", customer.CustomerID);
+            SqlCmd.Parameters.Add("@sadbhavnacd", customer.sadbhavnacd);
+            SqlCmd.Parameters.Add("@EntryDate", customer.EntryDate);
+            SqlCmd.Parameters.Add("@Cust_Name", customer.CustomerName);
+            SqlCmd.Parameters.Add("@Cust_Type", customer.CustomerType);
+            SqlCmd.Parameters.Add("@Address", customer.Address);
+            SqlCmd.Parameters.Add("@City", customer.City);
+            SqlCmd.Parameters.Add("@State", customer.State);
+            SqlCmd.Parameters.Add("@Country", customer.Country);
+            SqlCmd.Parameters.Add("@Tel_Res", customer.Tel_Res);
+            SqlCmd.Parameters.Add("@Tel_Off", customer.Tel_Off);
+            SqlCmd.Parameters.Add("@Mobile", customer.Mobile);
+            SqlCmd.Parameters.Add("@EMail", customer.EMail);
+            SqlCmd.Parameters.Add("@CR_Limit", customer.CR_Limit);
+            SqlCmd.Parameters.Add("@CR_Days", customer.CR_Days);
+            SqlCmd.Parameters.Add("@Op_Balance", customer.Op_Balance);
+            SqlCmd.Parameters.Add("@Balance_Type", customer.Balance_Type);
+            SqlCmd.Parameters.Add("@Tin_No", customer.TinNo);
+            SqlCmd.Parameters.Add("@SSR", customer.SSR);
+            SqlCmd.Parameters.Add("@ContactPerson", customer.ContactPerson);
+            SqlCmd.ExecuteNonQuery();
+        }
+        /// <summary>
+		/// Returns the DataSet Object containing the Customer information for the passing Customer ID , 
+		/// Name and City as a Parameters
+		/// </summary>
+		/// <param name="ID"></param>
+		/// <param name="name"></param>
+		/// <param name="place"></param>
+		/// <returns></returns>
+		public DataSet ShowCustomerInfo(string ID, string name, string place)
+        {
+            #region Query
+            string sql;
+            int wherestatus = 0;
+            //sql="select Cust_ID,Cust_Name,City from Customer";
+            sql = "select Cust_ID,Cust_Name,City,Ledger_ID from Customer c,Ledger_Master lm where c.Cust_Name=lm.Ledger_Name";
+            if (ID != "")
+            {
+                //sql=sql+" where Cust_ID=" + ID;
+                //sql=sql+" where Cust_ID like('" + ID +"%')";
+                sql = sql + " and Cust_ID like('" + ID + "%')";
+                wherestatus = 1;
+            }
+            if (name != "" && place == "")
+            {
+
+                if (wherestatus == 0)
+                {
+                    //sql=sql+" where  Cust_Name like('"+name+"%')";
+                    sql = sql + " and  Cust_Name like('" + name + "%')";
+                }
+                else if (wherestatus == 0)
+                {
+                    //sql=sql+" where Cust_Name like('%" + name +"%')";
+                    sql = sql + " and Cust_Name like('%" + name + "%')";
+                    wherestatus = 1;
+                }
+                else if (wherestatus == 0)
+                {
+                    //sql=sql+" where Cust_Name like('%" + name +"')";
+                    sql = sql + " and Cust_Name like('%" + name + "')";
+                    wherestatus = 1;
+                }
+            }
+            if (place != "" && name == "")
+            {
+                if (wherestatus == 0)
+                {
+                    //sql=sql+" where City like('" + place +"%')";
+                    sql = sql + " and City like('" + place + "%')";
+                    wherestatus = 1;
+                }
+                else if (wherestatus == 0)
+                {
+                    //sql=sql+" where City like('%" + place +"')";
+                    sql = sql + " and City like('%" + place + "')";
+                    wherestatus = 1;
+                }
+                else if (wherestatus == 0)
+                {
+                    sql = sql + " where City like('%" + place + "%')";
+                    wherestatus = 1;
+                }
+
+            }
+            if (name != "" && place != "")
+            {
+                if (wherestatus == 0)
+                {
+                    //sql=sql+" where City like('" + place +"%') and  Cust_Name like('" + name +"%')";
+                    sql = sql + " and City like('" + place + "%') and  Cust_Name like('" + name + "%')";
+                    wherestatus = 1;
+                }
+                else if (wherestatus == 0)
+                {
+                    //sql=sql+" where City like('%" + place +"') and  Cust_Name like('%" + name +"')";
+                    sql = sql + " and City like('%" + place + "') and  Cust_Name like('%" + name + "')";
+                    wherestatus = 1;
+                }
+                else if (wherestatus == 0)
+                {
+                    //sql=sql+" where City like('%" + place +"%') and  Cust_Name like('%" + name +"%')";
+                    sql = sql + " and City like('%" + place + "%') and  Cust_Name like('%" + name + "%')";
+                    wherestatus = 1;
+                }
+
+            }
+            #endregion
+
+            var SqlAdp = new SqlDataAdapter(sql, SqlCon);
+            ds = new DataSet();
+            SqlAdp.Fill(ds);
+            return ds;
+        }
+
     }
 }
