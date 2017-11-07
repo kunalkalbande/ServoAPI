@@ -15,13 +15,12 @@ using System.Web.Http;
 namespace Servo_API.Controllers
 {
     public class VehicleEntryController : ApiController
-    {
-        static string FromDate = "", ToDate = "";
+    {        
         App_Start.DbOperations_LATEST.DBUtil dbobj = new App_Start.DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
 
         [HttpGet]
         [Route("api/VehicleEntry/FillDropEngineOil")]
-        public List<string> FillDropEngineOil()
+        public IHttpActionResult FillDropEngineOil()
         {
             List<string> dropEngineOil = new List<string>();
             try
@@ -34,17 +33,20 @@ namespace Servo_API.Controllers
                     dropEngineOil.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropEngineOil;
+
+                if (dropEngineOil == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get Engine Oil data.");
+                return Ok(dropEngineOil);
             }
             catch (Exception ex)
             {
-                return dropEngineOil;
+                return Content(HttpStatusCode.NotFound, "Failed to get Engine Oil data.");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntry/FillDropbreak")]
-        public List<string> FillDropbreak()
+        public IHttpActionResult FillDropbreak()
         {
             List<string> dropBreak = new List<string>();
             try
@@ -57,17 +59,20 @@ namespace Servo_API.Controllers
                     dropBreak.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropBreak;
+
+                if (dropBreak == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get Brake Oil data.");
+                return Ok(dropBreak);
             }
             catch (Exception ex)
             {
-                return dropBreak;
+                return Content(HttpStatusCode.NotFound, "Failed to get Brake Oil data.");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntry/FillDropGear")]
-        public List<string> FillDropGear()
+        public IHttpActionResult FillDropGear()
         {
             List<string> dropGear = new List<string>();
             try
@@ -80,17 +85,20 @@ namespace Servo_API.Controllers
                     dropGear.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropGear;
+
+                if (dropGear == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get Gear Oil data.");
+                return Ok(dropGear);                
             }
             catch (Exception ex)
             {
-                return dropGear;
+                return Content(HttpStatusCode.NotFound, "Failed to get Gear Oil data.");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntry/FillDropCoolent")]
-        public List<string> FillDropCoolent()
+        public IHttpActionResult FillDropCoolent()
         {
             List<string> dropCoolent = new List<string>();
             try
@@ -103,17 +111,20 @@ namespace Servo_API.Controllers
                     dropCoolent.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropCoolent;
+
+                if (dropCoolent == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get Gear Oil data.");
+                return Ok(dropCoolent);                
             }
             catch (Exception ex)
             {
-                return dropCoolent;
+                return Content(HttpStatusCode.NotFound, "Failed to get Gear Oil data.");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntry/FillDropGrease")]
-        public List<string> FillDropGrease()
+        public IHttpActionResult FillDropGrease()
         {
             List<string> dropGrease = new List<string>();
             try
@@ -126,17 +137,20 @@ namespace Servo_API.Controllers
                     dropGrease.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropGrease;
+
+                if (dropGrease == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get Grease data.");
+                return Ok(dropGrease);               
             }
             catch (Exception ex)
             {
-                return dropGrease;
+                return Content(HttpStatusCode.NotFound, "Failed to get Grease data.");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntry/FillDropTransmission")]
-        public List<string> FillDropTransmission()
+        public IHttpActionResult FillDropTransmission()
         {
             List<string> dropTransmission = new List<string>();
             try
@@ -149,17 +163,20 @@ namespace Servo_API.Controllers
                     dropTransmission.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropTransmission;
+
+                if (dropTransmission == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get Transmisssion data.");
+                return Ok(dropTransmission);                
             }
             catch (Exception ex)
             {
-                return dropTransmission;
+                return Content(HttpStatusCode.NotFound, "Failed to get Transmisssion data.");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntry/GetNextVehicledetailID")]
-        public string GetNextVehicledetailID()
+        public IHttpActionResult GetNextVehicledetailID()
         {
             string vehicleDetailID = string.Empty;
             try
@@ -189,18 +206,21 @@ namespace Servo_API.Controllers
                     vehicleDetailID = "1001";
                 }
                 #endregion
-                return vehicleDetailID;
+
+                if (vehicleDetailID == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get Next Vehicle entry ID.");
+                return Ok(vehicleDetailID);                
             }
             catch (Exception ex)
             {
-                return vehicleDetailID;
+                return Content(HttpStatusCode.NotFound, "Failed to get Next Vehicle entry ID.");
             }
 
         }
 
         [HttpPost]
         [Route("api/VehicleEntry/UpdateVehicleEntry")]
-        public bool UpdateVehicleEntry(VehicleEntryModel vehEntryModel)
+        public IHttpActionResult UpdateVehicleEntry(VehicleEntryModel vehEntryModel)
         {           
             SqlConnection con;
             string strInsert;
@@ -378,17 +398,18 @@ namespace Servo_API.Controllers
                 cmdInsert.Parameters.AddWithValue("@Vehicle_Avg", vehEntryModel.Vehicle_Avg.Trim());
                 cmdInsert.ExecuteNonQuery();
                 con.Close();
-                return true;
+
+                return Ok(true);                
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update Vehicle entry ID.");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntry/GetDropVehicleID_SelectedData")]
-        public VehicleEntryModel GetDropVehicleID_SelectedData(string VehicleID)
+        public IHttpActionResult GetDropVehicleID_SelectedData(string VehicleID)
         {
 
             VehicleEntryModel vehEntryModel = null;
@@ -424,14 +445,7 @@ namespace Servo_API.Controllers
                     vehEntryModel.RouteName = route_name;
 
                     vehEntryModel.Insurance_Comp_name = SqlDtr["Insurance_Comp_Name"].ToString().Trim();
-                    //					string fuel_used = "";
-                    //					dbobj.SelectQuery("Select Fuel_used from vehicleentry where vehicledetail_id='"+DropVehicleID.SelectedItem.Text+"'",ref SqlDtr1); 
-                    //					if(SqlDtr1.Read())
-                    //					{
-                    //						fuel_used = SqlDtr1.GetValue(0).ToString();  
-                    //
-                    //					}
-                    //					SqlDtr1.Close();
+                    
                     vehEntryModel.Fuel_Used = SqlDtr["Fuel_Used"].ToString().Trim();
                     vehEntryModel.Fuel_Used_Qty = SqlDtr["Fuel_Used_Qty"].ToString().Trim();
                     vehEntryModel.Start_Fuel_Qty = SqlDtr["Start_Fuel_Qty"].ToString().Trim();
@@ -524,68 +538,21 @@ namespace Servo_API.Controllers
 
                 }
                 SqlDtr.Close();
-                return vehEntryModel;
+
+                if (vehEntryModel == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get data Vehicle entry ID related data.");
+                return Ok(vehEntryModel);                
             }
             catch (Exception ex)
             {
-                return vehEntryModel;
+                return Content(HttpStatusCode.NotFound, "Failed to get data Vehicle entry ID related data.");
             }
         }
 
         [HttpPost]
         [Route("api/VehicleEntry/InsertVehicleEntry")]
-        public bool InsertVehicleEntry(VehicleEntryModel vehEntryModel)
-        {
-            //vehEntryModel.Vehicleno = txtVehicleno.Text.Trim();
-
-            //vehEntryModel.Vehiclenm = txtVehiclenm.Text.Trim();
-
-            //vehEntryModel.RTO_Reg_Val_yrs = GenUtil.str2MMDDYYYY(Request.Form["txtrtoregvalidity"].ToString().Trim());
-            //vehEntryModel.Model_name = txtmodelnm.Text.Trim();
-
-            //vehEntryModel.RTO_Reg_No = txtrtono.Text.Trim();
-            //vehEntryModel.Vehicle_Man_Date = GenUtil.str2MMDDYYYY(Request.Form["txtVehicleyear"].ToString().Trim());
-            //vehEntryModel.Insurance_No = txtinsuranceno.Text.Trim();
-            //vehEntryModel.Meter_Reading = txtVehiclemreading.Text.Trim();
-            //vehEntryModel.Insurance_validity = GenUtil.str2MMDDYYYY(Request.Form["txtvalidityinsurance"].ToString().Trim());
-            //vehEntryModel.RouteName = DropDownList1.SelectedItem.Text.Trim();
-
-            //vehEntryModel.Fuel_Used = DropFuelused.SelectedItem.Text.Trim();
-            //vehEntryModel.Fuel_Used_Qty = txtfuelinword.Text.Trim();
-            //vehEntryModel.Start_Fuel_Qty = txtfuelintank.Text.Trim();
-
-            //vehEntryModel.EngineOil = DropEngineOil.SelectedItem.Text.Trim();
-            //vehEntryModel.Engine_Oil_Qty = txtEngineQty.Text.Trim();
-            //vehEntryModel.Engine_Oil_Dt = GenUtil.str2MMDDYYYY(Request.Form["txtEngineOilDate"].ToString().Trim());
-
-            //vehEntryModel.Gear_Oil = Dropgear.SelectedItem.Text.Trim();
-            //vehEntryModel.Gear_Oil_Qty = txtgearinword.Text.Trim();
-            //vehEntryModel.Gear_Oil_Dt = GenUtil.str2MMDDYYYY(Request.Form["txtgeardt"].ToString().Trim());
-
-            //vehEntryModel.Brake_Oil = Dropbreak.SelectedItem.Text.Trim();
-            //vehEntryModel.Brake_Oil_Qty = txtbearkinword.Text.Trim();
-            //vehEntryModel.Brake_Oil_Dt = GenUtil.str2MMDDYYYY(Request.Form["txtbreakdt"].ToString().Trim());
-
-            //vehEntryModel.Coolent = Dropcoolent.SelectedItem.Text.Trim();
-            //vehEntryModel.Coolent_Oil_Qty = txtcoolentinword.Text.Trim();
-            //vehEntryModel.Coolent_Oil_Dt = GenUtil.str2MMDDYYYY(Request.Form["txtcoolentdt"].ToString().Trim());
-
-            //vehEntryModel.Grease = Dropgrease.SelectedItem.Text.Trim();
-            //vehEntryModel.Grease_Qty = txtgreaseinword.Text.Trim();
-            //vehEntryModel.Grease_Dt = GenUtil.str2MMDDYYYY(Request.Form["txtgreasedt"].ToString().Trim());
-
-            //vehEntryModel.Trans_Oil = Droptransmission.SelectedItem.Text.Trim();
-            //vehEntryModel.Trans_Oil_Qty = txttransinword.Text.Trim();
-            //vehEntryModel.Trans_Oil_Dt = GenUtil.str2MMDDYYYY(Request.Form["txttransmissiondt"].ToString().Trim());
-            //vehEntryModel.Trans_Oil_km = txttransmissionkm.Text.Trim();
-            //vehEntryModel.Vehicle_Avg = txtvechileavarge.Text.Trim();
-
-            //vehEntryModel.Engine_Oil_km = txtEngineKM.Text.Trim();
-            //vehEntryModel.Gear_Oil_km = txtgearkm.Text.Trim();
-            //vehEntryModel.Brake_Oil_km = txtbreakkm.Text.Trim();
-            //vehEntryModel.Coolent_km = txtcoolentkm.Text.Trim();
-            //vehEntryModel.Grease_km = txtgreasekm.Text.Trim();
-
+        public IHttpActionResult InsertVehicleEntry(VehicleEntryModel vehEntryModel)
+        {           
             SqlConnection con;
             string strInsert;
             SqlCommand cmdInsert;
@@ -625,17 +592,11 @@ namespace Servo_API.Controllers
                 cmdInsert.Parameters.AddWithValue("@Vehicle_Route", route_id);
                 cmdInsert.Parameters.AddWithValue("@Insurance_Comp_name", vehEntryModel.Insurance_Comp_name.Trim());
                 string prod_id = "";
-                //Fetch the product id for selected product of type fuel from table products.
-                //				dbobj.SelectQuery("Select prod_id from products where prod_name='"+DropFuelused.SelectedItem.Text.Trim()+"' and Category ='Fuel'" ,ref SqlDtr);
-                //				if(SqlDtr.Read())
-                //				{
-                //					prod_id = SqlDtr.GetValue(0).ToString();       
-                //				}
-                //				SqlDtr.Close();
-                //cmdInsert.Parameters .Add ("@Fuel_Used",prod_id );
+                
                 cmdInsert.Parameters.AddWithValue("@Fuel_Used", vehEntryModel.Fuel_Used.Trim());
                 cmdInsert.Parameters.AddWithValue("@Fuel_Used_Qty", vehEntryModel.Fuel_Used_Qty.Trim());
                 cmdInsert.Parameters.AddWithValue("@Start_Fuel_Qty", vehEntryModel.Start_Fuel_Qty.Trim());
+
                 //Fetch the product id for selected product of type Engine Oil from table products.
                 
                 if (vehEntryModel.EngineOil.ToString() != "")
@@ -768,34 +729,35 @@ namespace Servo_API.Controllers
                 cmdInsert.Parameters.AddWithValue("@Vehicle_Avg", vehEntryModel.Vehicle_Avg.Trim());
                 cmdInsert.ExecuteNonQuery();
                 con.Close();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert Vehicle entry ID.");
             }
         }
 
         [HttpPost]
         [Route("api/VehicleEntry/DeleteVehicleEntry")]
-        public int DeleteVehicleEntry(string vehicleID)
+        public IHttpActionResult DeleteVehicleEntry(string vehicleID)
         {
             int count = 0;
             
             try
             {                                
                 dbobj.Insert_or_Update("Delete from vehicleentry where vehicledetail_id = " + vehicleID.Trim(), ref count);
-                return count;
+
+                return Ok(count);
             }
             catch (Exception ex)
             {
-                return count;
+                return Content(HttpStatusCode.NotFound, "Failed to delete Vehicle entry.");
             }
         }
 
         [HttpGet]
         [Route("api/VehicleEntry/FillDropVehicleID")]
-        public List<string> FillDropVehicleID()
+        public IHttpActionResult FillDropVehicleID()
         {
             List<string> dropVehicleID = new List<string>();
             try
@@ -809,13 +771,12 @@ namespace Servo_API.Controllers
                     dropVehicleID.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropVehicleID;
+                return Ok(dropVehicleID);
             }
             catch (Exception ex)
             {
-                return dropVehicleID;
+                return Content(HttpStatusCode.NotFound, "Failed to get Vehicle entry IDs.");
             }
         }
-        
     }
 }

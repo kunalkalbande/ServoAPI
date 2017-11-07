@@ -21,7 +21,7 @@ namespace Servo_API.Controllers
 
         [HttpGet]
         [Route("api/Roles/GetNextRoleID")]
-        public string GetNextRoleID()
+        public IHttpActionResult GetNextRoleID()
         {
             string roleID = string.Empty;
             try
@@ -40,18 +40,21 @@ namespace Servo_API.Controllers
                 }
                 SqlDtr.Close();
                 #endregion
-                return roleID;
+                if (roleID == null )
+                    return Content(HttpStatusCode.NotFound, "Failed to get Next Role ID.");
+
+                return Ok(roleID);                
             }
             catch (Exception ex)
             {
-                return roleID;
+                return Content(HttpStatusCode.NotFound, "Failed to get Next Role ID.");
             }
 
         }
 
         [HttpGet]
         [Route("api/Roles/GetCheckRoleExists")]
-        public int GetCheckRoleExists(string txtRoleName)
+        public IHttpActionResult GetCheckRoleExists(string txtRoleName)
         {
             int count = 0;
             string roleID = string.Empty;
@@ -59,17 +62,17 @@ namespace Servo_API.Controllers
             {
                 dbobj.ExecuteScalar("select count(*) from Roles where Role_Name='" + txtRoleName.Trim() + "'", ref count);
 
-                return count;
+                return Ok(count);
             }
             catch (Exception ex)
             {
-                return count;
+                return Content(HttpStatusCode.NotFound, "Failed to check existence of Role.");
             }
         }
 
         [HttpGet]
         [Route("api/Roles/GetCheckRoleExistsUser_master")]
-        public int GetCheckRoleExistsUser_master(string txtRoleName)
+        public IHttpActionResult GetCheckRoleExistsUser_master(string txtRoleName)
         {
             int count = 0;
             string roleID = string.Empty;
@@ -77,17 +80,17 @@ namespace Servo_API.Controllers
             {
                 dbobj.ExecuteScalar("select count(*) from User_master where Role_ID='" + txtRoleName + "'", ref count);
 
-                return count;
+                return Ok(count);
             }
             catch (Exception ex)
             {
-                return count;
+                return Content(HttpStatusCode.NotFound, "Failed to check existence of Role in User_master.");
             }
         }
 
         [HttpPost]
         [Route("api/Roles/DeleteRole")]
-        public int DeleteRole(string txtRoleName)
+        public IHttpActionResult DeleteRole(string txtRoleName)
         {
             int count = 0;
             string roleID = string.Empty;
@@ -95,17 +98,17 @@ namespace Servo_API.Controllers
             {
                 dbobj.Insert_or_Update("delete from roles where Role_Id='" + txtRoleName + "'", ref count);
 
-                return count;
+                return Ok(count);
             }
             catch (Exception ex)
             {
-                return count;
+                return Content(HttpStatusCode.NotFound, "Failed to delete Role.");
             }
         }
 
         [HttpPost]
         [Route("api/Roles/InsertRole")]
-        public bool InsertRole(EmployeeClass obj)
+        public IHttpActionResult InsertRole(EmployeeClass obj)
         {
             SqlCommand cmd;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -113,17 +116,17 @@ namespace Servo_API.Controllers
             try
             {
                 obj.InsertRoles();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert Role.");
             }
         }
 
         [HttpPost]
         [Route("api/Roles/UpdateRole")]
-        public bool UpdateRole(EmployeeClass obj)
+        public IHttpActionResult UpdateRole(EmployeeClass obj)
         {
             SqlCommand cmd;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -131,22 +134,21 @@ namespace Servo_API.Controllers
             try
             {
                 obj.UpdateRoles();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update Role.");
             }
         }
 
         [HttpGet]
         [Route("api/Roles/FillDropRoleID")]
-        public List<string> FillDropRoleID()
+        public IHttpActionResult FillDropRoleID()
         {            
             List<string> dropRoleID = new List<string>();
             try
-            {
-                //DBOperations.DBUtil obj = new DBOperations.DBUtil();
+            {                
                 SqlDataReader SqlDtr = null;
 
                 dbobj.SelectQuery("select Role_ID from Roles", ref SqlDtr);
@@ -155,24 +157,23 @@ namespace Servo_API.Controllers
                     dropRoleID.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return dropRoleID;
+                return Ok(dropRoleID);
             }
             catch (Exception ex)
             {
-                return dropRoleID;
+                return Content(HttpStatusCode.NotFound, "Failed to get Role IDs.");
             }
         }
 
         [HttpGet]
         [Route("api/Roles/GetSelectedRoleIDData")]
-        public RolesModel GetSelectedRoleIDData(string RoleID)
+        public IHttpActionResult GetSelectedRoleIDData(string RoleID)
         {
             RolesModel role = new RolesModel();
 
             List<string> dropRoleID = new List<string>();
             try
-            {
-                //DBOperations.DBUtil obj = new DBOperations.DBUtil();
+            {               
                 SqlDataReader SqlDtr = null;
 
                 dbobj.SelectQuery("select * from roles where Role_Id='" + RoleID + "'", ref SqlDtr);
@@ -181,11 +182,14 @@ namespace Servo_API.Controllers
                     role.Role_Name = SqlDtr.GetValue(1).ToString();
                     role.Description = SqlDtr.GetValue(2).ToString();
                 }
-                return role;
+                if (role == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get Role ID related data.");
+
+                return Ok(role);
             }
             catch (Exception ex)
             {
-                return role;
+                return Content(HttpStatusCode.NotFound, "Failed to get Role ID related data.");
             }
         }
     }

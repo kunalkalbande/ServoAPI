@@ -16,38 +16,107 @@ using System.Web.Http;
 namespace Servo_API.Controllers
 {
     public class StockAdjustmentController : ApiController
-    {
-        static string FromDate = "", ToDate = "";
+    {        
         App_Start.DbOperations_LATEST.DBUtil dbobj = new App_Start.DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
 
         [HttpGet]
-        [Route("api/RouteMaster/GetNextRouteID")]
-        public IHttpActionResult GetNextRouteID()
+        [Route("api/StockAdjustment/GetFillCombo")]
+        public IHttpActionResult GetFillCombo()
+        {            
+            string texthiddenprod = string.Empty;
+            try
+            {
+                SqlDataReader SqlDtr = null;
+                dbobj.SelectQuery("Select case when pack_type != '' then Prod_Name+':'+Pack_Type else Prod_Name  end from products order by Prod_Name", ref SqlDtr);
+                if (SqlDtr.HasRows)
+                {
+                    texthiddenprod = "Select,";
+                    while (SqlDtr.Read())
+                    {                        
+                        texthiddenprod += SqlDtr.GetValue(0).ToString() + ",";
+                    }
+                }
+                SqlDtr.Close();
+
+                if (texthiddenprod == null)
+                    return Content(HttpStatusCode.NotFound, "Route Names data Not found");
+
+                return Ok(texthiddenprod);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Route Names data Not found");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/StockAdjustment/GetStoreIn")]
+        public IHttpActionResult GetStoreIn()
         {
-            string Route_ID = string.Empty;
+            SqlDataReader SqlDtr = null;
+            SqlDataReader SqlDtr1 = null;
+            SqlDataReader SqlDtr2 = null;
+            StockAdjustmentModel stockAdjust = new StockAdjustmentModel();
+            try
+            {
+                dbobj.SelectQuery("Select case when pack_type != '' then Prod_Name+':'+Pack_Type else Prod_Name  end,Category,Store_In,Pack_Type,Prod_ID from products", ref SqlDtr);
+                while (SqlDtr.Read())
+                {
+                    if (SqlDtr.GetValue(1).ToString().Equals("Fuel"))
+                    {
+                        dbobj.SelectQuery("Select Prod_AbbName from tank where Tank_ID = '" + SqlDtr.GetValue(2).ToString() + "'", ref SqlDtr1);
+                        if (SqlDtr1.Read())
+                        {
+                            stockAdjust.product_info = stockAdjust.product_info + SqlDtr.GetValue(0).ToString().Trim() + "~" + SqlDtr.GetValue(1).ToString().Trim() + "~" + SqlDtr1.GetValue(0).ToString().Trim() + "~" + " " + "#";
+                            stockAdjust.product_info1 = stockAdjust.product_info1 + SqlDtr.GetValue(0).ToString().Trim() + "~" + "1X1#";
+                        }
+                        SqlDtr1.Close();
+                    }
+                    else
+                    {
+                        stockAdjust.product_info = stockAdjust.product_info + SqlDtr.GetValue(0).ToString().Trim() + "~" + SqlDtr.GetValue(1).ToString().Trim() + "~" + SqlDtr.GetValue(2).ToString().Trim() + "~" + SqlDtr.GetValue(3).ToString().Trim() + "#";
+                        stockAdjust.product_info1 = stockAdjust.product_info1 + SqlDtr.GetValue(0).ToString().Trim() + "~" + SqlDtr.GetValue(3).ToString() + "#";
+                    }
+                    dbobj.SelectQuery("Select top 1 Closing_Stock from Stock_Master where ProductID = " + SqlDtr.GetValue(4).ToString() + " order by stock_date desc", ref SqlDtr2);
+                    if (SqlDtr2.Read())
+                    {
+                        stockAdjust.product_info2 = stockAdjust.product_info2 + SqlDtr.GetValue(0).ToString().Trim() + "~" + SqlDtr2.GetValue(0).ToString() + "#";
+                    }
+                    SqlDtr2.Close();
+                }
+                SqlDtr.Close();
+
+                if (stockAdjust == null)
+                    return Content(HttpStatusCode.NotFound, "Failed to get data for GetStoreIn method");
+
+                return Ok(stockAdjust);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Failed to get data for GetStoreIn method");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/StockAdjustment/GetNextStockAdjustID")]
+        public IHttpActionResult GetNextStockAdjustID()
+        {
+            SqlDataReader SqlDtr = null;
+            string stockAdjust_ID = string.Empty;
             try
             {
 
-                InventoryClass obj = new InventoryClass();
-                SqlDataReader SqlDtr;
-                string sql;
-
-                #region Fetch the Next Route ID
-                sql = "select Max(Route_ID)+1 from Route";
-                SqlDtr = obj.GetRecordSet(sql);
+                dbobj.SelectQuery("Select max(SAV_ID)+1 from Stock_Adjustment", ref SqlDtr);
                 if (SqlDtr.Read())
                 {
-                    Route_ID = SqlDtr.GetValue(0).ToString();
-                    if (Route_ID == "")
-                    {
-                        Route_ID = "1";
-                    }
+                    if (!SqlDtr.GetValue(0).ToString().Trim().Equals(""))
+                        stockAdjust_ID = SqlDtr.GetValue(0).ToString();
+                    else
+                        stockAdjust_ID = "1001";
+
+                    
                 }
-                else
-                    Route_ID = "1";
-                SqlDtr.Close();
-                #endregion
-                return Ok(Route_ID);
+                return Ok(stockAdjust_ID);
             }
             catch (Exception ex)
             {
@@ -55,37 +124,99 @@ namespace Servo_API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/RouteMaster/GetFillRouteNames")]
-        public IHttpActionResult GetFillRouteNames()
+        [HttpPost]
+        [Route("api/StockAdjustment/UpdateBatchNo")]
+        public IHttpActionResult UpdateBatchNo(string DropSavID)
         {
-            List<string> dropRouteNames = new List<string>();
+            int count = 0;
+
             try
             {
-                SqlConnection con;
-                SqlCommand cmdselect;
-                SqlDataReader dtrdrive;
-                con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
-                con.Open();
-                cmdselect = new SqlCommand("Select Route_name  From Route", con);
-                dtrdrive = cmdselect.ExecuteReader();
-
-                dropRouteNames.Add("Select");
-                while (dtrdrive.Read())
+                SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
+                InventoryClass obj = new InventoryClass();
+                SqlDataReader rdr;
+                SqlCommand cmd;
+                //coment by vikas 18.06.09 rdr = obj.GetRecordSet("select * from Batch_transaction where trans_id='"+dropInvoiceNo.SelectedItem.Text+"'");
+                rdr = obj.GetRecordSet("select * from Batch_transaction where trans_id='" + DropSavID + "' and trans_type='Stock Adjustment (OUT)'");
+                while (rdr.Read())
                 {
-                    dropRouteNames.Add(dtrdrive.GetString(0));
+                    //******************************
+                    string s = "update StockMaster_Batch set Sales=Sales-" + rdr["Qty"].ToString() + ",Closing_Stock=Closing_Stock+" + rdr["Qty"].ToString() + " where ProductID='" + rdr["Prod_ID"].ToString() + "' and Batch_ID='" + rdr["Batch_ID"].ToString() + "'";
+                    Con.Open();
+                    cmd = new SqlCommand("update StockMaster_Batch set Sales=Sales-" + rdr["Qty"].ToString() + ",Closing_Stock=Closing_Stock+" + rdr["Qty"].ToString() + " where ProductID='" + rdr["Prod_ID"].ToString() + "' and Batch_ID='" + rdr["Batch_ID"].ToString() + "'", Con);
+                    //cmd = new SqlCommand("update StockMaster_Batch set Sales=Sales-"+rdr["Qty"].ToString()+",Closing_Stock=Closing_Stock+"+rdr["Qty"].ToString()+" where ProductID='"+rdr["Prod_ID"].ToString()+"' and Batch_ID='"+rdr["Batch_ID"].ToString()+"' and stock_date='"+GenUtil.str2MMDDYYYY(tempInvoiceDate.Value)+"'",Con);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    Con.Close();
+
+                    /*******Add by vikas 19.06.09**********************/
+                    Con.Open();
+                    cmd = new SqlCommand("update BatchNo set Qty=Qty+" + rdr["Qty"].ToString() + " where Prod_ID='" + rdr["Prod_ID"].ToString() + "' and Batch_ID='" + rdr["Batch_ID"].ToString() + "'", Con);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    Con.Close();
+                    /************************************************/
                 }
-                dtrdrive.Close();
-                con.Close();
+                rdr.Close();
+                Con.Open();
+                cmd = new SqlCommand("delete Batch_Transaction where Trans_ID='" + DropSavID + "' and Trans_Type='Stock Adjustment (OUT)'", Con);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                Con.Close();
 
-                if (dropRouteNames == null)
-                    return Content(HttpStatusCode.NotFound, "Route Names data Not found");
-
-                return Ok(dropRouteNames);
+                return Ok(true);
             }
-            catch (Exception ex)
+            catch
             {
-                return Content(HttpStatusCode.NotFound, "Route Names data Not found");
+                return Content(HttpStatusCode.NotFound, "Could not delete Route");
+            }
+        }
+
+        [HttpPost]
+        [Route("api/StockAdjustment/UpdateBatchNo_In")]
+        public IHttpActionResult UpdateBatchNo_In(string DropSavID)
+        {
+            int count = 0;
+
+            try
+            {
+                SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
+                InventoryClass obj = new InventoryClass();
+                SqlDataReader rdr;
+                SqlCommand cmd;
+                //coment by vikas 18.06.09 rdr = obj.GetRecordSet("select * from Batch_transaction where trans_id='"+dropInvoiceNo.SelectedItem.Text+"'");
+                rdr = obj.GetRecordSet("select * from Batch_transaction where trans_id='" + DropSavID + "' and trans_type='Stock Adjustment (IN)'");
+                while (rdr.Read())
+                {
+                    //******************************
+                    string s = "update StockMaster_Batch set Sales=Sales-" + rdr["Qty"].ToString() + ",Closing_Stock=Closing_Stock+" + rdr["Qty"].ToString() + " where ProductID='" + rdr["Prod_ID"].ToString() + "' and Batch_ID='" + rdr["Batch_ID"].ToString() + "'";
+                    Con.Open();
+                    cmd = new SqlCommand("update StockMaster_Batch set Receipt=Receipt-" + rdr["Qty"].ToString() + ",Closing_Stock=Closing_Stock-" + rdr["Qty"].ToString() + " where ProductID='" + rdr["Prod_ID"].ToString() + "' and Batch_ID='" + rdr["Batch_ID"].ToString() + "'", Con);
+                    //cmd = new SqlCommand("update StockMaster_Batch set Sales=Sales-"+rdr["Qty"].ToString()+",Closing_Stock=Closing_Stock+"+rdr["Qty"].ToString()+" where ProductID='"+rdr["Prod_ID"].ToString()+"' and Batch_ID='"+rdr["Batch_ID"].ToString()+"' and stock_date='"+GenUtil.str2MMDDYYYY(tempInvoiceDate.Value)+"'",Con);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    Con.Close();
+
+                    /*******Add by vikas 19.06.09**********************/
+                    Con.Open();
+                    cmd = new SqlCommand("update BatchNo set Qty=Qty-" + rdr["Qty"].ToString() + " where Prod_ID='" + rdr["Prod_ID"].ToString() + "' and Batch_ID='" + rdr["Batch_ID"].ToString() + "'", Con);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    Con.Close();
+                    /************************************************/
+                }
+                rdr.Close();
+                Con.Open();
+                cmd = new SqlCommand("delete Batch_Transaction where Trans_ID='" + DropSavID + "' and Trans_Type='Stock Adjustment (IN)'", Con);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                Con.Close();
+
+                return Ok(count);
+            }
+            catch
+            {
+                return Content(HttpStatusCode.NotFound, "Could not delete Route");
             }
         }
 
