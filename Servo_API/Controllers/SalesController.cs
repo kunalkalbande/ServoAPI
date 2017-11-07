@@ -21,7 +21,7 @@ namespace Servo_API.Controllers
 
         [HttpPost]
         [Route("api/Sales/InsertSalesMaster")]
-        public bool InsertSalesMaster(SalesSaveDetailsModel obj)
+        public IHttpActionResult InsertSalesMaster(SalesSaveDetailsModel obj)
         {
             SqlCommand cmd;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -29,17 +29,17 @@ namespace Servo_API.Controllers
             try
             {
                 obj1.InsertSalesMaster(obj);
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert SalesMaster related data.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateCustomerBalance")]
-        public bool UpdateCustomerBalance(InventoryClass obj)
+        public IHttpActionResult UpdateCustomerBalance(InventoryClass obj)
         {
             SqlCommand cmd;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -47,17 +47,17 @@ namespace Servo_API.Controllers
             try
             {
                 obj.UpdateCustomerBalance();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to Update Customer Balance.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateStock_Master_SetSales")]
-        public bool UpdateStock_Master_SetSales(SalesModels sales)
+        public IHttpActionResult UpdateStock_Master_SetSales(SalesModels sales)
         {
             SqlCommand cmd;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -80,17 +80,17 @@ namespace Servo_API.Controllers
                         cmd.Dispose();
                     }
                 }
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update Stock_Master to set sales.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateBatchNo")]
-        public bool UpdateBatchNo(string invoiceNo)
+        public IHttpActionResult UpdateBatchNo(string invoiceNo)
         {
             SqlCommand cmd;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -126,17 +126,17 @@ namespace Servo_API.Controllers
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
                 Con.Close();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to Update Batch No.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateStock_Master_SetSalesFOC")]
-        public bool UpdateStock_Master_SetSalesFOC(SalesModels sales)
+        public IHttpActionResult UpdateStock_Master_SetSalesFOC(SalesModels sales)
         {
             SqlCommand cmd;
             SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
@@ -157,17 +157,17 @@ namespace Servo_API.Controllers
                         cmd.Dispose();
                     }
                 }
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to Update Stock_Master to Set SalesFOC.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/Update_OVD_Sale_Trans_Id")]
-        public bool Update_OVD_Sale_Trans_Id(string id)
+        public IHttpActionResult Update_OVD_Sale_Trans_Id(string id)
         {
             try
             {
@@ -179,17 +179,17 @@ namespace Servo_API.Controllers
                 cmd.ExecuteNonQuery();
                 Con.Close();
                 cmd.Dispose();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to Update OVD to Sale_Trans_Id.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/DeleteSalesMasterData")]
-        public bool DeleteSalesOil(string id)
+        public IHttpActionResult DeleteSalesOil(string id)
         {
             try
             {
@@ -200,17 +200,17 @@ namespace Servo_API.Controllers
                 cmd.ExecuteNonQuery();
                 con.Close();
                 cmd.Dispose();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to delete from Sales_Oil.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/DeleteSalesMasterData")]
-        public bool DeleteSalesMasterData(string id)
+        public IHttpActionResult DeleteSalesMasterData(string id)
         {
             try
             {
@@ -235,17 +235,17 @@ namespace Servo_API.Controllers
                 Con.Close();
                 cmd.Dispose();
 
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to delete SalesMaster Data.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateAccountsLedgerCustomerLedger")]
-        public bool UpdateAccountsLedgerCustomerLedger(SalesModels sales)
+        public IHttpActionResult UpdateAccountsLedgerCustomerLedger(SalesModels sales)
         {
             try
             {
@@ -307,17 +307,17 @@ namespace Servo_API.Controllers
                 Con.Close();
                 cmd.Dispose();
 
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert Sales Oil Data.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/InsertSalesOil")]
-        public bool InsertSalesOil(List<string> sales)
+        public IHttpActionResult InsertSalesOil(List<string> sales)
         {
             try
             {
@@ -360,17 +360,17 @@ namespace Servo_API.Controllers
                 cmd.ExecuteNonQuery();
                 con.Close();
                 cmd.Dispose();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert Sales Oil Data.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateSalesOil")]
-        public bool UpdateSalesOil(List<string> sales)
+        public IHttpActionResult UpdateSalesOil(List<string> sales)
         {
             try
             {
@@ -411,17 +411,17 @@ namespace Servo_API.Controllers
                 con.Close();
                 cmd.Dispose();
 
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update Sales Oil Prod Sch Name.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/InsertSalesOilProdschName")]
-        public bool InsertSalesOilProdschName(List<string> sales)
+        public IHttpActionResult InsertSalesOilProdschName(List<string> sales)
         {
             try
             {
@@ -452,17 +452,17 @@ namespace Servo_API.Controllers
                 cmd.ExecuteNonQuery();
                 con.Close();
                 cmd.Dispose();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert Sales Oil Prod Sch Name.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateSalesOilProdschName")]
-        public bool UpdateSalesOilProdschName(List<string> sales)
+        public IHttpActionResult UpdateSalesOilProdschName(List<string> sales)
         {
             try
             {
@@ -492,17 +492,17 @@ namespace Servo_API.Controllers
                 con.Close();
                 cmd.Dispose();
 
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update Sales Oil Prod Sch Name.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/DeleteSales_OilData")]
-        public bool DeleteSales_OilData(string id)
+        public IHttpActionResult DeleteSales_OilData(string id)
         {
             try
             {
@@ -513,17 +513,17 @@ namespace Servo_API.Controllers
                 cmd.ExecuteNonQuery();
                 Con.Close();
                 cmd.Dispose();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to delete Sales Oil data.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/InsUpdateCustLedgerAcctLedgerCustomer")]
-        public bool InsUpdateCustLedgerAcctLedgerCustomer(List<string> sales)
+        public IHttpActionResult InsUpdateCustLedgerAcctLedgerCustomer(List<string> sales)
         {
             int x = 0;
             string invoiceDate = sales[0].ToString();
@@ -535,48 +535,48 @@ namespace Servo_API.Controllers
                 dbobj.Insert_or_Update("delete from customerledgertable where particular='Sales Invoice (" + invoiceDate + ")'", ref x);
                 dbobj.Insert_or_Update("delete from AccountsLedgerTable where particulars='Sales Invoice (" + invoiceDate + ")'", ref x);
                 dbobj.Insert_or_Update("update customer set Curr_Credit=Curr_Credit+" + NetAmount + " where Cust_ID='" + CustID + "'", ref x);
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert or update Customer Ledger, Account Ledger or Customer tables.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateSalesMaster")]
-        public bool UpdateSalesMaster(SalesSaveDetailsModel obj)
+        public IHttpActionResult UpdateSalesMaster(SalesSaveDetailsModel obj)
         {
             InventoryClass obj1 = new InventoryClass();
             try
             {
                 obj1.UpdateSalesMaster(obj);
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update SalesMaster.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/ProUpdate_Customer_Balance")]
-        public bool ProUpdate_Customer_Balance(InventoryClass obj)
+        public IHttpActionResult ProUpdate_Customer_Balance(InventoryClass obj)
         {
             try
             {
                 obj.UpdateCustomerBalance();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update Customer Balance.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/InsertSalesDetail")]
-        public bool InsertSalesDetail(SalesDetailsModel salesDetails)
+        public IHttpActionResult InsertSalesDetail(SalesDetailsModel salesDetails)
         {
             try
             {
@@ -599,32 +599,32 @@ namespace Servo_API.Controllers
                 obj.foediscounttype = salesDetails.foediscounttype;
 
                 obj.InsertSalesDetail();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert data to SalesDetails.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/InsertSaleSchemeDetail")]
-        public bool InsertSaleSchemeDetail(InventoryClass obj)
+        public IHttpActionResult InsertSaleSchemeDetail(InventoryClass obj)
         {
             try
             {
                 obj.InsertSaleSchemeDetail();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert data to Sales Scheme Details.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/InsertBatchNo")]
-        public bool InsertBatchNo(List<string> sales)
+        public IHttpActionResult InsertBatchNo(List<string> sales)
         {
             string Prod = sales[0].ToString();
             string PackType = sales[1].ToString();
@@ -757,17 +757,17 @@ namespace Servo_API.Controllers
                     }
                 }
                 rdr.Close();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to insert data to insert batch No.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/CustomerUpdate")]
-        public bool CustomerUpdate(List<string> sales)
+        public IHttpActionResult CustomerUpdate(List<string> sales)
         {
             try
             {
@@ -917,17 +917,17 @@ namespace Servo_API.Controllers
                     }
                 }
                 rdr.Close();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update customer.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/Update_Customer_Balance")]
-        public bool Update_Customer_Balance(List<string> sales)
+        public IHttpActionResult Update_Customer_Balance(List<string> sales)
         {
             int x = 0;
             string invoiceDate = sales[0].ToString();
@@ -937,17 +937,17 @@ namespace Servo_API.Controllers
             {
                 DbOperations_LATEST.DBUtil dbobj = new DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
                 dbobj.Insert_or_Update("update customer_balance set DR_Amount=DR_Amount-" + NetAmount + " where cust_id='" + CustID + "'", ref x);
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update Customer Balance.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/UpdateProductQty")]
-        public bool UpdateProductQty(SalesModels sales)
+        public IHttpActionResult UpdateProductQty(SalesModels sales)
         {
             try
             {
@@ -998,17 +998,17 @@ namespace Servo_API.Controllers
                         }
                     }
                 }
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update quantity.");
             }
         }
 
         [HttpPost]
         [Route("api/Sales/DeleteAccountsledgertableData")]
-        public bool DeleteAccountsledgertableData(string id)
+        public IHttpActionResult DeleteAccountsledgertableData(string id)
         {
             try
             {
@@ -1019,173 +1019,17 @@ namespace Servo_API.Controllers
                 cmd.ExecuteNonQuery();
                 Con.Close();
                 cmd.Dispose();
-                return true;
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to Delete Accounts ledger table Data.");
             }
         }
 
-        //[HttpDelete]
-        //[Route("api/Sales/DeleteSalesInvoice")]
-        //public int DeleteSalesInvoice(string id, string customerName, string netAmount, string place, string [] ProductType, string[] ProductQty, string invoiceDate, string[] ProductName, string[] ProductPack, string [] SchProductQty, string [] SchProductType, string [] SchProductPack, string [] SchProductName, string [] TypeSch)
-        //{
-        //    GetFromDateToDate();
-        //    string txtval = "";
-
-        //        string [] ProdType = { TypeSch[1], TypeSch[2], TypeSch[3], TypeSch[4], TypeSch[5], TypeSch[6], TypeSch[7], TypeSch[8], TypeSch[9], TypeSch[10], TypeSch[11], TypeSch[12] };
-        //        //TextBox[] ProdName1 = { txtProdsch1, txtProdsch2, txtProdsch3, txtProdsch4, txtProdsch5, txtProdsch6, txtProdsch7, txtProdsch8, txtProdsch9, txtProdsch10, txtProdsch11, txtProdsch12 };
-        //        //TextBox[] PackType1 = { txtPacksch1, txtPacksch2, txtPacksch3, txtPacksch4, txtPacksch5, txtPacksch6, txtPacksch7, txtPacksch8, txtPacksch9, txtPacksch10, txtPacksch11, txtPacksch12 };
-        //        //TextBox[] Qty1 = { txtQtysch1, txtQtysch2, txtQtysch3, txtQtysch4, txtQtysch5, txtQtysch6, txtQtysch7, txtQtysch8, txtQtysch9, txtQtysch10, txtQtysch11, txtQtysch12 };
-
-        //        InventoryClass obj = new InventoryClass();
-        //        SqlDataReader rdr = null;
-        //        SqlCommand cmd;
-        //        SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
-        //        Con.Open();
-        //        cmd = new SqlCommand("delete from Sales_Master where Invoice_No='" + FromDate + ToDate + id + "'", Con);
-        //        cmd.ExecuteNonQuery();
-        //        Con.Close();
-        //        cmd.Dispose();
-        //        //				Con.Open();
-        //        //				cmd = new SqlCommand("delete from monthwise1 where Invoice_No='"+FromDate+ToDate+dropInvoiceNo.SelectedItem.Text+"'",Con);
-        //        //				cmd.ExecuteNonQuery();
-        //        //				Con.Close();
-        //        //				cmd.Dispose();
-        //        Con.Open();
-        //        cmd = new SqlCommand("delete from Sales_Oil where Invoice_No='" + FromDate + ToDate + id + "'", Con);
-        //        cmd.ExecuteNonQuery();
-        //        Con.Close();
-        //        cmd.Dispose();
-        //        Con.Open();
-        //        cmd = new SqlCommand("delete from Accountsledgertable where Particulars='Sales Invoice (" + FromDate + ToDate + id + ")'", Con);
-        //        cmd.ExecuteNonQuery();
-        //        Con.Close();
-        //        cmd.Dispose();
-        //        //string str="select * from AccountsLedgerTable where Ledger_ID=(select Ledger_ID from Ledger_Master where Ledger_Name='"+DropCustName.SelectedItem.Text+"') order by entry_date";
-        //        //txtval = customerName; //Add by vikas sharma 
-        //                                                                     //Comment by vikas 1.05.09 string str="select * from AccountsLedgerTable where Ledger_ID = (select Ledger_ID from Ledger_Master where Ledger_Name='"+text1.Value+"') order by entry_date";
-        //        string str = "select * from AccountsLedgerTable where Ledger_ID = (select Ledger_ID from Ledger_Master where Ledger_Name='" + customerName + "') order by entry_date";
-        //        rdr = obj.GetRecordSet(str);
-        //        double Bal = 0;
-        //        while (rdr.Read())
-        //        {
-        //            if (rdr["Bal_Type"].ToString().Equals("Dr"))
-        //                Bal += double.Parse(rdr["Debit_Amount"].ToString()) - double.Parse(rdr["Credit_Amount"].ToString());
-        //            else
-        //                Bal += double.Parse(rdr["Credit_Amount"].ToString()) - double.Parse(rdr["Debit_Amount"].ToString());
-        //            if (Bal.ToString().StartsWith("-"))
-        //                Bal = double.Parse(Bal.ToString().Substring(1));
-        //            Con.Open();
-        //            cmd = new SqlCommand("update AccountsLedgerTable set Balance='" + Bal.ToString() + "' where Ledger_ID='" + rdr["Ledger_ID"].ToString() + "' and Particulars='" + rdr["Particulars"].ToString() + "'", Con);
-        //            cmd.ExecuteNonQuery();
-        //            Con.Close();
-        //            cmd.Dispose();
-        //        }
-        //        rdr.Close();
-        //        Con.Open();
-        //        cmd = new SqlCommand("delete from Customerledgertable where Particular='Sales Invoice (" + FromDate + ToDate + id + ")'", Con);
-        //        cmd.ExecuteNonQuery();
-        //        Con.Close();
-        //        cmd.Dispose();
-        //        //string str1="select * from CustomerLedgerTable where CustID=(select Cust_ID from Customer where Cust_Name='"+DropCustName.SelectedItem.Text+"') order by entrydate";
-
-        //        //Comment by vikas sharma 1.05.09 string str1="select * from CustomerLedgerTable where CustID=(select Cust_ID from Customer where Cust_Name='"+text1.Value+"') order by entrydate";
-        //        string str1 = "select * from CustomerLedgerTable where CustID=(select Cust_ID from Customer where Cust_Name='" + customerName + "') order by entrydate";
-        //        rdr = obj.GetRecordSet(str1);
-        //        Bal = 0;
-        //        while (rdr.Read())
-        //        {
-        //            if (rdr["BalanceType"].ToString().Equals("Dr."))
-        //                Bal += double.Parse(rdr["DebitAmount"].ToString()) - double.Parse(rdr["CreditAmount"].ToString());
-        //            else
-        //                Bal += double.Parse(rdr["CreditAmount"].ToString()) - double.Parse(rdr["DebitAmount"].ToString());
-        //            if (Bal.ToString().StartsWith("-"))
-        //                Bal = double.Parse(Bal.ToString().Substring(1));
-        //            Con.Open();
-        //            cmd = new SqlCommand("update CustomerLedgerTable set Balance='" + Bal.ToString() + "' where CustID='" + rdr["CustID"].ToString() + "' and Particular='" + rdr["Particular"].ToString() + "'", Con);
-        //            cmd.ExecuteNonQuery();
-        //            Con.Close();
-        //            cmd.Dispose();
-        //        }
-        //        rdr.Close();
-        //        //				Con.Open();
-        //        //				cmd = new SqlCommand("delete from LedgDetails where Bill_No='"+FromDate+ToDate+dropInvoiceNo.SelectedItem.Text+"'",Con);
-        //        //				cmd.ExecuteNonQuery();
-        //        //				Con.Close();
-        //        //				cmd.Dispose();
-        //        //				Con.Open();
-        //        //				cmd = new SqlCommand("delete from Invoice_Transaction where Invoice_No='"+FromDate+ToDate+dropInvoiceNo.SelectedItem.Text+"'",Con);
-        //        //				cmd.ExecuteNonQuery();
-        //        //				Con.Close();
-        //        //				cmd.Dispose();
-        //        Con.Open();
-        //        //cmd = new SqlCommand("Update Customer_Balance set DR_Amount = DR_Amount-'"+double.Parse(txtNetAmount.Text)+"' where Cust_ID = (select Cust_ID from Customer where Cust_Name='"+DropCustName.SelectedItem.Text+"' and city='"+lblPlace.Value+"')",Con);
-
-        //        //Comment by vikas sharma 1.05.09 cmd = new SqlCommand("Update Customer_Balance set DR_Amount = DR_Amount-'"+double.Parse(txtNetAmount.Text)+"' where Cust_ID = (select Cust_ID from Customer where Cust_Name='"+text1.Value+"' and city='"+lblPlace.Value+"')",Con);
-        //        cmd = new SqlCommand("Update Customer_Balance set DR_Amount = DR_Amount-'" + double.Parse(netAmount) + "' where Cust_ID = (select Cust_ID from Customer where Cust_Name='" + customerName + "' and city='" + place + "')", Con);
-        //        cmd.ExecuteNonQuery();
-        //        Con.Close();
-        //        cmd.Dispose();
-        //        for (int i = 0; i < 12; i++)
-        //        {
-        //            //if(DropType[i].SelectedItem.Text.Equals("Type") || ProdName[i].Value=="" || PackType[i].Value=="")
-        //            //if(DropType[i].SelectedItem.Text.Equals("Type"))
-        //            if (ProductType[i].ToString().Equals(""))
-        //                continue;
-        //            else
-        //            {
-        //                Con.Open();
-        //                //cmd = new SqlCommand("update Stock_Master set sales=sales-'"+double.Parse(Qty[i].Text)+"',closing_stock=closing_stock+'"+double.Parse(Qty[i].Text)+"' where ProductID=(select Prod_ID from Products where Category='"+DropType[i].SelectedItem.Text+"' and Prod_Name='"+ProdName[i].Value+"' and Pack_Type='"+PackType[i].Value+"') and cast(stock_date as smalldatetime)='"+GenUtil.str2DDMMYYYY(lblInvoiceDate.Text)+"'",Con);
-        //                cmd = new SqlCommand("update Stock_Master set sales=sales-'" + double.Parse(ProductQty[i].ToString()) + "',closing_stock=closing_stock+'" + double.Parse(ProductQty[i].ToString()) + "' where ProductID=(select Prod_ID from Products where Category='" + ProductType[i].ToString() + "' and Prod_Name='" + ProductName[i].ToString() + "' and Pack_Type='" + ProductPack[i].ToString() + "') and cast(floor(cast(stock_date as float)) as datetime)=Convert(datetime,'" + GenUtil.str2DDMMYYYY(invoiceDate) + "',103)", Con);
-        //                cmd.ExecuteNonQuery();
-        //                Con.Close();
-        //                cmd.Dispose();
-        //            }
-        //            //if(ProdType[i].Text=="" || ProdName1[i].Text=="" || PackType1[i].Text=="")
-        //            if (ProdType[i].ToString() == "")
-        //                continue;
-        //            else
-        //            {
-        //                Con.Open();
-        //                //cmd = new SqlCommand("update Stock_Master set salesfoc=salesfoc-'"+double.Parse(Qty1[i].Text)+"',closing_stock=closing_stock+'"+double.Parse(Qty1[i].Text)+"' where ProductID=(select Prod_ID from Products where Category='"+ProdType[i].Text+"' and Prod_Name='"+ProdName1[i].Text+"' and Pack_Type='"+PackType1[i].Text+"') and cast(stock_date as smalldatetime)='"+GenUtil.str2DDMMYYYY(lblInvoiceDate.Text)+"'",Con);
-        //                cmd = new SqlCommand("update Stock_Master set salesfoc=salesfoc-'" + double.Parse(SchProductQty[i].ToString()) + "',closing_stock=closing_stock+'" + double.Parse(SchProductQty[i].ToString()) + "' where ProductID=(select Prod_ID from Products where Category='" + SchProductType[i].ToString() + "' and Prod_Name='" + SchProductName[i].ToString() + "' and Pack_Type='" + SchProductPack[i].ToString() + "') and cast(floor(cast(stock_date as float)) as datetime)=Convert(datetime,'" + GenUtil.str2DDMMYYYY(invoiceDate) + "',103)", Con);
-        //                cmd.ExecuteNonQuery();
-        //                Con.Close();
-        //                cmd.Dispose();
-        //            }
-        //        }
-
-        //        /***********Add by vikas 16.11.2012*****************/
-
-        //        Con.Open();
-        //        cmd = new SqlCommand("Update OVD set Sale_Trans_Id='0' , sale_qty='0' where Sale_Trans_Id='" + FromDate + ToDate + id + "'", Con);
-        //        cmd.ExecuteNonQuery();
-        //        Con.Close();
-        //        cmd.Dispose();
-
-        //        /***********End*****************/
-        //        //SeqStockMaster(ProductType, ProductName, ProductQty, ProductPack, SchProductType, SchProductName, SchProductQty, SchProductPack);
-        //        //MessageBox.Show("Sales Transaction Deleted");
-        //        //CreateLogFiles.ErrorLog("Form:SalesInvoice.aspx,Method:btnDelete_Click - InvoiceNo : " + FromDate + ToDate + id + " Deleted, user : " + uid);
-        //        //Clear();
-        //        //clear1();
-        //        int iNextInvoiceNo = GetNextInvoiceNo();
-        //        //GetProducts();
-        //        //FetchData();
-        //        //getschemefoe();
-        //        //getscheme();
-        //    //getscheme1();
-        //    //lblInvoiceNo.Visible = true;
-        //    //dropInvoiceNo.Visible = false;
-        //    //btnEdit.Visible = true;        
-        //    return iNextInvoiceNo;
-        //}
-
         [HttpGet]
         [Route("api/Sales/GetBatchDetailsForProdCodeSales")]
-        public List<string> GetBatchDetailsForProdCodeSales(string ProdCode, string arrProdCat1, string arrProdCat2, string InvoiceNo)
+        public IHttpActionResult GetBatchDetailsForProdCodeSales(string ProdCode, string arrProdCat1, string arrProdCat2, string InvoiceNo)
         {
             List<string> btQty = new List<string>();
             try
@@ -1203,43 +1047,18 @@ namespace Servo_API.Controllers
 
                     }
                 }
-                return btQty;
+                return Ok(btQty);
             }
             catch (Exception ex)
             {
-                return btQty;
+                return Content(HttpStatusCode.NotFound, "Failed to Get Batch details for ProdCodeSales.");
             }
-
         }
 
-        //[HttpGet]
-        //[Route("api/Sales/GetBatchDetailsDuringUpdateSales")]
-        //public List<string> GetBatchDetailsDuringUpdateSales(string invoiceDate)
-        //{
-        //    List<string> InDate = new List<string>();
-        //    try
-        //    {
 
-        //        string str = "select invoice_date from sales_master where invoice_no=" + invoiceDate + "";
-        //        SqlDataReader SqlDtr;
-        //        InventoryClass obj = new InventoryClass();
-        //        SqlDtr = obj.GetRecordSet(str);
-        //        if (SqlDtr.Read())
-        //            InDate = SqlDtr.GetValue(0).ToString();
-        //        else
-        //            InDate = "";
-        //        SqlDtr.Close();
-        //        return InDate;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return InDate;
-        //    }
-
-        //}
         [HttpGet]
         [Route("api/Sales/GetinvoiceDate")]
-        public string GetinvoiceDate(string invoiceDate)
+        public IHttpActionResult GetinvoiceDate(string invoiceDate)
         {
             string InDate = string.Empty;
             try
@@ -1253,17 +1072,17 @@ namespace Servo_API.Controllers
                 else
                     InDate = "";
                 SqlDtr.Close();
-                return InDate;
+                return Ok(InDate);
             }
             catch (Exception ex)
             {
-                return InDate;
+                return Content(HttpStatusCode.NotFound, "Failed to get invoice Date.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetProdCode_PackType")]
-        public List<string> GetProdCode_PackType(string ProdType1, string ProdType2)
+        public IHttpActionResult GetProdCode_PackType(string ProdType1, string ProdType2)
         {
             string prodCode = string.Empty;
             string packType = string.Empty;
@@ -1287,17 +1106,17 @@ namespace Servo_API.Controllers
                 sales.Add(prodCode);
                 sales.Add(packType);
                 SqlDtr.Close();
-                return sales;
+                return Ok(sales);
             }
             catch (Exception ex)
             {
-                return sales;
+                return Content(HttpStatusCode.NotFound, "Failed to get ProdCode, PackType.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetCustomer")]
-        public List<string> GetCustomer(string txtval)
+        public IHttpActionResult GetCustomer(string txtval)
         {
             string addr = string.Empty;
             string ssc = string.Empty;
@@ -1323,33 +1142,18 @@ namespace Servo_API.Controllers
                 sales.Add(TinNo);
 
                 SqlDtr.Close();
-                return sales;
+                return Ok(sales);
             }
             catch (Exception ex)
             {
-                return sales;
+                return Content(HttpStatusCode.NotFound, "Failed to get Customer.");
             }
         }
 
-        //[HttpGet]
-        //[Route("api/Sales/GetBatchDetails")]
-        //public SalesModel GetBatchDetails(string[] ProdCode, string  string arrProdCat1, string arrProdCat2, string invoiceNo)
-        //{
-        //    SalesModel sales = new SalesModel();
-        //    try
-        //    {
-        //        return sales;
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        return sales;
-        //    }
-        //}
 
         [HttpGet]
         [Route("api/Sales/GetschProdCode")]
-        public string GetschProdCode(string ProdSchType1, string ProdSchType2)
+        public IHttpActionResult GetschProdCode(string ProdSchType1, string ProdSchType2)
         {
             string schProdCode = string.Empty;
 
@@ -1369,34 +1173,34 @@ namespace Servo_API.Controllers
                 }
 
                 SqlDtr.Close();
-                return schProdCode;
+                return Ok(schProdCode);
             }
             catch (Exception ex)
             {
-                return schProdCode;
+                return Content(HttpStatusCode.NotFound, "Failed to get schProdCode.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetCountofInvoiceNo")]
-        public int GetCountofInvoiceNo(string invoiceNo)
+        public IHttpActionResult GetCountofInvoiceNo(string invoiceNo)
         {
             int count = 0;
             try
             {
                 DbOperations_LATEST.DBUtil dbobj = new DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
                 dbobj.ExecuteScalar("Select count(Invoice_No) from Sales_Master where Invoice_No = " + invoiceNo, ref count);
-                return count;
+                return Ok(count);
             }
             catch (Exception ex)
             {
-                return count;
+                return Content(HttpStatusCode.NotFound, "Failed to get Count of InvoiceNo.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetCategory")]
-        public string GetCategory(string prodName1, string prodName2)
+        public IHttpActionResult GetCategory(string prodName1, string prodName2)
         {
             string category = string.Empty;
             try
@@ -1418,11 +1222,11 @@ namespace Servo_API.Controllers
                         category = SqlDtr.GetValue(1).ToString();
                 }
                 SqlDtr.Close();
-                return category;
+                return Ok(category);
             }
             catch (Exception ex)
             {
-                return category;
+                return Content(HttpStatusCode.NotFound, "Failed to get Category.");
             }
         }
 
@@ -1431,7 +1235,7 @@ namespace Servo_API.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/Sales/GetProducts")]
-        public SalesModels GetProducts()
+        public IHttpActionResult GetProducts()
         {
             SalesModels sales = new SalesModels();
             try
@@ -1533,13 +1337,13 @@ namespace Servo_API.Controllers
                 }
                 SqlDtr.Close();
                 sales.TempText = str;
-                sales.Tempminmax = MinMax;
-                return sales;
+                sales.Tempminmax = MinMax;                
                 #endregion
+                return Ok(sales);
             }
             catch (Exception ex)
             {
-                return sales;
+                return Content(HttpStatusCode.NotFound, "Failed to get Products.");
             }
         }
 
@@ -1548,73 +1352,80 @@ namespace Servo_API.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/Sales/GetNextInvoiceNo")]
-        public int GetNextInvoiceNo()
+        public IHttpActionResult GetNextInvoiceNo()
         {
-            GetFromDateToDate();
-
-            string nextInvoiceNo = string.Empty;
-            InventoryClass obj = new InventoryClass();
-            SqlDataReader SqlDtr, rdr = null;
-            string sql;
-
-            #region Fetch the Next Invoice Number
-            sql = "select max(Invoice_No) from Sales_Master";
-            SqlDtr = obj.GetRecordSet(sql);
-            while (SqlDtr.Read())
+            try
             {
-                string InNo = SqlDtr.GetValue(0).ToString();
-                string fdt = "", No = "";
-                int n = 0;
-                if (InNo != "" && InNo.Length >= 4)
-                {
-                    if (FromDate.StartsWith("0"))
-                    {
-                        fdt = FromDate.Substring(1) + ToDate;
-                        No = InNo.Substring(0, 3);
-                    }
-                    else
-                    {
-                        fdt = FromDate + ToDate;
-                        if (fdt.Length == 3)
-                            No = InNo.Substring(0, 3);
-                        else
-                            No = InNo.Substring(0, 4);
-                    }
-                }
-                else
-                    fdt = "0";
-                if (fdt == No)
-                {
-                    //lblInvoiceNo.Text =SqlDtr.GetValue(0).ToString ();				
-                    if (No.Length == 3)
-                        InNo = InNo.Substring(3);
-                    else
-                        InNo = InNo.Substring(4);
-                    n = int.Parse(InNo);
-                    nextInvoiceNo = System.Convert.ToString(++n);
-                }
-                else
-                //if(lblInvoiceNo.Text=="")
-                {   //lblInvoiceNo.Text ="1001";
-                    dbobj.SelectQuery("select * from organisation", ref rdr);
-                    if (rdr.Read())
-                    {
-                        nextInvoiceNo = rdr["StartInvoice"].ToString();
-                    }
-                    else
-                        nextInvoiceNo = "1";
-                }
+                GetFromDateToDate();
 
+                string nextInvoiceNo = string.Empty;
+                InventoryClass obj = new InventoryClass();
+                SqlDataReader SqlDtr, rdr = null;
+                string sql;
+
+                #region Fetch the Next Invoice Number
+                sql = "select max(Invoice_No) from Sales_Master";
+                SqlDtr = obj.GetRecordSet(sql);
+                while (SqlDtr.Read())
+                {
+                    string InNo = SqlDtr.GetValue(0).ToString();
+                    string fdt = "", No = "";
+                    int n = 0;
+                    if (InNo != "" && InNo.Length >= 4)
+                    {
+                        if (FromDate.StartsWith("0"))
+                        {
+                            fdt = FromDate.Substring(1) + ToDate;
+                            No = InNo.Substring(0, 3);
+                        }
+                        else
+                        {
+                            fdt = FromDate + ToDate;
+                            if (fdt.Length == 3)
+                                No = InNo.Substring(0, 3);
+                            else
+                                No = InNo.Substring(0, 4);
+                        }
+                    }
+                    else
+                        fdt = "0";
+                    if (fdt == No)
+                    {
+                        //lblInvoiceNo.Text =SqlDtr.GetValue(0).ToString ();				
+                        if (No.Length == 3)
+                            InNo = InNo.Substring(3);
+                        else
+                            InNo = InNo.Substring(4);
+                        n = int.Parse(InNo);
+                        nextInvoiceNo = System.Convert.ToString(++n);
+                    }
+                    else
+                    //if(lblInvoiceNo.Text=="")
+                    {   //lblInvoiceNo.Text ="1001";
+                        dbobj.SelectQuery("select * from organisation", ref rdr);
+                        if (rdr.Read())
+                        {
+                            nextInvoiceNo = rdr["StartInvoice"].ToString();
+                        }
+                        else
+                            nextInvoiceNo = "1";
+                    }
+
+                }
+                SqlDtr.Close();
+                #endregion
+                int iNextInvoiceNo = Int32.Parse(nextInvoiceNo);
+                return Ok(iNextInvoiceNo);
             }
-            SqlDtr.Close();
-            #endregion
-            int iNextInvoiceNo = Int32.Parse(nextInvoiceNo);
-            return iNextInvoiceNo;
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Failed to get next invoice No.");
+            }
         }
 
         [HttpGet]
         [Route("api/Sales/GetCustNameCityData")]
-        public List<string> GetCustNameCityData()
+        public IHttpActionResult GetCustNameCityData()
         {
 
             List<string> custNameCity = new List<string>();
@@ -1643,17 +1454,17 @@ namespace Servo_API.Controllers
                 SqlDtr.Close();
                 custNameCity.Add(texthidden);
                 custNameCity.Add(val);
-                return custNameCity;
+                return Ok(custNameCity);
             }
             catch (Exception ex)
             {
-                return custNameCity;
+                return Content(HttpStatusCode.NotFound, "Failed to get Customer Name City Data.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/PriceUpdation")]
-        public string PriceUpdation()
+        public IHttpActionResult PriceUpdation()
         {
             string txtMainIGST = string.Empty;
             try
@@ -1675,17 +1486,17 @@ namespace Servo_API.Controllers
 
                 }
                 txtMainIGST = txtMainIGST.Substring(0, txtMainIGST.LastIndexOf("~"));
-                return txtMainIGST;
+                return Ok(txtMainIGST);
             }
             catch (Exception ex)
             {
-                return txtMainIGST;
+                return Content(HttpStatusCode.NotFound, "Failed to update Price.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/FillInvoceNoDropdown")]
-        public List<string> FillInvoceNoDropdown(string invoiceFromDate, string invoiceToDate)
+        public IHttpActionResult FillInvoceNoDropdown(string invoiceFromDate, string invoiceToDate)
         {
             GetFromDateToDate();
             List<string> dropInvoiceNo = new List<string>();
@@ -1703,17 +1514,17 @@ namespace Servo_API.Controllers
                         dropInvoiceNo.Add(SqlDtr.GetValue(0).ToString().Substring(3));
                 }
                 SqlDtr.Close();
-                return dropInvoiceNo;
+                return Ok(dropInvoiceNo);
             }
             catch (Exception ex)
             {
-                return dropInvoiceNo;
+                return Content(HttpStatusCode.NotFound, "Failed to Fill Invoce No Dropdown.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetOrderInvoice")]
-        public List<string> GetOrderInvoice()
+        public IHttpActionResult GetOrderInvoice()
         {
             List<string> orderInvoice = new List<string>();
             try
@@ -1771,18 +1582,17 @@ namespace Servo_API.Controllers
                 SqlDtr.Close();
                 /**********End***********************/
                 #endregion
-                return orderInvoice;
+                return Ok(orderInvoice);
             }
             catch (Exception ex)
             {
-                return orderInvoice;
+                return Content(HttpStatusCode.NotFound, "Failed to get Order Invoice.");
             }
-
         }
 
         [HttpGet]
         [Route("api/Sales/GetDiscountData")]
-        public List<string> GetDiscountData()
+        public IHttpActionResult GetDiscountData()
         {
             List<string> discount = new List<string>();
             try
@@ -1832,17 +1642,17 @@ namespace Servo_API.Controllers
                 discount.Add(dropCashDiscType);
                 discount.Add(txtDisc);
                 discount.Add(dropDiscType);
-                return discount;
+                return Ok(discount);
             }
             catch (Exception ex)
             {
-                return discount;
+                return Content(HttpStatusCode.NotFound, "Failed to get discount data.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetSalesManData")]
-        public List<string> GetSalesManData()
+        public IHttpActionResult GetSalesManData()
         {
 
             List<string> salesMan = new List<string>();
@@ -1858,17 +1668,17 @@ namespace Servo_API.Controllers
                     salesMan.Add(SqlDtr.GetValue(0).ToString());
                 }
                 SqlDtr.Close();
-                return salesMan;
+                return Ok(salesMan);
             }
             catch (Exception ex)
             {
-                return salesMan;
+                return Content(HttpStatusCode.NotFound, "Failed to get salesMan data.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetFromDateToDateData")]
-        public List<string> GetFromDateToDateData()
+        public IHttpActionResult GetFromDateToDateData()
         {
             List<string> result = new List<string>();
             try
@@ -1889,17 +1699,17 @@ namespace Servo_API.Controllers
                 }
                 result.Add(FromDate);
                 result.Add(ToDate);
-                return result;
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return result;
+                return Content(HttpStatusCode.NotFound, "Failed to get From Date, ToDate Data.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetProductTypes")]
-        public string GetProductTypes()
+        public IHttpActionResult GetProductTypes()
         {
             string sql;
             string texthiddenprod = string.Empty;
@@ -1914,23 +1724,22 @@ namespace Servo_API.Controllers
                     texthiddenprod = "Type,";
                     while (SqlDtr.Read())
                     {
-                        texthiddenprod += SqlDtr.GetValue(0).ToString() + ":" + SqlDtr.GetValue(1).ToString() + ":" + SqlDtr.GetValue(2).ToString() + ",";
-                        //21.04.09 coment by vikas  texthiddenprod.Value+=SqlDtr.GetValue(0).ToString()+":"+SqlDtr.GetValue(1).ToString()+",";
+                        texthiddenprod += SqlDtr.GetValue(0).ToString() + ":" + SqlDtr.GetValue(1).ToString() + ":" + SqlDtr.GetValue(2).ToString() + ",";                        
                     }
                 }
                 SqlDtr.Close();
-                return texthiddenprod;
+                return Ok(texthiddenprod);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return texthiddenprod;
+                return Content(HttpStatusCode.NotFound, "Failed to get Product Types.");
             }
         }
 
 
         [HttpGet]
         [Route("api/Sales/Getschemefoe")]
-        public string Getschemefoe(string invoiceDate)
+        public IHttpActionResult Getschemefoe(string invoiceDate)
         {
             string temptextfoe = string.Empty;
             try
@@ -1989,20 +1798,19 @@ namespace Servo_API.Controllers
                 }
                 //SqlDtr.Close();
                 rdr.Close();
-                temptextfoe = str;
-                return temptextfoe;
-                //MessageBox.Show("foe " +temptextfoe.Value);
+                temptextfoe = str;                
+                return Ok(temptextfoe);
             }
             catch (Exception ex)
             {
-                return temptextfoe;
+                return Content(HttpStatusCode.NotFound, "Failed to get Schemefoe.");
             }
         }
 
 
         [HttpGet]
         [Route("api/Sales/GetschemeSecSP")]
-        public string GetschemeSecSP(string invoiceDate)
+        public IHttpActionResult GetschemeSecSP(string invoiceDate)
         {
             string temptextSecSP = string.Empty;
             try
@@ -2038,18 +1846,19 @@ namespace Servo_API.Controllers
                 }
                 SqlDtr.Close();
                 temptextSecSP = str;
-                return temptextSecSP;
+                
+                return Ok(temptextSecSP);
             }
             catch (Exception ex)
             {
-                return temptextSecSP;
+                return Content(HttpStatusCode.NotFound, "Failed to get SchemeSacSP.");
             }
         }
 
 
         [HttpGet]
         [Route("api/Sales/Getscheme1")]
-        public string Getscheme1(string invoiceDate)
+        public IHttpActionResult Getscheme1(string invoiceDate)
         {
             string strText12 = string.Empty;
             try
@@ -2102,18 +1911,18 @@ namespace Servo_API.Controllers
                 }
                 int j = i;
                 SqlDtr.Close();
-                strText12 = str;
-                return strText12;
+                strText12 = str;               
+                return Ok(strText12);
             }
             catch (Exception ex)
             {
-                return strText12;
+                return Content(HttpStatusCode.NotFound, "Failed to get Scheme1.");
             }
         }
 
         [HttpGet]
         [Route("api/Sales/GetFOECust")]
-        public string GetFOECust()
+        public IHttpActionResult GetFOECust()
         {
             string strText13 = string.Empty;
             try
@@ -2129,18 +1938,18 @@ namespace Servo_API.Controllers
                 }
                 SqlDtr.Close();
                 strText13 = str;
-                return strText13;
+                
+                return Ok(strText13);
             }
             catch (Exception ex)
             {
-                return strText13;
+                return Content(HttpStatusCode.NotFound, "Failed to get FOE Cust.");
             }
         }
 
-
         [HttpGet]
         [Route("api/Sales/Getscheme")]
-        public string Getscheme(string invoiceDate)
+        public IHttpActionResult Getscheme(string invoiceDate)
         {
             string str = "";
             int i = 0;
@@ -2218,12 +2027,12 @@ namespace Servo_API.Controllers
                     i++;
                 }
                 SqlDtr.Close();
-                return str;
+                
+                return Ok(str);
             }
             catch (Exception ex)
             {
-                return str;
-                //CreateLogFiles.ErrorLog("Form : SalesInvoice.aspx, Method : getscheme() EXCEPTION :  " + ex.Message + "   " + uid);
+                return Content(HttpStatusCode.NotFound, "Failed to get Scheme.");
             }
         }
 
@@ -2232,7 +2041,7 @@ namespace Servo_API.Controllers
 		/// </summary>
         [HttpPost]
         [Route("api/Sales/SeqStockMaster")]
-        public bool SeqStockMaster(SalesModels sales)
+        public IHttpActionResult SeqStockMaster(SalesModels sales)
         {
             try
             {
@@ -2248,12 +2057,7 @@ namespace Servo_API.Controllers
                     if (sales.ProductType[i] == "" || sales.ProductName[i] == "" || sales.ProductQty[i] == "")
                         continue;
                     else
-                    {
-                        //					InventoryClass obj = new InventoryClass();
-                        //					InventoryClass obj1 = new InventoryClass();
-                        //					SqlCommand cmd;
-                        //					SqlConnection Con = new SqlConnection(System.Configuration.ConfigurationSettings.AppSettings["Servosms"]);
-                        //					SqlDataReader rdr1=null,rdr=null;
+                    {                        
                         string str = "select Prod_ID from Products where Category='" + sales.ProductType[i].ToString() + "' and Prod_Name='" + sales.ProductName[i].ToString() + "' and Pack_Type='" + sales.ProductPack[i].ToString() + "'";
                         rdr = obj.GetRecordSet(str);
                         if (rdr.Read())
@@ -2323,123 +2127,542 @@ namespace Servo_API.Controllers
                             rdr.Close();
                         }
                     }
-                }
-                return true;
+                }                
+                return Ok(true);
             }
             catch (Exception ex)
             {
-                return false;
+                return Content(HttpStatusCode.NotFound, "Failed to update the product stock after sales in edit time.");
             }
-
         }
 
         [HttpGet]
         [Route("api/Sales/GetFetchData")]
-        public string GetFetchData()
+        public IHttpActionResult GetFetchData()
         {
-            string strTxtVen = string.Empty;
-
-            InventoryClass obj = new InventoryClass();
-            InventoryClass obj1 = new InventoryClass();
-            SqlDataReader rdr1 = null;
-            SqlDataReader rdr3 = null;
-            string str1 = "";
-            DateTime duedate;
-            string duedatestr = "";
-
-            //coment by vikas 25.10.2012 rdr3 = obj.GetRecordSet("select c.City,CR_Days,Curr_Credit,Cust_ID,SSR,Cust_Name,Emp_Name  from Customer c,Employee e where e.Emp_ID=c.SSR order by Cust_Name");
-
-            //SalesCustomerModel salesCustomer = new SalesCustomerModel();
-
-            rdr3 = obj.GetRecordSet("select c.City,CR_Days,Curr_Credit,Cust_ID,SSR,Cust_Name,Emp_Name,ct.group_name  from Customer c,Employee e,customertype ct where e.Emp_ID=c.SSR and c.cust_type=ct.customertypename order by Cust_Name");
-            while (rdr3.Read())
+            try
             {
-                //salesCustomer.CR_Days.Add(DateTime.Now.AddDays(System.Convert.ToDouble(rdr3["CR_Days"])).ToString());
-                duedate = DateTime.Now.AddDays(System.Convert.ToDouble(rdr3["CR_Days"]));
-                duedatestr = duedate.ToShortDateString();
-                str1 = str1 + rdr3["Cust_Name"].ToString() + "~" + rdr3["City"].ToString().Trim() + "~" + GenUtil.str2DDMMYYYY(duedatestr.Trim()) + "~" + GenUtil.strNumericFormat(rdr3["Curr_Credit"].ToString().Trim()) + "~";
-                rdr1 = obj1.GetRecordSet("select top 1 Balance,BalanceType from customerledgertable where CustID=" + rdr3["Cust_ID"] + " order by EntryDate Desc");
-                //dbobj.SelectQuery("select top 1 Balance,BalanceType from customerledgertable where CustID="+rdr3["Cust_ID"]+" order by EntryDate Desc",ref rdr1);
-                if (rdr1.Read())
+                string strTxtVen = string.Empty;
+
+                InventoryClass obj = new InventoryClass();
+                InventoryClass obj1 = new InventoryClass();
+                SqlDataReader rdr1 = null;
+                SqlDataReader rdr3 = null;
+                string str1 = "";
+                DateTime duedate;
+                string duedatestr = "";
+
+                //coment by vikas 25.10.2012 rdr3 = obj.GetRecordSet("select c.City,CR_Days,Curr_Credit,Cust_ID,SSR,Cust_Name,Emp_Name  from Customer c,Employee e where e.Emp_ID=c.SSR order by Cust_Name");
+
+                //SalesCustomerModel salesCustomer = new SalesCustomerModel();
+
+                rdr3 = obj.GetRecordSet("select c.City,CR_Days,Curr_Credit,Cust_ID,SSR,Cust_Name,Emp_Name,ct.group_name  from Customer c,Employee e,customertype ct where e.Emp_ID=c.SSR and c.cust_type=ct.customertypename order by Cust_Name");
+                while (rdr3.Read())
                 {
-                    string str15 = GenUtil.strNumericFormat(rdr1["Balance"].ToString().Trim()) + "~" + rdr1["BalanceType"].ToString().Trim() + "~";
-                    str1 = str1 + GenUtil.strNumericFormat(rdr1["Balance"].ToString().Trim()) + "~" + rdr1["BalanceType"].ToString().Trim() + "~";
+                    //salesCustomer.CR_Days.Add(DateTime.Now.AddDays(System.Convert.ToDouble(rdr3["CR_Days"])).ToString());
+                    duedate = DateTime.Now.AddDays(System.Convert.ToDouble(rdr3["CR_Days"]));
+                    duedatestr = duedate.ToShortDateString();
+                    str1 = str1 + rdr3["Cust_Name"].ToString() + "~" + rdr3["City"].ToString().Trim() + "~" + GenUtil.str2DDMMYYYY(duedatestr.Trim()) + "~" + GenUtil.strNumericFormat(rdr3["Curr_Credit"].ToString().Trim()) + "~";
+                    rdr1 = obj1.GetRecordSet("select top 1 Balance,BalanceType from customerledgertable where CustID=" + rdr3["Cust_ID"] + " order by EntryDate Desc");
+                    //dbobj.SelectQuery("select top 1 Balance,BalanceType from customerledgertable where CustID="+rdr3["Cust_ID"]+" order by EntryDate Desc",ref rdr1);
+                    if (rdr1.Read())
+                    {
+                        string str15 = GenUtil.strNumericFormat(rdr1["Balance"].ToString().Trim()) + "~" + rdr1["BalanceType"].ToString().Trim() + "~";
+                        str1 = str1 + GenUtil.strNumericFormat(rdr1["Balance"].ToString().Trim()) + "~" + rdr1["BalanceType"].ToString().Trim() + "~";
+                    }
+                    else
+                    {
+                        str1 = str1 + "0" + "~" + " " + "~";
+                    }
+                    rdr1.Close();
+                    //coment by vikas 25.10.2012 str1+=rdr3["Emp_Name"].ToString()+"#";
+                    str1 += rdr3["Emp_Name"].ToString() + "~" + rdr3["group_name"].ToString() + "#";
                 }
-                else
-                {
-                    str1 = str1 + "0" + "~" + " " + "~";
-                }
-                rdr1.Close();
-                //coment by vikas 25.10.2012 str1+=rdr3["Emp_Name"].ToString()+"#";
-                str1 += rdr3["Emp_Name"].ToString() + "~" + rdr3["group_name"].ToString() + "#";
+                rdr3.Close();
+                strTxtVen = str1;
+                
+                return Ok(strTxtVen);
             }
-            rdr3.Close();
-            strTxtVen = str1;
-            return strTxtVen;
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Failed to get Fetch data.");
+            }
         }
+
 
         [HttpGet]
         [Route("api/Sales/GetDataSelectedOrderInvoice")]
-        public SalesModels GetDataSelectedOrderInvoice(string id)
+        public IHttpActionResult GetDataSelectedOrderInvoice(string id)
         {
-            SalesModels sales = new SalesModels();
-
-            string strTextSelect = id;
-
-            /*********Add by vikas 11.12.12********************************/
-            string[] Order_No = strTextSelect.Split(new char[] { ':' });
-            int Count = Order_No.Length;
-            /***************************End********************************/
-
-            if (strTextSelect != "Select")
+            try
             {
-                //Clear();
-                //HtmlInputText[] ProdType = { DropType1, DropType2, DropType3, DropType4, DropType5, DropType6, DropType7, DropType8, DropType9, DropType10, DropType11, DropType12 };
-                //TextBox[] Qty = { txtQty1, txtQty2, txtQty3, txtQty4, txtQty5, txtQty6, txtQty7, txtQty8, txtQty9, txtQty10, txtQty11, txtQty12 };
-                //TextBox[] Rate = { txtRate1, txtRate2, txtRate3, txtRate4, txtRate5, txtRate6, txtRate7, txtRate8, txtRate9, txtRate10, txtRate11, txtRate12 };
-                //TextBox[] Amount = { txtAmount1, txtAmount2, txtAmount3, txtAmount4, txtAmount5, txtAmount6, txtAmount7, txtAmount8, txtAmount9, txtAmount10, txtAmount11, txtAmount12 };
-                //TextBox[] AvStock = { txtAvStock1, txtAvStock2, txtAvStock3, txtAvStock4, txtAvStock5, txtAvStock6, txtAvStock7, txtAvStock8, txtAvStock9, txtAvStock10, txtAvStock11, txtAvStock12 };
-                //TextBox[] tempQty = { txtTempQty1, txtTempQty2, txtTempQty3, txtTempQty4, txtTempQty5, txtTempQty6, txtTempQty7, txtTempQty8, txtTempQty9, txtTempQty10, txtTempQty11, txtTempQty12 };
-                //TextBox[] tempSchQty = { txtTempSchQty1, txtTempSchQty2, txtTempSchQty3, txtTempSchQty4, txtTempSchQty5, txtTempSchQty6, txtTempSchQty7, txtTempSchQty8, txtTempSchQty9, txtTempSchQty10, txtTempSchQty11, txtTempSchQty12 };
-                //HtmlInputHidden[] tmpQty = { tmpQty1, tmpQty2, tmpQty3, tmpQty4, tmpQty5, tmpQty6, tmpQty7, tmpQty8, tmpQty9, tmpQty10, tmpQty11, tmpQty12 };
-                //HtmlInputHidden[] tmpSchType = { tmpSchType1, tmpSchType2, tmpSchType3, tmpSchType4, tmpSchType5, tmpSchType6, tmpSchType7, tmpSchType8, tmpSchType9, tmpSchType10, tmpSchType11, tmpSchType12 };
-                //TextBox[] pid = { txtpname1, txtpname2, txtpname3, txtpname4, txtpname5, txtpname6, txtpname7, txtpname8, txtpname9, txtpname10, txtpname11, txtpname12 };
-                //TextBox[] pid1 = { txtmwid1, txtmwid2, txtmwid3, txtmwid4, txtmwid5, txtmwid6, txtmwid7, txtmwid8, txtmwid9, txtmwid10, txtmwid11, txtmwid12 };
-                //TextBox[] scheme = { txtsch1, txtsch2, txtsch3, txtsch4, txtsch5, txtsch6, txtsch7, txtsch8, txtsch9, txtsch10, txtsch11, txtsch12 };
-                //TextBox[] foe = { txtfoe1, txtfoe2, txtfoe3, txtfoe4, txtfoe5, txtfoe6, txtfoe7, txtfoe8, txtfoe9, txtfoe10, txtfoe11, txtfoe12 };
-                //TextBox[] ProdType1 = { txtTypesch1, txtTypesch2, txtTypesch3, txtTypesch4, txtTypesch5, txtTypesch6, txtTypesch7, txtTypesch8, txtTypesch9, txtTypesch10, txtTypesch11, txtTypesch12 };
-                //TextBox[] Qty1 = { txtQtysch1, txtQtysch2, txtQtysch3, txtQtysch4, txtQtysch5, txtQtysch6, txtQtysch7, txtQtysch8, txtQtysch9, txtQtysch10, txtQtysch11, txtQtysch12 };
-                //TextBox[] stk1 = { txtstk1, txtstk2, txtstk3, txtstk4, txtstk5, txtstk6, txtstk7, txtstk8, txtstk9, txtstk10, txtstk11, txtstk12 };
-                //HtmlInputHidden[] tmpFoeType = { tmpFoeType1, tmpFoeType2, tmpFoeType3, tmpFoeType4, tmpFoeType5, tmpFoeType6, tmpFoeType7, tmpFoeType8, tmpFoeType9, tmpFoeType10, tmpFoeType11, tmpFoeType12 };
-                //HtmlInputHidden[] SchSPType = { tmpSecSPType1, tmpSecSPType2, tmpSecSPType3, tmpSecSPType4, tmpSecSPType5, tmpSecSPType6, tmpSecSPType7, tmpSecSPType8, tmpSecSPType9, tmpSecSPType10, tmpSecSPType11, tmpSecSPType12 };
-                //HtmlInputHidden[] SchSP = { txtTempSecSP1, txtTempSecSP2, txtTempSecSP3, txtTempSecSP4, txtTempSecSP5, txtTempSecSP6, txtTempSecSP7, txtTempSecSP8, txtTempSecSP9, txtTempSecSP10, txtTempSecSP11, txtTempSecSP12 };
+                SalesModels sales = new SalesModels();
 
+                string strTextSelect = id;
+
+                /*********Add by vikas 11.12.12********************************/
+                string[] Order_No = strTextSelect.Split(new char[] { ':' });
+                int Count = Order_No.Length;
+                /***************************End********************************/
+
+                if (strTextSelect != "Select")
+                {
+                    InventoryClass obj = new InventoryClass();
+                    InventoryClass obj1 = new InventoryClass();
+                    SqlDataReader SqlDtr;
+                    string sql, sql1;
+                    SqlDataReader rdr = null, rdr1 = null, rdr2 = null, rdr3 = null;
+                    int i = 0;
+
+
+                    #region Get Data from Order_Col_Master Table regarding Order No.
+                    //coment by vikas 11.12.12 sql="select * from Order_Col_Master,Employee where Under_SalesMan=Emp_ID and Order_No='"+DropOrderInvoice.SelectedItem.Value +"'" ;
+
+                    /***********Add by vikas 11.12.12***************************/
+                    if (Count == 1)
+                        sql = "select * from Order_Col_Master,Employee where Under_SalesMan=Emp_ID and Order_No='" + id + "'";
+                    else
+                        sql = "select * from Order_Col_Master,Employee where Under_SalesMan=Emp_ID and Order_No=(select distinct order_id from ovd o where bo_1=" + Order_No[1].ToString() + " or bo_2=" + Order_No[1].ToString() + " or bo_3=" + Order_No[1].ToString() + ")";
+                    /************End**************************/
+
+                    SqlDtr = obj.GetRecordSet(sql);
+                    while (SqlDtr.Read())
+                    {
+                        sales.Invoice_Date = SqlDtr.GetValue(1).ToString();
+                        string strDate = SqlDtr.GetValue(1).ToString().Trim();
+                        int pos = strDate.IndexOf(" ");
+
+                        if (pos != -1)
+                        {
+                            strDate = strDate.Substring(0, pos);
+                        }
+                        else
+                        {
+                            strDate = "";
+                        }
+
+                        sales.Invoice_Date = GenUtil.str2DDMMYYYY(strDate);
+                        //tempInvoiceDate.Value = GenUtil.str2DDMMYYYY(strDate);
+                        sales.Sales_Type = (SqlDtr.GetValue(2).ToString());
+
+                        sales.Under_SalesMan = SqlDtr["Emp_Name"].ToString();
+                        sales.Vehicle_No = SqlDtr.GetValue(5).ToString();
+
+                        sales.Grand_Total = GenUtil.strNumericFormat(SqlDtr.GetValue(6).ToString());
+                        sales.Discount = float.Parse(SqlDtr.GetValue(7).ToString());
+                        string strDisc = GenUtil.strNumericFormat(SqlDtr.GetValue(7).ToString());
+                        sales.Discount = float.Parse(strDisc);
+                        sales.Discount_Type = (SqlDtr.GetValue(8).ToString());
+                        string strNetAmount = GenUtil.strNumericFormat(SqlDtr.GetValue(9).ToString());
+                        sales.Net_Amount = float.Parse(strNetAmount);
+                        //tempNetAmount.Value = SqlDtr.GetValue(9).ToString();                               //Add by vikas 14.07.09
+                        //tempNetAmount.Value = GenUtil.strNumericFormat(tempNetAmount.Value.ToString());     //Add by vikas 14.07.09
+
+                        //NetAmount = GenUtil.strNumericFormat(txtNetAmount.Text.ToString());
+
+                        sales.Promo_Scheme = SqlDtr.GetValue(10).ToString();
+                        sales.Remark = SqlDtr.GetValue(11).ToString();
+                        sales.Entry_By = SqlDtr.GetValue(12).ToString();
+                        sales.Entry_Time = System.Convert.ToDateTime(SqlDtr.GetValue(13).ToString());
+                        sales.SecSPDisc = float.Parse(SqlDtr["SecSPDisc"].ToString());
+
+                        sales.Promo_Scheme = SqlDtr.GetValue(10).ToString();
+                        sales.Remark = SqlDtr.GetValue(11).ToString();
+                        sales.Entry_By = SqlDtr.GetValue(12).ToString();
+
+                        sales.Entry_Time = System.Convert.ToDateTime(SqlDtr.GetValue(13).ToString());
+                        sales.SecSPDisc = float.Parse(SqlDtr["SecSPDisc"].ToString());
+
+                        if (SqlDtr["Discount_type"].ToString() == "Per")
+                        {
+                            string strTotalDisc = System.Convert.ToString((double.Parse(SqlDtr["Grand_Total"].ToString()) - double.Parse(SqlDtr["schdiscount"].ToString())) * double.Parse(SqlDtr["discount"].ToString()) / 100);
+                            sales.Total_Discount = float.Parse(System.Convert.ToString(Math.Round(double.Parse(strTotalDisc), 2)));
+                        }
+                        else
+                        {
+                            double Discount = double.Parse(GenUtil.strNumericFormat(SqlDtr["Discount"].ToString())) * double.Parse(GenUtil.strNumericFormat(SqlDtr["totalqtyltr"].ToString()));
+                            sales.Total_Discount = float.Parse(GenUtil.strNumericFormat(Discount.ToString()));
+                        }
+
+
+                        if (SqlDtr["cash_Disc_type"].ToString() == "Per")
+                        {
+                            double tot = 0;
+                            if (Convert.ToString(sales.Total_Discount) != "")
+                                tot = double.Parse(SqlDtr["Grand_Total"].ToString()) - (double.Parse(SqlDtr["schdiscount"].ToString()) + double.Parse(SqlDtr["foediscount"].ToString()) + double.Parse(sales.Total_Discount.ToString()));
+                            else
+                                tot = double.Parse(SqlDtr["Grand_Total"].ToString()) - (double.Parse(SqlDtr["schdiscount"].ToString()) + double.Parse(SqlDtr["foediscount"].ToString()));
+                            string strCashDiscount = System.Convert.ToString(tot * double.Parse(SqlDtr["Cash_Discount"].ToString()) / 100);
+                            sales.Total_Discount = float.Parse(System.Convert.ToString(Math.Round(double.Parse(strCashDiscount), 2)));
+                        }
+                        else
+                        {
+                            sales.Total_Discount = 0;
+                        }
+
+
+                        string strCashDisc = SqlDtr.GetValue(15).ToString();
+                        sales.Cash_Discount = float.Parse(GenUtil.strNumericFormat(strCashDisc));
+
+                        sales.Cash_Disc_Type = (SqlDtr.GetValue(16).ToString());
+                        sales.IGST_Amount = float.Parse(SqlDtr.GetValue(17).ToString());
+                        sales.Scheme_Discount = float.Parse(SqlDtr.GetValue(18).ToString());
+                        sales.FOE_Discount = float.Parse(SqlDtr.GetValue(19).ToString());
+                        sales.FOE_Discounttype = (SqlDtr.GetValue(20).ToString());
+                        sales.FOE_Discountrs = float.Parse(SqlDtr.GetValue(21).ToString());
+                        sales.Total_Qty_Ltr = float.Parse(SqlDtr.GetValue(22).ToString());
+                        //sales.CGST_Amount = float.Parse(SqlDtr.GetValue(27).ToString());
+                        //sales.SGST_Amount = float.Parse(SqlDtr.GetValue(26).ToString());
+
+
+
+                        if (SqlDtr["ChallanNo"].ToString() == "0")
+                            sales.ChallanNo = "";
+                        else
+                            sales.ChallanNo = SqlDtr["ChallanNo"].ToString();
+
+
+                        if (GenUtil.trimDate(SqlDtr["ChallanDate"].ToString()) == "1/1/1900")
+                            sales.ChallanDate = System.Convert.ToDateTime("1/1/1900");
+                        else
+                            sales.ChallanDate = System.Convert.ToDateTime(GenUtil.str2DDMMYYYY(GenUtil.trimDate(SqlDtr["ChallanDate"].ToString())));
+                    }
+                    SqlDtr.Close();
+                    #endregion
+
+                    #region Get Customer name and place regarding Customer ID
+
+                    //coment by vikas 10.11.2012 sql="select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID from Customer as c, Order_Col_master as s where c.Cust_ID= s.Cust_ID and s.Order_No='"+DropOrderInvoice.SelectedValue +"'";
+
+                    //coment by vikas 11.12.2012 sql="select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID,ct.group_name from Customer as c, Order_Col_Master as s,customertype as ct where c.Cust_ID= s.Cust_ID and c.cust_type=ct.customertypename and s.Order_No='"+DropOrderInvoice.SelectedValue +"'";
+                    /***********Add by vikas 11.12.12***************************/
+                    if (Count == 1)
+                        sql = "select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID,ct.group_name from Customer as c, Order_Col_Master as s,customertype as ct where c.Cust_ID= s.Cust_ID and c.cust_type=ct.customertypename and s.Order_No='" + id + "'";
+                    else
+                        sql = "select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID,ct.group_name from Customer as c, Order_Col_Master as s,customertype as ct where c.Cust_ID= s.Cust_ID and c.cust_type=ct.customertypename and s.Order_No =(select distinct order_id from ovd o where bo_1=" + Order_No[1].ToString() + " or bo_2=" + Order_No[1].ToString() + " or bo_3=" + Order_No[1].ToString() + ")";
+                    /************End**************************/
+                    SqlDtr = obj.GetRecordSet(sql);
+                    while (SqlDtr.Read())
+                    {
+                        //coment by vikas 12.11.2012 texthidden1.Value=SqlDtr.GetValue(0).ToString();
+                        //coment by vikas 12.11.2012 text1.Value=SqlDtr.GetValue(0).ToString();                        
+                        sales.Cust_Name = SqlDtr.GetValue(0).ToString() + ":" + SqlDtr.GetValue(1).ToString();
+                        sales.Cust_ID = Int32.Parse(SqlDtr["Cust_ID"].ToString());
+
+                        sales.Place = SqlDtr.GetValue(1).ToString();//System.Convert.ToDateTime(
+                        sales.DueDate = DateTime.Now.AddDays(System.Convert.ToDouble(SqlDtr.GetValue(2).ToString()));
+                        string duedatestr = (sales.DueDate.ToShortDateString());
+                        sales.DueDate = System.Convert.ToDateTime(GenUtil.str2DDMMYYYY(duedatestr));
+                        sales.Current_Balance = GenUtil.strNumericFormat(SqlDtr.GetValue(3).ToString());
+                        //TxtCrLimit.Value = SqlDtr.GetValue(4).ToString();
+                        sales.Credit_Limit = float.Parse(SqlDtr.GetValue(4).ToString());
+                        //txtcusttype.Text = SqlDtr.GetValue(5).ToString();
+
+                        if (SqlDtr["Group_Name"].ToString() != null && SqlDtr["Group_Name"].ToString() != "")
+                            sales.Group_Name = SqlDtr["Group_Name"].ToString();
+                    }
+                    SqlDtr.Close();
+
+                    //coment by vikas 11.12.2012 sql="select top 1 balance,balancetype  from CustomerLedgerTable as c, Order_Col_master as s where c.CustID= s.Cust_ID and s.Order_No='"+DropOrderInvoice.SelectedValue+"' order by entrydate desc";
+
+                    /***********Add by vikas 11.12.12***************************/
+                    if (Count == 1)
+                        sql = "select top 1 balance,balancetype  from CustomerLedgerTable as c, Order_Col_master as s where c.CustID= s.Cust_ID and s.Order_No='" + id + "' order by entrydate desc";
+                    else
+                        sql = "select top 1 balance,balancetype  from CustomerLedgerTable as c, Order_Col_master as s where c.CustID= s.Cust_ID and s.Order_No=(select distinct order_id from ovd o where bo_1=" + Order_No[1].ToString() + " or bo_2=" + Order_No[1].ToString() + " or bo_3=" + Order_No[1].ToString() + ") order by entrydate desc";
+                    /*****************************End**************************/
+                    SqlDtr = obj.GetRecordSet(sql);
+
+                    while (SqlDtr.Read())
+                    {
+                        sales.Balance = SqlDtr.GetValue(0).ToString();
+                        sales.BalanceType = SqlDtr.GetValue(1).ToString();
+                        //sales.Current_Balance = GenUtil.strNumericFormat(SqlDtr.GetValue(0).ToString()) + " " + SqlDtr.GetValue(1).ToString();
+                    }
+                    SqlDtr.Close();
+                    #endregion
+
+                    #region Get Data from Order Details Table regarding Order No.
+
+                    /*Coment by vikas 10.11.2012 sql="select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_no,sm.Order_date,SchType,FoeType,SPDiscType,SPDisc,cust_id"+
+                        " from Products p, Order_Col_Details sd,Order_Col_master sm"+
+                        " where p.Prod_ID=sd.prod_id and sd.Order_no=sm.Order_no and sd.Rate >0 and sd.Amount > 0 and sd.Order_no='"+DropOrderInvoice.SelectedItem.Value +"' order by sd.sno" ;*/
+
+                    double Avail_Stock = 0, Order_Qty = 0;  //Add by Vikas 12.11.2012
+
+                    //coment by vikas 11.12.2012 sql="select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_No,sm.Order_Date,SchType,FoeType,SPDiscType,SPDisc,cust_id,p.Prod_Code"+
+                    //coment by vikas 11.12.2012	" from Products p, Order_Col_Details sd,Order_Col_Master sm"+
+                    //coment by vikas 11.12.2012	" where p.Prod_ID=sd.prod_id and sd.Order_No=sm.Order_No and sd.Rate >0 and sd.Amount > 0 and sd.Order_No='"+DropOrderInvoice.SelectedItem.Value +"' order by sd.sno" ;
+
+                    /***********Add by vikas 11.12.12***************************/
+                    if (Count == 1)
+                    {
+                        sql = "select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_No,sm.Order_Date,SchType,FoeType,SPDiscType,SPDisc,cust_id,p.Prod_Code" +
+                            " from Products p, Order_Col_Details sd,Order_Col_Master sm" +
+                            " where p.Prod_ID=sd.prod_id and sd.Order_No=sm.Order_No and sd.Rate >0 and sd.Amount > 0 and sd.Order_No='" + id + "' order by sd.sno";
+                    }
+                    else
+                    {
+                        sql = "select p.Category,p.Prod_Name,p.Pack_Type,(cast(ovd.item_qty as int)-cast(ovd.sale_qty as int)) qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_No,sm.Order_Date,SchType,FoeType,SPDiscType,SPDisc,ovd.cust_id,p.Prod_Code" +
+                            " from Products p, Order_Col_Details sd,Order_Col_Master sm, ovd" +
+                            " where ovd.item_id=sd.prod_id and ovd.order_id=sd.order_no and ovd.item_qty>ovd.sale_qty and p.Prod_ID=sd.prod_id and sd.Order_No=sm.Order_No and sd.Rate >0 and sd.Amount > 0 and sd.Order_No =(select distinct order_id from ovd o where bo_1=" + Order_No[1].ToString() + " or bo_2=" + Order_No[1].ToString() + " or bo_3=" + Order_No[1].ToString() + ") order by sd.sno";
+                    }
+                    /*****************************End**************************/
+
+                    //select p.Category,p.Prod_Name,p.Pack_Type,sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_No,sm.Order_Date,SchType,FoeType,SPDiscType,SPDisc,ovd.cust_id,p.Prod_Code
+                    //from Products p, Order_Col_Details sd,Order_Col_Master sm, ovd
+                    //ovd where ovd.item_id=sd.prod_id and ovd.order_id=sd.order_no and ovd.item_qty=ovd.sale_qty and p.Prod_ID=sd.prod_id and sd.Order_No=sm.Order_No and sd.Rate >0 and sd.Amount > 0 and sd.Order_No =(select distinct order_id from ovd o where bo_1=9 or bo_2=9 or bo_3=9) order by sd.sno
+                    List<string> controlSalesQty = new List<string>();
+                    List<string> controlProdType = new List<string>();
+
+                    List<string> controlProductType = new List<string>();
+                    List<string> controlProductName = new List<string>();
+                    List<string> controlProductPack = new List<string>();
+                    List<string> controlProductQty = new List<string>();
+                    List<string> controlPID = new List<string>();
+                    List<string> controlPID1 = new List<string>();
+                    List<string> controlscheme = new List<string>();
+                    List<string> controlDetails_foe = new List<string>();
+                    List<string> controlAv_Stock = new List<string>();
+                    List<string> controlSchSPType = new List<string>();
+                    List<string> controlSchSP = new List<string>();
+                    List<string> controlTmpFoeType = new List<string>();
+                    List<string> controlSalesQty1 = new List<string>();
+                    List<string> controlProdType1 = new List<string>();
+                    List<string> controlTempSchQty = new List<string>();
+                    List<string> controlTmpSchType = new List<string>();
+                    List<string> controlStk1 = new List<string>();
+                    List<string> controlRate = new List<string>();
+                    List<string> controlAmount = new List<string>();
+                    List<string> controlSchProductType = new List<string>();
+                    List<string> controlSchProductName = new List<string>();
+                    List<string> controlSchProductPack = new List<string>();
+                    List<string> controlSchProductQty = new List<string>();
+
+                    SqlDtr = obj.GetRecordSet(sql);
+                    while (SqlDtr.Read())
+                    {
+                        /*****************this Condition Add by Vikas 12.11.2012*becouse Condition shift Above*********************************/
+                        sql1 = "select top 1 Closing_Stock from Stock_Master where productid=" + SqlDtr.GetValue(6).ToString() + " order by stock_date desc";
+                        dbobj.SelectQuery(sql1, ref rdr);
+                        if (rdr.Read())
+                        {
+                            //Coment by Vikas 12.11.2012 AvStock [i].Text =rdr["Closing_Stock"]+" "+SqlDtr.GetValue(7).ToString();
+                            Avail_Stock = Double.Parse(rdr["Closing_Stock"].ToString());
+                        }
+                        else
+                        {
+                            //Coment by Vikas 12.11.2012 AvStock [i].Text ="0"+" "+SqlDtr.GetValue(7).ToString();
+                            Avail_Stock = 0;
+                        }
+
+                        Order_Qty = double.Parse(SqlDtr.GetValue(3).ToString());
+
+                        if (Avail_Stock != 0)
+                        {
+                            controlAv_Stock.Add(Avail_Stock + " " + SqlDtr.GetValue(7).ToString());
+
+                            controlProdType.Add(SqlDtr["Prod_Code"].ToString() + ":" + SqlDtr.GetValue(1).ToString() + ":" + SqlDtr.GetValue(2).ToString());
+
+                            //Coment by Vikas 10.11.2012 Qty[i].Text=SqlDtr.GetValue(3).ToString();
+                            if (Avail_Stock >= Order_Qty)
+                            {
+                                controlSalesQty.Add(SqlDtr.GetValue(3).ToString());
+                            }
+                            else
+                            {
+                                controlSalesQty.Add(Avail_Stock.ToString());
+                            }
+
+                            controlProductType.Add(SqlDtr.GetValue(0).ToString());
+
+                            controlProductName.Add(SqlDtr.GetValue(1).ToString());
+                            controlProductPack.Add(SqlDtr.GetValue(2).ToString());
+                            controlProductQty.Add(SqlDtr.GetValue(3).ToString());
+                            //controlTempQty.Add(SqlDtr.GetValue(3).ToString());
+                            //controlTmpQty.Add(SqlDtr.GetValue(3).ToString());
+
+                            controlRate.Add(SqlDtr.GetValue(4).ToString());
+                            controlAmount.Add(SqlDtr.GetValue(5).ToString());
+                            controlPID.Add(SqlDtr.GetValue(6).ToString());
+                            controlPID1.Add(SqlDtr.GetValue(6).ToString());
+                            controlscheme.Add(SqlDtr.GetValue(8).ToString());
+                            controlDetails_foe.Add(SqlDtr.GetValue(9).ToString());
+
+                            if (SqlDtr["SPDiscType"].ToString() == "")
+                            {
+                                //rdr3 = obj1.GetRecordSet("select o.DiscountType,o.Discount from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='"+SqlDtr["invoice_No"].ToString()+"' and o.schname='Secondry SP(LTRSP Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)<='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)>='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and sd.prod_id='"+SqlDtr["Prod_ID"].ToString()+"'");
+                                rdr3 = obj1.GetRecordSet("select o.DiscountType,o.Discount from order_col_details sd,oilscheme o,order_col_master sm where o.prodid=sd.prod_id and sm.order_no=sd.order_no and sd.order_no='" + SqlDtr["Order_No"].ToString() + "' and o.schname='Secondry SP(LTRSP Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'");
+                                if (rdr3.HasRows)
+                                {
+                                    if (rdr3.Read())
+                                    {
+                                        controlSchSPType.Add(rdr3.GetValue(0).ToString());
+                                        controlSchSP.Add(rdr3.GetValue(1).ToString());
+                                    }
+                                }
+                                rdr3.Close();
+                            }
+                            else
+                            {
+                                controlSchSPType.Add(SqlDtr["SPDiscType"].ToString());
+                                controlSchSP.Add(SqlDtr["SPDisc"].ToString());
+                            }
+
+                            if (SqlDtr["FoeType"].ToString() == "")
+                            {
+                                //rdr3 = obj1.GetRecordSet("select distinct o.distype from sales_details sd,foe o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and custid=cust_id and custid='"+SqlDtr["Cust_ID"].ToString()+"' and sd.prod_id='"+SqlDtr["Prod_ID"].ToString()+"' and cast(floor(cast(o.datefrom as float)) as datetime)<='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)>='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"'");
+                                string ss = "select distinct o.distype from order_col_details sd,foe o,order_col_master sm where o.prodid=sd.prod_id and sm.order_no=sd.order_no and custid=cust_id and custid='" + SqlDtr["Cust_ID"].ToString() + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Order_Date"].ToString()) + "'";
+                                rdr3 = obj1.GetRecordSet("select distinct o.distype from order_col_details sd,foe o,order_col_master sm where o.prodid=sd.prod_id and sm.order_no=sd.order_no and custid=cust_id and custid='" + SqlDtr["Cust_ID"].ToString() + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Order_Date"].ToString()) + "'");
+                                if (rdr3.HasRows)
+                                {
+                                    if (rdr3.Read())
+                                    {
+                                        controlTmpFoeType.Add(rdr3.GetValue(0).ToString());
+                                    }
+                                }
+                                rdr3.Close();
+                            }
+                            else
+                                controlTmpFoeType.Add(SqlDtr["FoeType"].ToString());
+
+                            if (SqlDtr["SchType"].ToString() == "")
+                            {
+                                //rdr3 = obj1.GetRecordSet("select o.discounttype from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='"+SqlDtr["invoice_No"].ToString()+"' and (o.schname='Primary(LTR&% Scheme)' or o.schname='Secondry(LTR Scheme)') and cast(floor(cast(o.datefrom as float)) as datetime)<='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)>='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and sd.prod_id='"+SqlDtr["Prod_ID"].ToString()+"'");
+                                rdr3 = obj1.GetRecordSet("select o.discounttype from order_col_details sd,oilscheme o,order_col_master sm where o.prodid=sd.prod_id and sm.order_no=sd.order_no and sd.order_no='" + SqlDtr["Order_No"].ToString() + "' and (o.schname='Primary(LTR&% Scheme)' or o.schname='Secondry(LTR Scheme)') and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Order_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'");
+                                if (rdr3.HasRows)
+                                {
+                                    if (rdr3.Read())
+                                    {
+                                        controlTmpSchType.Add(rdr3.GetValue(0).ToString());
+                                    }
+                                }
+                                rdr3.Close();
+                            }
+                            else
+                                controlTmpSchType.Add(SqlDtr["SchType"].ToString());
+
+                            //Qty[i].ToolTip = "Actual Available Stock = " + Qty[i].Text.ToString() + " + " + AvStock[i].Text.ToString();
+
+
+                            string sql11 = "select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,p.Prod_ID,p.unit" +
+                                " from Products p, Order_Col_Details sd" +
+                                " where p.Prod_ID=sd.prod_id and sd.Rate =0 and sd.Amount = 0 and sno=" + i + " and sd.Order_no='" + id + "'";
+                            dbobj.SelectQuery(sql11, ref rdr2);
+                            if (rdr2.HasRows)
+                            {
+                                while (rdr2.Read())
+                                {
+                                    controlProdType1.Add(rdr2.GetValue(1).ToString() + ":" + rdr2.GetValue(2).ToString());
+                                    controlSalesQty1.Add(rdr2.GetValue(3).ToString());
+                                    controlSchProductType.Add(rdr2.GetValue(0).ToString());
+                                    controlSchProductName.Add(rdr2.GetValue(1).ToString());
+                                    controlSchProductPack.Add(rdr2.GetValue(2).ToString());
+                                    controlSchProductQty.Add(rdr2.GetValue(3).ToString());
+                                    controlTempSchQty.Add(rdr2.GetValue(3).ToString());
+                                    string sql12 = "select top 1 Closing_Stock from Stock_Master where productid=" + rdr2.GetValue(4).ToString() + " order by stock_date desc";
+                                    dbobj.SelectQuery(sql12, ref rdr1);
+                                    if (rdr1.Read())
+                                    {
+                                        controlStk1.Add(rdr1["Closing_Stock"] + " " + rdr2.GetValue(5).ToString());
+                                    }
+                                    else
+                                    {
+                                        controlStk1.Add("0" + " " + rdr2.GetValue(5).ToString());
+                                    }
+
+                                    /*********
+                                    rdr3 = obj1.GetRecordSet("select o.discounttype from Order_Col_details sd,oilscheme o,Order_Col_master sm where o.prodid=sd.prod_id and sm.Order_no=sd.Order_no and sd.Order_no='"+SqlDtr["Order_No"].ToString()+"' and o.schname='Primary(LTR&% Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)>='"+GenUtil.str2DDMMYYYY(SqlDtr["Order_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)<='"+GenUtil.str2DDMMYYYY(SqlDtr["Order_Date"].ToString())+"' and sd.prod_id='"+rdr2["Prod_ID"].ToString()+"'");
+                                    if(rdr3.HasRows)
+                                    {
+                                        if(rdr3.Read())
+                                        {
+                                            tmpSchType[i].Value=rdr3.GetValue(0).ToString();
+                                        }
+                                    }
+                                    rdr3.Close();
+                                    **********/
+                                }
+                                rdr1.Close();
+                            }
+                            rdr2.Close();
+                            rdr.Close();
+                            i++;
+                        }
+                    }
+                    sales.SalesQty = controlSalesQty;
+                    sales.ProductType = controlProductType;
+                    sales.ProdType = controlProdType;
+                    sales.ProductName = controlProductName;
+                    sales.ProductPack = controlProductPack;
+                    sales.ProductQty = controlProductQty;
+                    sales.PID = controlPID;
+                    sales.PID1 = controlPID1;
+                    sales.scheme = controlscheme;
+                    sales.Details_foe = controlDetails_foe;
+                    sales.Av_Stock = controlAv_Stock;
+                    sales.SchSPType = controlSchSPType;
+                    sales.SchSP = controlSchSP;
+                    sales.tmpFoeType = controlTmpFoeType;
+                    sales.SalesQty1 = controlSalesQty1;
+                    sales.ProdType1 = controlProdType1;
+                    sales.tempSchQty = controlTempSchQty;
+                    sales.tmpSchType = controlTmpSchType;
+                    sales.stk1 = controlStk1;
+
+                    sales.SchProductType = controlSchProductType;
+                    sales.SchProductName = controlSchProductName;
+                    sales.SchProductPack = controlSchProductPack;
+                    sales.SchProductQty = controlSchProductQty;
+                    sales.Rate = controlRate;
+                    sales.Amount = controlAmount;
+                    SqlDtr.Close();
+                    #endregion
+                }
+                
+                return Ok(sales);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Failed to get data of selected Order Invoice.");
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("api/Sales/GetDataSelectedSalesInvoice")]
+        public IHttpActionResult GetDataSelectedSalesInvoice(string id)
+        {
+            try
+            {
+                SalesModels sales = new SalesModels();
 
                 InventoryClass obj = new InventoryClass();
                 InventoryClass obj1 = new InventoryClass();
                 SqlDataReader SqlDtr;
-                string sql, sql1;
+                #region Fetch the From and To Date From OrganisationDatail table.
+                GetFromDateToDate();
+                #endregion
+                string sql = "select * from Sales_Master sm,employee e where Under_SalesMan=emp_id and Invoice_No='" + int.Parse(FromDate) + ToDate + id + "'";
+                string sql1 = "1";
+
                 SqlDataReader rdr = null, rdr1 = null, rdr2 = null, rdr3 = null;
                 int i = 0;
 
-
-                #region Get Data from Order_Col_Master Table regarding Order No.
-                //coment by vikas 11.12.12 sql="select * from Order_Col_Master,Employee where Under_SalesMan=Emp_ID and Order_No='"+DropOrderInvoice.SelectedItem.Value +"'" ;
-
-                /***********Add by vikas 11.12.12***************************/
-                if (Count == 1)
-                    sql = "select * from Order_Col_Master,Employee where Under_SalesMan=Emp_ID and Order_No='" + id + "'";
+                if (FromDate != "")
+                {
+                    SqlDtr = obj.GetRecordSet(sql);
+                }
                 else
-                    sql = "select * from Order_Col_Master,Employee where Under_SalesMan=Emp_ID and Order_No=(select distinct order_id from ovd o where bo_1=" + Order_No[1].ToString() + " or bo_2=" + Order_No[1].ToString() + " or bo_3=" + Order_No[1].ToString() + ")";
-                /************End**************************/
-
-                SqlDtr = obj.GetRecordSet(sql);
+                {
+                    SqlDtr = null;
+                }
                 while (SqlDtr.Read())
                 {
-                    sales.Invoice_Date = SqlDtr.GetValue(1).ToString();
+                    //sales.Invoice_Date = SqlDtr.GetValue(1).ToString();
                     string strDate = SqlDtr.GetValue(1).ToString().Trim();
                     int pos = strDate.IndexOf(" ");
-
                     if (pos != -1)
                     {
                         strDate = strDate.Substring(0, pos);
@@ -2448,14 +2671,15 @@ namespace Servo_API.Controllers
                     {
                         strDate = "";
                     }
-
                     sales.Invoice_Date = GenUtil.str2DDMMYYYY(strDate);
                     //tempInvoiceDate.Value = GenUtil.str2DDMMYYYY(strDate);
                     sales.Sales_Type = (SqlDtr.GetValue(2).ToString());
-
                     sales.Under_SalesMan = SqlDtr["Emp_Name"].ToString();
+                    //DropUnderSalesMan.SelectedIndex=(DropUnderSalesMan.Items.IndexOf((DropUnderSalesMan.Items.FindByValue(SqlDtr.GetValue(4).ToString()))));
+
                     sales.Vehicle_No = SqlDtr.GetValue(5).ToString();
 
+                    //txtGrandTotal.Text = SqlDtr.GetValue(6).ToString();
                     sales.Grand_Total = GenUtil.strNumericFormat(SqlDtr.GetValue(6).ToString());
                     sales.Discount = float.Parse(SqlDtr.GetValue(7).ToString());
                     string strDisc = GenUtil.strNumericFormat(SqlDtr.GetValue(7).ToString());
@@ -2473,14 +2697,7 @@ namespace Servo_API.Controllers
                     sales.Entry_By = SqlDtr.GetValue(12).ToString();
                     sales.Entry_Time = System.Convert.ToDateTime(SqlDtr.GetValue(13).ToString());
                     sales.SecSPDisc = float.Parse(SqlDtr["SecSPDisc"].ToString());
-
-                    sales.Promo_Scheme = SqlDtr.GetValue(10).ToString();
-                    sales.Remark = SqlDtr.GetValue(11).ToString();
-                    sales.Entry_By = SqlDtr.GetValue(12).ToString();
-
-                    sales.Entry_Time = System.Convert.ToDateTime(SqlDtr.GetValue(13).ToString());
-                    sales.SecSPDisc = float.Parse(SqlDtr["SecSPDisc"].ToString());
-
+                    //******************
                     if (SqlDtr["Discount_type"].ToString() == "Per")
                     {
                         string strTotalDisc = System.Convert.ToString((double.Parse(SqlDtr["Grand_Total"].ToString()) - double.Parse(SqlDtr["schdiscount"].ToString())) * double.Parse(SqlDtr["discount"].ToString()) / 100);
@@ -2505,9 +2722,9 @@ namespace Servo_API.Controllers
                     }
                     else
                     {
-                        sales.Total_Discount = 0;
+                        double cashDiscount = double.Parse(GenUtil.strNumericFormat(SqlDtr["Cash_Discount"].ToString())) * double.Parse(GenUtil.strNumericFormat(SqlDtr["totalqtyltr"].ToString()));
+                        sales.Total_Discount = float.Parse(GenUtil.strNumericFormat(cashDiscount.ToString()));
                     }
-
 
                     string strCashDisc = SqlDtr.GetValue(15).ToString();
                     sales.Cash_Discount = float.Parse(GenUtil.strNumericFormat(strCashDisc));
@@ -2519,44 +2736,33 @@ namespace Servo_API.Controllers
                     sales.FOE_Discounttype = (SqlDtr.GetValue(20).ToString());
                     sales.FOE_Discountrs = float.Parse(SqlDtr.GetValue(21).ToString());
                     sales.Total_Qty_Ltr = float.Parse(SqlDtr.GetValue(22).ToString());
-                    //sales.CGST_Amount = float.Parse(SqlDtr.GetValue(27).ToString());
-                    //sales.SGST_Amount = float.Parse(SqlDtr.GetValue(26).ToString());
-
-
 
                     if (SqlDtr["ChallanNo"].ToString() == "0")
                         sales.ChallanNo = "";
                     else
                         sales.ChallanNo = SqlDtr["ChallanNo"].ToString();
 
-
                     if (GenUtil.trimDate(SqlDtr["ChallanDate"].ToString()) == "1/1/1900")
                         sales.ChallanDate = System.Convert.ToDateTime("1/1/1900");
                     else
                         sales.ChallanDate = System.Convert.ToDateTime(GenUtil.str2DDMMYYYY(GenUtil.trimDate(SqlDtr["ChallanDate"].ToString())));
+
+                    sales.CGST_Amount = float.Parse(SqlDtr.GetValue(27).ToString());
+                    sales.SGST_Amount = float.Parse(SqlDtr.GetValue(26).ToString());
                 }
                 SqlDtr.Close();
-                #endregion
 
-                #region Get Customer name and place regarding Customer ID
 
-                //coment by vikas 10.11.2012 sql="select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID from Customer as c, Order_Col_master as s where c.Cust_ID= s.Cust_ID and s.Order_No='"+DropOrderInvoice.SelectedValue +"'";
-
-                //coment by vikas 11.12.2012 sql="select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID,ct.group_name from Customer as c, Order_Col_Master as s,customertype as ct where c.Cust_ID= s.Cust_ID and c.cust_type=ct.customertypename and s.Order_No='"+DropOrderInvoice.SelectedValue +"'";
-                /***********Add by vikas 11.12.12***************************/
-                if (Count == 1)
-                    sql = "select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID,ct.group_name from Customer as c, Order_Col_Master as s,customertype as ct where c.Cust_ID= s.Cust_ID and c.cust_type=ct.customertypename and s.Order_No='" + id + "'";
-                else
-                    sql = "select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID,ct.group_name from Customer as c, Order_Col_Master as s,customertype as ct where c.Cust_ID= s.Cust_ID and c.cust_type=ct.customertypename and s.Order_No =(select distinct order_id from ovd o where bo_1=" + Order_No[1].ToString() + " or bo_2=" + Order_No[1].ToString() + " or bo_3=" + Order_No[1].ToString() + ")";
-                /************End**************************/
+                #region Get Customer name and place regarding Customer ID            
+                sql = "select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID,ct.group_name from Customer as c, sales_master as s,customertype as ct where c.Cust_ID= s.Cust_ID and c.cust_type=ct.customertypename and s.Invoice_No='" + FromDate + ToDate + id + "'";
                 SqlDtr = obj.GetRecordSet(sql);
                 while (SqlDtr.Read())
                 {
-                    //coment by vikas 12.11.2012 texthidden1.Value=SqlDtr.GetValue(0).ToString();
-                    //coment by vikas 12.11.2012 text1.Value=SqlDtr.GetValue(0).ToString();                        
-                    sales.Cust_Name = SqlDtr.GetValue(0).ToString() + ":" + SqlDtr.GetValue(1).ToString();
-                    sales.Cust_ID = Int32.Parse(SqlDtr["Cust_ID"].ToString());
+                    sales.Cust_Name = SqlDtr.GetValue(0).ToString() + ":" + SqlDtr.GetValue(1).ToString(); //Add by vikas sharma 27.04.09
 
+                    //Cache["CustName"]=SqlDtr.GetValue(0).ToString();
+                    sales.Cust_ID = Int32.Parse(SqlDtr["Cust_ID"].ToString());
+                    //sales.City = SqlDtr["City"].ToString();
                     sales.Place = SqlDtr.GetValue(1).ToString();//System.Convert.ToDateTime(
                     sales.DueDate = DateTime.Now.AddDays(System.Convert.ToDouble(SqlDtr.GetValue(2).ToString()));
                     string duedatestr = (sales.DueDate.ToShortDateString());
@@ -2568,19 +2774,13 @@ namespace Servo_API.Controllers
 
                     if (SqlDtr["Group_Name"].ToString() != null && SqlDtr["Group_Name"].ToString() != "")
                         sales.Group_Name = SqlDtr["Group_Name"].ToString();
+                    /*********************************************/
                 }
                 SqlDtr.Close();
 
-                //coment by vikas 11.12.2012 sql="select top 1 balance,balancetype  from CustomerLedgerTable as c, Order_Col_master as s where c.CustID= s.Cust_ID and s.Order_No='"+DropOrderInvoice.SelectedValue+"' order by entrydate desc";
-
-                /***********Add by vikas 11.12.12***************************/
-                if (Count == 1)
-                    sql = "select top 1 balance,balancetype  from CustomerLedgerTable as c, Order_Col_master as s where c.CustID= s.Cust_ID and s.Order_No='" + id + "' order by entrydate desc";
-                else
-                    sql = "select top 1 balance,balancetype  from CustomerLedgerTable as c, Order_Col_master as s where c.CustID= s.Cust_ID and s.Order_No=(select distinct order_id from ovd o where bo_1=" + Order_No[1].ToString() + " or bo_2=" + Order_No[1].ToString() + " or bo_3=" + Order_No[1].ToString() + ") order by entrydate desc";
-                /*****************************End**************************/
+                //Coment by vikas 06.08.09 sql="select top 1 balance,balancetype  from CustomerLedgerTable as c, sales_master as s where c.CustID= s.Cust_ID and s.Invoice_No='"+FromDate+ToDate+dropInvoiceNo.SelectedValue+"' order by entrydate desc";
+                sql = "select top 1 Balance,BalanceType from customerledgertable where CustID=" + sales.Cust_ID + " order by EntryDate Desc";
                 SqlDtr = obj.GetRecordSet(sql);
-
                 while (SqlDtr.Read())
                 {
                     sales.Balance = SqlDtr.GetValue(0).ToString();
@@ -2588,39 +2788,17 @@ namespace Servo_API.Controllers
                     //sales.Current_Balance = GenUtil.strNumericFormat(SqlDtr.GetValue(0).ToString()) + " " + SqlDtr.GetValue(1).ToString();
                 }
                 SqlDtr.Close();
+
                 #endregion
 
-                #region Get Data from Order Details Table regarding Order No.
+                #region Get Data from Sales Details Table regarding Invoice No.            
+                sql = "select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.invoice_no,sm.invoice_date,sm.cust_id,sd.SchType,sd.FoeType,sd.SPDiscType,sd.SPDisc,p.Prod_Code" +
+                    " from Products p, sales_Details sd,sales_master sm" +
+                    " where p.Prod_ID=sd.prod_id and sd.invoice_no=sm.invoice_no and sd.Rate >0 and sd.Amount > 0 and sd.invoice_no='" + FromDate + ToDate + id + "' order by sd.sno";
+                /* **********end***************************************/
 
-                /*Coment by vikas 10.11.2012 sql="select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_no,sm.Order_date,SchType,FoeType,SPDiscType,SPDisc,cust_id"+
-                    " from Products p, Order_Col_Details sd,Order_Col_master sm"+
-                    " where p.Prod_ID=sd.prod_id and sd.Order_no=sm.Order_no and sd.Rate >0 and sd.Amount > 0 and sd.Order_no='"+DropOrderInvoice.SelectedItem.Value +"' order by sd.sno" ;*/
-
-                double Avail_Stock = 0, Order_Qty = 0;  //Add by Vikas 12.11.2012
-
-                //coment by vikas 11.12.2012 sql="select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_No,sm.Order_Date,SchType,FoeType,SPDiscType,SPDisc,cust_id,p.Prod_Code"+
-                //coment by vikas 11.12.2012	" from Products p, Order_Col_Details sd,Order_Col_Master sm"+
-                //coment by vikas 11.12.2012	" where p.Prod_ID=sd.prod_id and sd.Order_No=sm.Order_No and sd.Rate >0 and sd.Amount > 0 and sd.Order_No='"+DropOrderInvoice.SelectedItem.Value +"' order by sd.sno" ;
-
-                /***********Add by vikas 11.12.12***************************/
-                if (Count == 1)
-                {
-                    sql = "select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_No,sm.Order_Date,SchType,FoeType,SPDiscType,SPDisc,cust_id,p.Prod_Code" +
-                        " from Products p, Order_Col_Details sd,Order_Col_Master sm" +
-                        " where p.Prod_ID=sd.prod_id and sd.Order_No=sm.Order_No and sd.Rate >0 and sd.Amount > 0 and sd.Order_No='" + id + "' order by sd.sno";
-                }
-                else
-                {
-                    sql = "select p.Category,p.Prod_Name,p.Pack_Type,(cast(ovd.item_qty as int)-cast(ovd.sale_qty as int)) qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_No,sm.Order_Date,SchType,FoeType,SPDiscType,SPDisc,ovd.cust_id,p.Prod_Code" +
-                        " from Products p, Order_Col_Details sd,Order_Col_Master sm, ovd" +
-                        " where ovd.item_id=sd.prod_id and ovd.order_id=sd.order_no and ovd.item_qty>ovd.sale_qty and p.Prod_ID=sd.prod_id and sd.Order_No=sm.Order_No and sd.Rate >0 and sd.Amount > 0 and sd.Order_No =(select distinct order_id from ovd o where bo_1=" + Order_No[1].ToString() + " or bo_2=" + Order_No[1].ToString() + " or bo_3=" + Order_No[1].ToString() + ") order by sd.sno";
-                }
-                /*****************************End**************************/
-
-                //select p.Category,p.Prod_Name,p.Pack_Type,sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.Order_No,sm.Order_Date,SchType,FoeType,SPDiscType,SPDisc,ovd.cust_id,p.Prod_Code
-                //from Products p, Order_Col_Details sd,Order_Col_Master sm, ovd
-                //ovd where ovd.item_id=sd.prod_id and ovd.order_id=sd.order_no and ovd.item_qty=ovd.sale_qty and p.Prod_ID=sd.prod_id and sd.Order_No=sm.Order_No and sd.Rate >0 and sd.Amount > 0 and sd.Order_No =(select distinct order_id from ovd o where bo_1=9 or bo_2=9 or bo_3=9) order by sd.sno
                 List<string> controlSalesQty = new List<string>();
+
                 List<string> controlProdType = new List<string>();
 
                 List<string> controlProductType = new List<string>();
@@ -2646,82 +2824,130 @@ namespace Servo_API.Controllers
                 List<string> controlSchProductName = new List<string>();
                 List<string> controlSchProductPack = new List<string>();
                 List<string> controlSchProductQty = new List<string>();
+                //List<string> controlTmpQty = new List<string>();
+                //List<string> controlTempQty = new List<string>();
 
                 SqlDtr = obj.GetRecordSet(sql);
                 while (SqlDtr.Read())
                 {
-                    /*****************this Condition Add by Vikas 12.11.2012*becouse Condition shift Above*********************************/
+                    if (SqlDtr.GetValue(3).ToString() != null)
+                        controlSalesQty.Add(SqlDtr.GetValue(3).ToString());
+
+                    controlProdType.Add(SqlDtr.GetValue(17).ToString() + ":" + SqlDtr.GetValue(1).ToString() + ":" + SqlDtr.GetValue(2).ToString());
+
+                    controlProductType.Add(SqlDtr.GetValue(0).ToString());
+                    controlProductName.Add(SqlDtr.GetValue(1).ToString());
+                    controlProductPack.Add(SqlDtr.GetValue(2).ToString());
+                    controlProductQty.Add(SqlDtr.GetValue(3).ToString());
+
+                    //controlTempQty.Add(SqlDtr.GetValue(3).ToString());
+                    //controlTmpQty.Add(SqlDtr.GetValue(3).ToString());
+                    //tempQty[i].Text = sale.SalesQty[i];
+                    //tmpQty[i].Value = SqlDtr.GetValue(3).ToString();
+                    controlRate.Add(SqlDtr.GetValue(4).ToString());
+                    controlAmount.Add(SqlDtr.GetValue(5).ToString());
+                    //********
+                    controlPID.Add(SqlDtr.GetValue(6).ToString());
+                    controlPID1.Add(SqlDtr.GetValue(6).ToString());
+                    /*bhal*/
+                    controlscheme.Add(SqlDtr.GetValue(8).ToString());
+                    controlDetails_foe.Add(SqlDtr.GetValue(9).ToString());
+                    //********
                     sql1 = "select top 1 Closing_Stock from Stock_Master where productid=" + SqlDtr.GetValue(6).ToString() + " order by stock_date desc";
                     dbobj.SelectQuery(sql1, ref rdr);
                     if (rdr.Read())
                     {
-                        //Coment by Vikas 12.11.2012 AvStock [i].Text =rdr["Closing_Stock"]+" "+SqlDtr.GetValue(7).ToString();
-                        Avail_Stock = Double.Parse(rdr["Closing_Stock"].ToString());
+                        controlAv_Stock.Add(rdr["Closing_Stock"] + " " + SqlDtr.GetValue(7).ToString());
                     }
                     else
                     {
-                        //Coment by Vikas 12.11.2012 AvStock [i].Text ="0"+" "+SqlDtr.GetValue(7).ToString();
-                        Avail_Stock = 0;
+                        controlAv_Stock.Add("0" + " " + SqlDtr.GetValue(7).ToString());
                     }
 
-                    Order_Qty = double.Parse(SqlDtr.GetValue(3).ToString());
-
-                    if (Avail_Stock != 0)
+                    if (SqlDtr["SPDiscType"].ToString() == "")
                     {
-                        controlAv_Stock.Add(Avail_Stock + " " + SqlDtr.GetValue(7).ToString());
-
-                        controlProdType.Add(SqlDtr["Prod_Code"].ToString() + ":" + SqlDtr.GetValue(1).ToString() + ":" + SqlDtr.GetValue(2).ToString());
-
-                        //Coment by Vikas 10.11.2012 Qty[i].Text=SqlDtr.GetValue(3).ToString();
-                        if (Avail_Stock >= Order_Qty)
+                        rdr3 = obj1.GetRecordSet("select o.DiscountType,o.Discount from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='" + SqlDtr["invoice_No"].ToString() + "' and o.schname='Secondry SP(LTRSP Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'");
+                        if (rdr3.HasRows)
                         {
-                            controlSalesQty.Add(SqlDtr.GetValue(3).ToString());
-                        }
-                        else
-                        {
-                            controlSalesQty.Add(Avail_Stock.ToString());
-                        }
-
-                        controlProductType.Add(SqlDtr.GetValue(0).ToString());
-
-                        controlProductName.Add(SqlDtr.GetValue(1).ToString());
-                        controlProductPack.Add(SqlDtr.GetValue(2).ToString());
-                        controlProductQty.Add(SqlDtr.GetValue(3).ToString());
-                        //controlTempQty.Add(SqlDtr.GetValue(3).ToString());
-                        //controlTmpQty.Add(SqlDtr.GetValue(3).ToString());
-
-                        controlRate.Add(SqlDtr.GetValue(4).ToString());
-                        controlAmount.Add(SqlDtr.GetValue(5).ToString());
-                        controlPID.Add(SqlDtr.GetValue(6).ToString());
-                        controlPID1.Add(SqlDtr.GetValue(6).ToString());
-                        controlscheme.Add(SqlDtr.GetValue(8).ToString());
-                        controlDetails_foe.Add(SqlDtr.GetValue(9).ToString());
-
-                        if (SqlDtr["SPDiscType"].ToString() == "")
-                        {
-                            //rdr3 = obj1.GetRecordSet("select o.DiscountType,o.Discount from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='"+SqlDtr["invoice_No"].ToString()+"' and o.schname='Secondry SP(LTRSP Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)<='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)>='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and sd.prod_id='"+SqlDtr["Prod_ID"].ToString()+"'");
-                            rdr3 = obj1.GetRecordSet("select o.DiscountType,o.Discount from order_col_details sd,oilscheme o,order_col_master sm where o.prodid=sd.prod_id and sm.order_no=sd.order_no and sd.order_no='" + SqlDtr["Order_No"].ToString() + "' and o.schname='Secondry SP(LTRSP Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'");
-                            if (rdr3.HasRows)
+                            if (rdr3.Read())
                             {
-                                if (rdr3.Read())
-                                {
-                                    controlSchSPType.Add(rdr3.GetValue(0).ToString());
-                                    controlSchSP.Add(rdr3.GetValue(1).ToString());
-                                }
+                                controlSchSPType.Add(rdr3.GetValue(0).ToString());
+                                controlSchSP.Add(rdr3.GetValue(1).ToString());
                             }
-                            rdr3.Close();
                         }
-                        else
+                        rdr3.Close();
+                    }
+                    else
+                    {
+                        controlSchSPType.Add(SqlDtr["SPDiscType"].ToString());
+                        controlSchSP.Add(SqlDtr["SPDisc"].ToString());
+                    }
+                    //strstrste="select distinct o.distype from sales_details sd,foe o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and custid=cust_id and custid='1470' and sd.prod_id='1037' and cast(floor(cast(o.datefrom as float)) as datetime)<='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)>='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"'";
+                    if (SqlDtr["FoeType"].ToString() == "")
+                    {
+                        rdr3 = obj1.GetRecordSet("select distinct o.distype from sales_details sd,foe o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and custid=cust_id and custid='" + SqlDtr["Cust_ID"].ToString() + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "'");
+                        if (rdr3.HasRows)
                         {
-                            controlSchSPType.Add(SqlDtr["SPDiscType"].ToString());
-                            controlSchSP.Add(SqlDtr["SPDisc"].ToString());
+                            if (rdr3.Read())
+                            {
+                                controlTmpFoeType.Add(rdr3.GetValue(0).ToString());
+                            }
                         }
+                        rdr3.Close();
+                    }
+                    else
+                        controlTmpFoeType.Add(SqlDtr["FoeType"].ToString());
+                    //*************
+                    if (SqlDtr["SchType"].ToString() == "")
+                    {
+                        string ssssss = "select o.discounttype from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='" + SqlDtr["invoice_No"].ToString() + "' and (o.schname='Primary(LTR&% Scheme)' or o.schname='Secondry(LTR Scheme)') and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'";
+                        //rdr3 = obj1.GetRecordSet("select o.discounttype from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='"+SqlDtr["invoice_No"].ToString()+"' and o.schname='Primary(LTR&% Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)>='"+GenUtil.str2DDMMYYYY(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)<='"+GenUtil.str2DDMMYYYY(SqlDtr["Invoice_Date"].ToString())+"' and sd.prod_id='"+rdr2["Prod_ID"].ToString()+"'");
+                        rdr3 = obj1.GetRecordSet("select o.discounttype from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='" + SqlDtr["invoice_No"].ToString() + "' and (o.schname='Primary(LTR&% Scheme)' or o.schname='Secondry(LTR Scheme)') and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'");
+                        if (rdr3.HasRows)
+                        {
+                            if (rdr3.Read())
+                            {
+                                controlTmpSchType.Add(rdr3.GetValue(0).ToString());
+                            }
+                        }
+                        rdr3.Close();
+                    }
+                    else
+                        controlTmpSchType.Add(SqlDtr["SchType"].ToString());
+                    //*************
+                    string sql11 = "select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,p.Prod_ID,p.unit" +
+                        " from Products p, sales_Details sd" +
+                        " where p.Prod_ID=sd.prod_id and sd.Rate =0 and sd.Amount = 0 and sno=" + i + " and sd.invoice_no='" + FromDate + ToDate + id + "'";
+                    dbobj.SelectQuery(sql11, ref rdr2);
 
-                        if (SqlDtr["FoeType"].ToString() == "")
+                    if (rdr2.HasRows)
+                    {
+                        while (rdr2.Read())
                         {
-                            //rdr3 = obj1.GetRecordSet("select distinct o.distype from sales_details sd,foe o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and custid=cust_id and custid='"+SqlDtr["Cust_ID"].ToString()+"' and sd.prod_id='"+SqlDtr["Prod_ID"].ToString()+"' and cast(floor(cast(o.datefrom as float)) as datetime)<='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)>='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"'");
-                            string ss = "select distinct o.distype from order_col_details sd,foe o,order_col_master sm where o.prodid=sd.prod_id and sm.order_no=sd.order_no and custid=cust_id and custid='" + SqlDtr["Cust_ID"].ToString() + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Order_Date"].ToString()) + "'";
-                            rdr3 = obj1.GetRecordSet("select distinct o.distype from order_col_details sd,foe o,order_col_master sm where o.prodid=sd.prod_id and sm.order_no=sd.order_no and custid=cust_id and custid='" + SqlDtr["Cust_ID"].ToString() + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Order_Date"].ToString()) + "'");
+                            //ProdType1[i].Text=rdr2.GetValue(0).ToString();
+                            controlProdType1.Add(rdr2.GetValue(1).ToString() + ":" + rdr2.GetValue(2).ToString());
+                            //**ProdName1[i].Text=rdr2.GetValue(1).ToString();
+                            //**PackType1[i].Text=rdr2.GetValue(2).ToString();
+                            controlSalesQty1.Add(rdr2.GetValue(3).ToString());
+                            //*************
+                            controlSchProductType.Add(rdr2.GetValue(0).ToString());
+                            controlSchProductName.Add(rdr2.GetValue(1).ToString());
+                            controlSchProductPack.Add(rdr2.GetValue(2).ToString());
+                            controlSchProductQty.Add(rdr2.GetValue(3).ToString());
+                            //**************
+                            controlTempSchQty.Add(rdr2.GetValue(3).ToString());
+                            string sql12 = "select top 1 Closing_Stock from Stock_Master where productid=" + rdr2.GetValue(4).ToString() + " order by stock_date desc";
+                            dbobj.SelectQuery(sql12, ref rdr1);
+                            if (rdr1.Read())
+                            {
+                                controlStk1.Add(rdr1["Closing_Stock"] + " " + rdr2.GetValue(5).ToString());
+                            }
+                            else
+                            {
+                                controlStk1.Add("0" + " " + rdr2.GetValue(5).ToString());
+                            }
+
+                            rdr3 = obj1.GetRecordSet("select o.distype from sales_details sd,foe o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='" + SqlDtr["invoice_No"].ToString() + "' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.str2DDMMYYYY(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.str2DDMMYYYY(SqlDtr["Invoice_Date"].ToString()) + "' and sd.prod_id='" + rdr2["Prod_ID"].ToString() + "'");
                             if (rdr3.HasRows)
                             {
                                 if (rdr3.Read())
@@ -2731,72 +2957,12 @@ namespace Servo_API.Controllers
                             }
                             rdr3.Close();
                         }
-                        else
-                            controlTmpFoeType.Add(SqlDtr["FoeType"].ToString());
-
-                        if (SqlDtr["SchType"].ToString() == "")
-                        {
-                            //rdr3 = obj1.GetRecordSet("select o.discounttype from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='"+SqlDtr["invoice_No"].ToString()+"' and (o.schname='Primary(LTR&% Scheme)' or o.schname='Secondry(LTR Scheme)') and cast(floor(cast(o.datefrom as float)) as datetime)<='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)>='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and sd.prod_id='"+SqlDtr["Prod_ID"].ToString()+"'");
-                            rdr3 = obj1.GetRecordSet("select o.discounttype from order_col_details sd,oilscheme o,order_col_master sm where o.prodid=sd.prod_id and sm.order_no=sd.order_no and sd.order_no='" + SqlDtr["Order_No"].ToString() + "' and (o.schname='Primary(LTR&% Scheme)' or o.schname='Secondry(LTR Scheme)') and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["order_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Order_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'");
-                            if (rdr3.HasRows)
-                            {
-                                if (rdr3.Read())
-                                {
-                                    controlTmpSchType.Add(rdr3.GetValue(0).ToString());
-                                }
-                            }
-                            rdr3.Close();
-                        }
-                        else
-                            controlTmpSchType.Add(SqlDtr["SchType"].ToString());
-
-                        //Qty[i].ToolTip = "Actual Available Stock = " + Qty[i].Text.ToString() + " + " + AvStock[i].Text.ToString();
-
-
-                        string sql11 = "select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,p.Prod_ID,p.unit" +
-                            " from Products p, Order_Col_Details sd" +
-                            " where p.Prod_ID=sd.prod_id and sd.Rate =0 and sd.Amount = 0 and sno=" + i + " and sd.Order_no='" + id + "'";
-                        dbobj.SelectQuery(sql11, ref rdr2);
-                        if (rdr2.HasRows)
-                        {
-                            while (rdr2.Read())
-                            {
-                                controlProdType1.Add(rdr2.GetValue(1).ToString() + ":" + rdr2.GetValue(2).ToString());
-                                controlSalesQty1.Add(rdr2.GetValue(3).ToString());
-                                controlSchProductType.Add(rdr2.GetValue(0).ToString());
-                                controlSchProductName.Add(rdr2.GetValue(1).ToString());
-                                controlSchProductPack.Add(rdr2.GetValue(2).ToString());
-                                controlSchProductQty.Add(rdr2.GetValue(3).ToString());
-                                controlTempSchQty.Add(rdr2.GetValue(3).ToString());
-                                string sql12 = "select top 1 Closing_Stock from Stock_Master where productid=" + rdr2.GetValue(4).ToString() + " order by stock_date desc";
-                                dbobj.SelectQuery(sql12, ref rdr1);
-                                if (rdr1.Read())
-                                {
-                                    controlStk1.Add(rdr1["Closing_Stock"] + " " + rdr2.GetValue(5).ToString());
-                                }
-                                else
-                                {
-                                    controlStk1.Add("0" + " " + rdr2.GetValue(5).ToString());
-                                }
-
-                                /*********
-                                rdr3 = obj1.GetRecordSet("select o.discounttype from Order_Col_details sd,oilscheme o,Order_Col_master sm where o.prodid=sd.prod_id and sm.Order_no=sd.Order_no and sd.Order_no='"+SqlDtr["Order_No"].ToString()+"' and o.schname='Primary(LTR&% Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)>='"+GenUtil.str2DDMMYYYY(SqlDtr["Order_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)<='"+GenUtil.str2DDMMYYYY(SqlDtr["Order_Date"].ToString())+"' and sd.prod_id='"+rdr2["Prod_ID"].ToString()+"'");
-                                if(rdr3.HasRows)
-                                {
-                                    if(rdr3.Read())
-                                    {
-                                        tmpSchType[i].Value=rdr3.GetValue(0).ToString();
-                                    }
-                                }
-                                rdr3.Close();
-                                **********/
-                            }
-                            rdr1.Close();
-                        }
-                        rdr2.Close();
-                        rdr.Close();
-                        i++;
+                        rdr1.Close();
                     }
+                    rdr2.Close();
+                    rdr.Close();
+
+                    i++;
                 }
                 sales.SalesQty = controlSalesQty;
                 sales.ProductType = controlProductType;
@@ -2824,381 +2990,18 @@ namespace Servo_API.Controllers
                 sales.SchProductQty = controlSchProductQty;
                 sales.Rate = controlRate;
                 sales.Amount = controlAmount;
+
                 SqlDtr.Close();
                 #endregion
+                
+                return Ok(sales);
             }
-
-            return sales;
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Failed to get data of selected sales Invoice.");
+            }
         }
-
-        [HttpGet]
-        [Route("api/Sales/GetDataSelectedSalesInvoice")]
-        public SalesModels GetDataSelectedSalesInvoice(string id)
-        {
-            SalesModels sales = new SalesModels();
-
-            InventoryClass obj = new InventoryClass();
-            InventoryClass obj1 = new InventoryClass();
-            SqlDataReader SqlDtr;
-            #region Fetch the From and To Date From OrganisationDatail table.
-            GetFromDateToDate();
-            #endregion
-            string sql = "select * from Sales_Master sm,employee e where Under_SalesMan=emp_id and Invoice_No='" + int.Parse(FromDate) + ToDate + id + "'";
-            string sql1 = "1";
-
-            SqlDataReader rdr = null, rdr1 = null, rdr2 = null, rdr3 = null;
-            int i = 0;
-            //FlagPrint = false;
-            //Button1.CausesValidation = true;
-
-
-
-            if (FromDate != "")
-            {
-                SqlDtr = obj.GetRecordSet(sql);
-            }
-            else
-            {
-                SqlDtr = null;
-            }
-            while (SqlDtr.Read())
-            {
-                //sales.Invoice_Date = SqlDtr.GetValue(1).ToString();
-                string strDate = SqlDtr.GetValue(1).ToString().Trim();
-                int pos = strDate.IndexOf(" ");
-                if (pos != -1)
-                {
-                    strDate = strDate.Substring(0, pos);
-                }
-                else
-                {
-                    strDate = "";
-                }
-                sales.Invoice_Date = GenUtil.str2DDMMYYYY(strDate);
-                //tempInvoiceDate.Value = GenUtil.str2DDMMYYYY(strDate);
-                sales.Sales_Type = (SqlDtr.GetValue(2).ToString());
-                sales.Under_SalesMan = SqlDtr["Emp_Name"].ToString();
-                //DropUnderSalesMan.SelectedIndex=(DropUnderSalesMan.Items.IndexOf((DropUnderSalesMan.Items.FindByValue(SqlDtr.GetValue(4).ToString()))));
-
-                sales.Vehicle_No = SqlDtr.GetValue(5).ToString();
-
-                //txtGrandTotal.Text = SqlDtr.GetValue(6).ToString();
-                sales.Grand_Total = GenUtil.strNumericFormat(SqlDtr.GetValue(6).ToString());
-                sales.Discount = float.Parse(SqlDtr.GetValue(7).ToString());
-                string strDisc = GenUtil.strNumericFormat(SqlDtr.GetValue(7).ToString());
-                sales.Discount = float.Parse(strDisc);
-                sales.Discount_Type = (SqlDtr.GetValue(8).ToString());
-                string strNetAmount = GenUtil.strNumericFormat(SqlDtr.GetValue(9).ToString());
-                sales.Net_Amount = float.Parse(strNetAmount);
-                //tempNetAmount.Value = SqlDtr.GetValue(9).ToString();                               //Add by vikas 14.07.09
-                //tempNetAmount.Value = GenUtil.strNumericFormat(tempNetAmount.Value.ToString());     //Add by vikas 14.07.09
-
-                //NetAmount = GenUtil.strNumericFormat(txtNetAmount.Text.ToString());
-
-                sales.Promo_Scheme = SqlDtr.GetValue(10).ToString();
-                sales.Remark = SqlDtr.GetValue(11).ToString();
-                sales.Entry_By = SqlDtr.GetValue(12).ToString();
-                sales.Entry_Time = System.Convert.ToDateTime(SqlDtr.GetValue(13).ToString());
-                sales.SecSPDisc = float.Parse(SqlDtr["SecSPDisc"].ToString());
-                //******************
-                if (SqlDtr["Discount_type"].ToString() == "Per")
-                {
-                    string strTotalDisc = System.Convert.ToString((double.Parse(SqlDtr["Grand_Total"].ToString()) - double.Parse(SqlDtr["schdiscount"].ToString())) * double.Parse(SqlDtr["discount"].ToString()) / 100);
-                    sales.Total_Discount = float.Parse(System.Convert.ToString(Math.Round(double.Parse(strTotalDisc), 2)));
-                }
-                else
-                {
-                    double Discount = double.Parse(GenUtil.strNumericFormat(SqlDtr["Discount"].ToString())) * double.Parse(GenUtil.strNumericFormat(SqlDtr["totalqtyltr"].ToString()));
-                    sales.Total_Discount = float.Parse(GenUtil.strNumericFormat(Discount.ToString()));
-                }
-
-
-                if (SqlDtr["cash_Disc_type"].ToString() == "Per")
-                {
-                    double tot = 0;
-                    if (Convert.ToString(sales.Total_Discount) != "")
-                        tot = double.Parse(SqlDtr["Grand_Total"].ToString()) - (double.Parse(SqlDtr["schdiscount"].ToString()) + double.Parse(SqlDtr["foediscount"].ToString()) + double.Parse(sales.Total_Discount.ToString()));
-                    else
-                        tot = double.Parse(SqlDtr["Grand_Total"].ToString()) - (double.Parse(SqlDtr["schdiscount"].ToString()) + double.Parse(SqlDtr["foediscount"].ToString()));
-                    string strCashDiscount = System.Convert.ToString(tot * double.Parse(SqlDtr["Cash_Discount"].ToString()) / 100);
-                    sales.Total_Discount = float.Parse(System.Convert.ToString(Math.Round(double.Parse(strCashDiscount), 2)));
-                }
-                else
-                {
-                    double cashDiscount = double.Parse(GenUtil.strNumericFormat(SqlDtr["Cash_Discount"].ToString())) * double.Parse(GenUtil.strNumericFormat(SqlDtr["totalqtyltr"].ToString()));
-                    sales.Total_Discount = float.Parse(GenUtil.strNumericFormat(cashDiscount.ToString()));
-                }
-
-                string strCashDisc = SqlDtr.GetValue(15).ToString();
-                sales.Cash_Discount = float.Parse(GenUtil.strNumericFormat(strCashDisc));
-
-                sales.Cash_Disc_Type = (SqlDtr.GetValue(16).ToString());
-                sales.IGST_Amount = float.Parse(SqlDtr.GetValue(17).ToString());
-                sales.Scheme_Discount = float.Parse(SqlDtr.GetValue(18).ToString());
-                sales.FOE_Discount = float.Parse(SqlDtr.GetValue(19).ToString());
-                sales.FOE_Discounttype = (SqlDtr.GetValue(20).ToString());
-                sales.FOE_Discountrs = float.Parse(SqlDtr.GetValue(21).ToString());
-                sales.Total_Qty_Ltr = float.Parse(SqlDtr.GetValue(22).ToString());
-
-                if (SqlDtr["ChallanNo"].ToString() == "0")
-                    sales.ChallanNo = "";
-                else
-                    sales.ChallanNo = SqlDtr["ChallanNo"].ToString();
-
-                if (GenUtil.trimDate(SqlDtr["ChallanDate"].ToString()) == "1/1/1900")
-                    sales.ChallanDate = System.Convert.ToDateTime("1/1/1900");
-                else
-                    sales.ChallanDate = System.Convert.ToDateTime(GenUtil.str2DDMMYYYY(GenUtil.trimDate(SqlDtr["ChallanDate"].ToString())));
-
-                sales.CGST_Amount = float.Parse(SqlDtr.GetValue(27).ToString());
-                sales.SGST_Amount = float.Parse(SqlDtr.GetValue(26).ToString());
-            }
-            SqlDtr.Close();
-
-
-            #region Get Customer name and place regarding Customer ID            
-            sql = "select Cust_Name, City,CR_Days,Op_Balance,Curr_Credit,Cust_Type,c.Cust_ID,ct.group_name from Customer as c, sales_master as s,customertype as ct where c.Cust_ID= s.Cust_ID and c.cust_type=ct.customertypename and s.Invoice_No='" + FromDate + ToDate + id + "'";
-            SqlDtr = obj.GetRecordSet(sql);
-            while (SqlDtr.Read())
-            {
-                sales.Cust_Name = SqlDtr.GetValue(0).ToString() + ":" + SqlDtr.GetValue(1).ToString(); //Add by vikas sharma 27.04.09
-
-                //Cache["CustName"]=SqlDtr.GetValue(0).ToString();
-                sales.Cust_ID = Int32.Parse(SqlDtr["Cust_ID"].ToString());
-                //sales.City = SqlDtr["City"].ToString();
-                sales.Place = SqlDtr.GetValue(1).ToString();//System.Convert.ToDateTime(
-                sales.DueDate = DateTime.Now.AddDays(System.Convert.ToDouble(SqlDtr.GetValue(2).ToString()));
-                string duedatestr = (sales.DueDate.ToShortDateString());
-                sales.DueDate = System.Convert.ToDateTime(GenUtil.str2DDMMYYYY(duedatestr));
-                sales.Current_Balance = GenUtil.strNumericFormat(SqlDtr.GetValue(3).ToString());
-                //TxtCrLimit.Value = SqlDtr.GetValue(4).ToString();
-                sales.Credit_Limit = float.Parse(SqlDtr.GetValue(4).ToString());
-                //txtcusttype.Text = SqlDtr.GetValue(5).ToString();
-
-                if (SqlDtr["Group_Name"].ToString() != null && SqlDtr["Group_Name"].ToString() != "")
-                    sales.Group_Name = SqlDtr["Group_Name"].ToString();
-                /*********************************************/
-            }
-            SqlDtr.Close();
-
-            //Coment by vikas 06.08.09 sql="select top 1 balance,balancetype  from CustomerLedgerTable as c, sales_master as s where c.CustID= s.Cust_ID and s.Invoice_No='"+FromDate+ToDate+dropInvoiceNo.SelectedValue+"' order by entrydate desc";
-            sql = "select top 1 Balance,BalanceType from customerledgertable where CustID=" + sales.Cust_ID + " order by EntryDate Desc";
-            SqlDtr = obj.GetRecordSet(sql);
-            while (SqlDtr.Read())
-            {
-                sales.Balance = SqlDtr.GetValue(0).ToString();
-                sales.BalanceType = SqlDtr.GetValue(1).ToString();
-                //sales.Current_Balance = GenUtil.strNumericFormat(SqlDtr.GetValue(0).ToString()) + " " + SqlDtr.GetValue(1).ToString();
-            }
-            SqlDtr.Close();
-
-            #endregion
-
-            #region Get Data from Sales Details Table regarding Invoice No.            
-            sql = "select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,sd.rate,sd.amount,p.Prod_ID,p.unit,sd.scheme1,sd.foe,sd.invoice_no,sm.invoice_date,sm.cust_id,sd.SchType,sd.FoeType,sd.SPDiscType,sd.SPDisc,p.Prod_Code" +
-                " from Products p, sales_Details sd,sales_master sm" +
-                " where p.Prod_ID=sd.prod_id and sd.invoice_no=sm.invoice_no and sd.Rate >0 and sd.Amount > 0 and sd.invoice_no='" + FromDate + ToDate + id + "' order by sd.sno";
-            /* **********end***************************************/
-
-            List<string> controlSalesQty = new List<string>();
-
-            List<string> controlProdType = new List<string>();
-
-            List<string> controlProductType = new List<string>();
-            List<string> controlProductName = new List<string>();
-            List<string> controlProductPack = new List<string>();
-            List<string> controlProductQty = new List<string>();
-            List<string> controlPID = new List<string>();
-            List<string> controlPID1 = new List<string>();
-            List<string> controlscheme = new List<string>();
-            List<string> controlDetails_foe = new List<string>();
-            List<string> controlAv_Stock = new List<string>();
-            List<string> controlSchSPType = new List<string>();
-            List<string> controlSchSP = new List<string>();
-            List<string> controlTmpFoeType = new List<string>();
-            List<string> controlSalesQty1 = new List<string>();
-            List<string> controlProdType1 = new List<string>();
-            List<string> controlTempSchQty = new List<string>();
-            List<string> controlTmpSchType = new List<string>();
-            List<string> controlStk1 = new List<string>();
-            List<string> controlRate = new List<string>();
-            List<string> controlAmount = new List<string>();
-            List<string> controlSchProductType = new List<string>();
-            List<string> controlSchProductName = new List<string>();
-            List<string> controlSchProductPack = new List<string>();
-            List<string> controlSchProductQty = new List<string>();
-            //List<string> controlTmpQty = new List<string>();
-            //List<string> controlTempQty = new List<string>();
-
-            SqlDtr = obj.GetRecordSet(sql);
-            while (SqlDtr.Read())
-            {
-                if (SqlDtr.GetValue(3).ToString() != null)
-                    controlSalesQty.Add(SqlDtr.GetValue(3).ToString());
-
-                controlProdType.Add(SqlDtr.GetValue(17).ToString() + ":" + SqlDtr.GetValue(1).ToString() + ":" + SqlDtr.GetValue(2).ToString());
-
-                controlProductType.Add(SqlDtr.GetValue(0).ToString());
-                controlProductName.Add(SqlDtr.GetValue(1).ToString());
-                controlProductPack.Add(SqlDtr.GetValue(2).ToString());
-                controlProductQty.Add(SqlDtr.GetValue(3).ToString());
-
-                //controlTempQty.Add(SqlDtr.GetValue(3).ToString());
-                //controlTmpQty.Add(SqlDtr.GetValue(3).ToString());
-                //tempQty[i].Text = sale.SalesQty[i];
-                //tmpQty[i].Value = SqlDtr.GetValue(3).ToString();
-                controlRate.Add(SqlDtr.GetValue(4).ToString());
-                controlAmount.Add(SqlDtr.GetValue(5).ToString());
-                //********
-                controlPID.Add(SqlDtr.GetValue(6).ToString());
-                controlPID1.Add(SqlDtr.GetValue(6).ToString());
-                /*bhal*/
-                controlscheme.Add(SqlDtr.GetValue(8).ToString());
-                controlDetails_foe.Add(SqlDtr.GetValue(9).ToString());
-                //********
-                sql1 = "select top 1 Closing_Stock from Stock_Master where productid=" + SqlDtr.GetValue(6).ToString() + " order by stock_date desc";
-                dbobj.SelectQuery(sql1, ref rdr);
-                if (rdr.Read())
-                {
-                    controlAv_Stock.Add(rdr["Closing_Stock"] + " " + SqlDtr.GetValue(7).ToString());
-                }
-                else
-                {
-                    controlAv_Stock.Add("0" + " " + SqlDtr.GetValue(7).ToString());
-                }
-
-                if (SqlDtr["SPDiscType"].ToString() == "")
-                {
-                    rdr3 = obj1.GetRecordSet("select o.DiscountType,o.Discount from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='" + SqlDtr["invoice_No"].ToString() + "' and o.schname='Secondry SP(LTRSP Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'");
-                    if (rdr3.HasRows)
-                    {
-                        if (rdr3.Read())
-                        {
-                            controlSchSPType.Add(rdr3.GetValue(0).ToString());
-                            controlSchSP.Add(rdr3.GetValue(1).ToString());
-                        }
-                    }
-                    rdr3.Close();
-                }
-                else
-                {
-                    controlSchSPType.Add(SqlDtr["SPDiscType"].ToString());
-                    controlSchSP.Add(SqlDtr["SPDisc"].ToString());
-                }
-                //strstrste="select distinct o.distype from sales_details sd,foe o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and custid=cust_id and custid='1470' and sd.prod_id='1037' and cast(floor(cast(o.datefrom as float)) as datetime)<='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)>='"+GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString())+"'";
-                if (SqlDtr["FoeType"].ToString() == "")
-                {
-                    rdr3 = obj1.GetRecordSet("select distinct o.distype from sales_details sd,foe o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and custid=cust_id and custid='" + SqlDtr["Cust_ID"].ToString() + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "'");
-                    if (rdr3.HasRows)
-                    {
-                        if (rdr3.Read())
-                        {
-                            controlTmpFoeType.Add(rdr3.GetValue(0).ToString());
-                        }
-                    }
-                    rdr3.Close();
-                }
-                else
-                    controlTmpFoeType.Add(SqlDtr["FoeType"].ToString());
-                //*************
-                if (SqlDtr["SchType"].ToString() == "")
-                {
-                    string ssssss = "select o.discounttype from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='" + SqlDtr["invoice_No"].ToString() + "' and (o.schname='Primary(LTR&% Scheme)' or o.schname='Secondry(LTR Scheme)') and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'";
-                    //rdr3 = obj1.GetRecordSet("select o.discounttype from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='"+SqlDtr["invoice_No"].ToString()+"' and o.schname='Primary(LTR&% Scheme)' and cast(floor(cast(o.datefrom as float)) as datetime)>='"+GenUtil.str2DDMMYYYY(SqlDtr["Invoice_Date"].ToString())+"' and cast(floor(cast(o.dateto as float)) as datetime)<='"+GenUtil.str2DDMMYYYY(SqlDtr["Invoice_Date"].ToString())+"' and sd.prod_id='"+rdr2["Prod_ID"].ToString()+"'");
-                    rdr3 = obj1.GetRecordSet("select o.discounttype from sales_details sd,oilscheme o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='" + SqlDtr["invoice_No"].ToString() + "' and (o.schname='Primary(LTR&% Scheme)' or o.schname='Secondry(LTR Scheme)') and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.trimDate(SqlDtr["Invoice_Date"].ToString()) + "' and sd.prod_id='" + SqlDtr["Prod_ID"].ToString() + "'");
-                    if (rdr3.HasRows)
-                    {
-                        if (rdr3.Read())
-                        {
-                            controlTmpSchType.Add(rdr3.GetValue(0).ToString());
-                        }
-                    }
-                    rdr3.Close();
-                }
-                else
-                    controlTmpSchType.Add(SqlDtr["SchType"].ToString());
-                //*************
-                string sql11 = "select	p.Category,p.Prod_Name,p.Pack_Type,	sd.qty,p.Prod_ID,p.unit" +
-                    " from Products p, sales_Details sd" +
-                    " where p.Prod_ID=sd.prod_id and sd.Rate =0 and sd.Amount = 0 and sno=" + i + " and sd.invoice_no='" + FromDate + ToDate + id + "'";
-                dbobj.SelectQuery(sql11, ref rdr2);
-
-                if (rdr2.HasRows)
-                {
-                    while (rdr2.Read())
-                    {
-                        //ProdType1[i].Text=rdr2.GetValue(0).ToString();
-                        controlProdType1.Add(rdr2.GetValue(1).ToString() + ":" + rdr2.GetValue(2).ToString());
-                        //**ProdName1[i].Text=rdr2.GetValue(1).ToString();
-                        //**PackType1[i].Text=rdr2.GetValue(2).ToString();
-                        controlSalesQty1.Add(rdr2.GetValue(3).ToString());
-                        //*************
-                        controlSchProductType.Add(rdr2.GetValue(0).ToString());
-                        controlSchProductName.Add(rdr2.GetValue(1).ToString());
-                        controlSchProductPack.Add(rdr2.GetValue(2).ToString());
-                        controlSchProductQty.Add(rdr2.GetValue(3).ToString());
-                        //**************
-                        controlTempSchQty.Add(rdr2.GetValue(3).ToString());
-                        string sql12 = "select top 1 Closing_Stock from Stock_Master where productid=" + rdr2.GetValue(4).ToString() + " order by stock_date desc";
-                        dbobj.SelectQuery(sql12, ref rdr1);
-                        if (rdr1.Read())
-                        {
-                            controlStk1.Add(rdr1["Closing_Stock"] + " " + rdr2.GetValue(5).ToString());
-                        }
-                        else
-                        {
-                            controlStk1.Add("0" + " " + rdr2.GetValue(5).ToString());
-                        }
-
-                        rdr3 = obj1.GetRecordSet("select o.distype from sales_details sd,foe o,sales_master sm where o.prodid=sd.prod_id and sm.invoice_no=sd.invoice_no and sd.invoice_no='" + SqlDtr["invoice_No"].ToString() + "' and cast(floor(cast(o.datefrom as float)) as datetime)<='" + GenUtil.str2DDMMYYYY(SqlDtr["Invoice_Date"].ToString()) + "' and cast(floor(cast(o.dateto as float)) as datetime)>='" + GenUtil.str2DDMMYYYY(SqlDtr["Invoice_Date"].ToString()) + "' and sd.prod_id='" + rdr2["Prod_ID"].ToString() + "'");
-                        if (rdr3.HasRows)
-                        {
-                            if (rdr3.Read())
-                            {
-                                controlTmpFoeType.Add(rdr3.GetValue(0).ToString());
-                            }
-                        }
-                        rdr3.Close();
-                    }
-                    rdr1.Close();
-                }
-                rdr2.Close();
-                rdr.Close();
-
-                i++;
-            }
-            sales.SalesQty = controlSalesQty;
-            sales.ProductType = controlProductType;
-            sales.ProdType = controlProdType;
-            sales.ProductName = controlProductName;
-            sales.ProductPack = controlProductPack;
-            sales.ProductQty = controlProductQty;
-            sales.PID = controlPID;
-            sales.PID1 = controlPID1;
-            sales.scheme = controlscheme;
-            sales.Details_foe = controlDetails_foe;
-            sales.Av_Stock = controlAv_Stock;
-            sales.SchSPType = controlSchSPType;
-            sales.SchSP = controlSchSP;
-            sales.tmpFoeType = controlTmpFoeType;
-            sales.SalesQty1 = controlSalesQty1;
-            sales.ProdType1 = controlProdType1;
-            sales.tempSchQty = controlTempSchQty;
-            sales.tmpSchType = controlTmpSchType;
-            sales.stk1 = controlStk1;
-
-            sales.SchProductType = controlSchProductType;
-            sales.SchProductName = controlSchProductName;
-            sales.SchProductPack = controlSchProductPack;
-            sales.SchProductQty = controlSchProductQty;
-            sales.Rate = controlRate;
-            sales.Amount = controlAmount;
-
-            SqlDtr.Close();
-            #endregion
-
-            return sales;
-        }
+    
 
         public void GetFromDateToDate()
         {
@@ -3238,7 +3041,7 @@ namespace Servo_API.Controllers
 
         [HttpGet]
         [Route("api/Sales/GetCustomerVehicles")]
-        public List<string> GetCustomerVehicles(string cust_id)
+        public IHttpActionResult GetCustomerVehicles(string cust_id)
         {
             List<string> vehNo = new List<string>();
             try
@@ -3315,13 +3118,13 @@ namespace Servo_API.Controllers
                     SqlDtr.Close();
                     //return true;
                 }
-                return vehNo;
+                
+                return Ok(vehNo);
             }
             catch (Exception ex)
             {
-                //CreateLogFiles.ErrorLog("Form:Sales Invoice.aspx,Method:getCustomerVehicles().  EXCEPTION  " + ex.Message + "  userid " + "   " + "   " + uid);
+                return Content(HttpStatusCode.NotFound, "Failed to get customer vehicles.");
             }
-            return vehNo;
         }
 
     }
