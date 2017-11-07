@@ -39,13 +39,44 @@ namespace Servo_API.Controllers
                 SqlDtr.Close();
 
                 if (texthiddenprod == null)
-                    return Content(HttpStatusCode.NotFound, "Route Names data Not found");
+                    return Content(HttpStatusCode.NotFound, "Could not get data to fill Product Name combobox");
 
                 return Ok(texthiddenprod);
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.NotFound, "Route Names data Not found");
+                return Content(HttpStatusCode.NotFound, "Could not get data to fill Product Name combobox");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/StockAdjustment/GetStockAdjustmentIds")]
+        public IHttpActionResult GetStockAdjustmentIds()
+        {
+            List<string> dropStockAdjustmentIds = new List<string>();
+            try
+            {
+                SqlDataReader SqlDtr = null;
+                InventoryClass obj = new InventoryClass();
+                SqlDataReader rdr = obj.GetRecordSet("select distinct sav_id from stock_adjustment order by sav_id");
+                
+                if (rdr.HasRows)
+                {
+                    while (rdr.Read())
+                    {
+                        dropStockAdjustmentIds.Add(rdr.GetValue(0).ToString());
+                    }
+                }
+                rdr.Close();
+
+                if (dropStockAdjustmentIds == null)
+                    return Content(HttpStatusCode.NotFound, "Could not get data to fill Stock Adjustment combobox");
+
+                return Ok(dropStockAdjustmentIds);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Could not get data to fill Stock Adjustment combobox");
             }
         }
 
@@ -120,7 +151,326 @@ namespace Servo_API.Controllers
             }
             catch (Exception ex)
             {
-                return Content(HttpStatusCode.NotFound, "Failed to get Next Route ID");
+                return Content(HttpStatusCode.NotFound, "Failed to get Next Stock Adjustment ID");
+            }
+        }
+
+        [HttpPost]
+        [Route("api/StockAdjustment/InsertBatchNo")]
+        public IHttpActionResult InsertBatchNo(StockAdjustmentModel stockAdjust)
+        {
+            
+            try
+            {
+                //StockAdjustmentModel stockAdjust = new StockAdjustmentModel();
+
+
+                //stockAdjust.Prod = Prod;
+                //stockAdjust.PackType = PackType;
+                //stockAdjust.Qty = Qty;
+
+                InventoryClass obj = new InventoryClass();
+                InventoryClass obj1 = new InventoryClass();
+                DbOperations_LATEST.DBUtil dbobj1 = new DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationManager.AppSettings["Servosms"], true);
+                SqlDataReader rdr1 = null;
+                int SNo = 0;
+                rdr1 = obj1.GetRecordSet("select max(SNo)+1 from Batch_Transaction");
+                if (rdr1.Read())
+                {
+                    if (rdr1.GetValue(0).ToString() != "" && rdr1.GetValue(0).ToString() != null)
+                        SNo = int.Parse(rdr1.GetValue(0).ToString());
+                    else
+                        SNo = 1;
+                }
+                else
+                    SNo = 1;
+                rdr1.Close();
+                SqlDataReader rdr = obj.GetRecordSet("select * from stockmaster_batch where productid=(select prod_id from products where prod_name='" + stockAdjust.Prod + "' and Pack_Type='" + stockAdjust.PackType + "') order by stock_date");
+                int count = 0;
+                if (stockAdjust.Qty != "")
+                    count = int.Parse(stockAdjust.Qty);
+                int x = 0;
+                double cl_sk = 0;
+                while (rdr.Read())
+                {
+                    if (double.Parse(rdr["closing_stock"].ToString()) > 0)
+                        cl_sk = double.Parse(rdr["closing_stock"].ToString());
+                    else
+                        continue;
+                    if (count > 0)
+                    {
+                        if (int.Parse(rdr["closing_stock"].ToString()) > 0)
+                        {
+                            if (count <= int.Parse(rdr["closing_stock"].ToString()))
+                            {
+                                cl_sk -= count;
+
+                                dbobj1.Insert_or_Update("update stockmaster_batch set sales=sales+" + count + ",closing_stock=closing_stock-" + count + " where productid='" + rdr["productid"].ToString() + "' and batch_id='" + rdr["batch_id"].ToString() + "'", ref x);
+                                if (stockAdjust.SAV_ID_Visible == true)
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (OUT)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','" + rdr["Batch_ID"].ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+                                else
+                                    //22.06.09 dbobj1.Insert_or_Update("insert into batch_transaction values("+(SNo++)+",'"+DropSavID.SelectedItem.Text+"','Stock Adjustment (OUT)','"+System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(txtDate.Text)+" "+DateTime.Now.TimeOfDay.ToString())+"','"+rdr["ProductID"].ToString()+"','"+rdr["Batch_ID"].ToString()+"','"+count+"',"+cl_sk.ToString()+")",ref x);	
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (OUT)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','" + rdr["Batch_ID"].ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+
+
+                                //***********add by vikas 19.06.09 *****************
+
+                                dbobj1.Insert_or_Update("update batchno set qty=qty-" + count + " where prod_id='" + rdr["productid"].ToString() + "' and batch_id='" + rdr["batch_id"].ToString() + "'", ref x);
+                                //****************************
+                                count = 0;
+                                break;
+                            }
+                            else
+                            {
+                                cl_sk -= double.Parse(rdr["closing_stock"].ToString());
+                                //dbobj1.Insert_or_Update("update batchno set qty=0 where prod_id='"+rdr["prod_id"].ToString()+"' and trans_no='"+rdr["trans_no"].ToString()+"' and Batch_No='"+rdr["Batch_No"].ToString()+"' and Date='"+rdr["Date"].ToString()+"'",ref x);
+                                dbobj1.Insert_or_Update("update stockmaster_batch set sales=sales+" + double.Parse(rdr["closing_stock"].ToString()) + ",closing_stock=closing_stock-" + double.Parse(rdr["closing_stock"].ToString()) + " where productid='" + rdr["productid"].ToString() + "' and batch_id='" + rdr["batch_id"].ToString() + "'", ref x);
+                                if (stockAdjust.SAV_ID_Visible == true)
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (OUT)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','" + rdr["Batch_ID"].ToString() + "','" + rdr["closing_stock"].ToString() + "'," + cl_sk.ToString() + ")", ref x);
+                                else
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (OUT)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','" + rdr["Batch_ID"].ToString() + "','" + rdr["closing_stock"].ToString() + "'," + cl_sk.ToString() + ")", ref x);
+                                //count-=int.Parse(rdr["qty"].ToString());
+
+                                //***********add by vikas 19.06.09 *****************
+                                dbobj1.Insert_or_Update("update batchno set qty=" + cl_sk + " where prod_id='" + rdr["productid"].ToString() + "' and batch_id='" + rdr["batch_id"].ToString() + "'", ref x);
+                                //****************************
+
+                                count -= int.Parse(rdr["closing_stock"].ToString());
+
+                                //*****Add by vikas 10.06.09*********
+                                if (stockAdjust.SAV_ID_Visible == true)
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (OUT)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','0','" + count.ToString() + "'," + cl_sk.ToString() + ")", ref x);
+                                else
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (OUT)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','0','" + count.ToString() + "'," + cl_sk.ToString() + ")", ref x);
+                                //*****end*********
+                            }
+                        }
+                    }
+                }
+                rdr.Close();
+
+                return Ok(true);
+            }
+            catch
+            {
+                return Content(HttpStatusCode.NotFound, "Could not insert Batch No.");
+            }
+        }
+
+        [HttpPost]
+        [Route("api/StockAdjustment/InsertBatchNoIn")]
+        public IHttpActionResult InsertBatchNoIn(StockAdjustmentModel stockAdjust)
+        {
+
+            try
+            {
+                //StockAdjustmentModel stockAdjust = new StockAdjustmentModel();
+
+
+                //stockAdjust.Prod = Prod;
+                //stockAdjust.PackType = PackType;
+                //stockAdjust.Qty = Qty;
+
+                InventoryClass obj = new InventoryClass();
+                InventoryClass obj1 = new InventoryClass();
+                DbOperations_LATEST.DBUtil dbobj1 = new DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
+                SqlDataReader rdr1 = null;
+                int SNo = 0, BatID = 0; ;
+                rdr1 = obj1.GetRecordSet("select max(SNo)+1 from Batch_Transaction");
+                if (rdr1.Read())
+                {
+                    if (rdr1.GetValue(0).ToString() != "" && rdr1.GetValue(0).ToString() != null)
+                        SNo = int.Parse(rdr1.GetValue(0).ToString());
+                    else
+                        SNo = 1;
+                }
+                else
+                    SNo = 1;
+                rdr1.Close();
+                rdr1 = obj.GetRecordSet("select max(Batch_ID) from BatchNo");
+                if (rdr1.Read())
+                {
+                    if (rdr1.GetValue(0).ToString() != null && rdr1.GetValue(0).ToString() != "")
+                        BatID = int.Parse(rdr1.GetValue(0).ToString());
+                    else
+                        BatID = 0;
+                }
+                else
+                    BatID = 0;
+                rdr1.Close();
+
+                SqlDataReader rdr = obj.GetRecordSet("select * from stockmaster_batch where productid=(select prod_id from products where prod_name='" + stockAdjust.Prod + "' and Pack_Type='" + stockAdjust.PackType + "') order by stock_date");
+                int count = 0;
+                if (stockAdjust.Qty != "")
+                    count = int.Parse(stockAdjust.Qty);
+                int x = 0;
+                double cl_sk = 0;
+                string batch_name = "";
+                while (rdr.Read())
+                {
+                    if (double.Parse(rdr["closing_stock"].ToString()) > 0)
+                    {
+                        cl_sk = double.Parse(rdr["closing_stock"].ToString());
+                    }
+                    else
+                    {
+                        /*******Add by vikas 24.06.09 ****************************/
+
+                        rdr1 = obj1.GetRecordSet("select * from batchno where prod_id=(select prod_id from products where prod_name='" + stockAdjust.Prod1 + "' and pack_type='" + stockAdjust.PackType1 + "')");
+                        if (rdr1.Read())
+                        {
+                            batch_name = rdr1.GetValue(1).ToString();
+                        }
+                        rdr1.Close();
+
+                        cl_sk += count;
+
+                        string prod_id = "";
+                        rdr1 = obj1.GetRecordSet("select prod_id from products where prod_name='" + stockAdjust.Prod + "' and pack_type='" + stockAdjust.PackType + "'");
+                        if (rdr1.Read())
+                        {
+                            prod_id = rdr1.GetValue(0).ToString();
+                        }
+                        rdr1.Close();
+
+                        string batch_id = "";
+                        rdr1 = obj1.GetRecordSet("select batch_id from batchno where batch_no='" + batch_name + "' and prod_id='" + prod_id + "'");
+                        if (rdr1.Read())
+                        {
+                            batch_id = rdr1.GetValue(0).ToString();
+                        }
+                        rdr1.Close();
+                       
+
+                        dbobj1.Insert_or_Update("update batchno set qty=" + count.ToString() + " where prod_id='" + prod_id.ToString() + "' and batch_id='" + batch_id.ToString() + "'", ref x);
+                        dbobj1.Insert_or_Update("update stockmaster_batch set receipt=receipt+" + count + ",closing_stock=closing_stock+" + count + " where productid='" + prod_id.ToString() + "' and batch_id='" + batch_id.ToString() + "'", ref x);
+
+
+                        if (stockAdjust.SAV_ID_Visible == true)
+                            dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (IN)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + prod_id.ToString() + "','" + BatID.ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+                        else
+                            dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (IN)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + prod_id.ToString() + "','" + batch_id.ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+
+                        count = 0;
+
+                        /*******End ****************************/
+                        continue;
+                    }
+
+                    /*******Add by vikas 23.06.09***********************/
+                    rdr1 = obj1.GetRecordSet("select * from batchno where prod_id=" + rdr["productid"].ToString() + " and batch_id=" + rdr["batch_id"].ToString());
+                    if (rdr1.Read())
+                    {
+                        batch_name = rdr1.GetValue(1).ToString();
+                    }
+                    rdr1.Close();
+                    /*******End***********************/
+
+                    if (count > 0)
+                    {
+                        if (int.Parse(rdr["closing_stock"].ToString()) > 0)
+                        {
+                            if (count <= int.Parse(rdr["closing_stock"].ToString()))
+                            {
+                                cl_sk += count;
+
+                                //23.06.09 dbobj1.Insert_or_Update("update stockmaster_batch set receipt=receipt+"+count+",closing_stock=closing_stock+"+count+" where productid='"+rdr["productid"].ToString()+"' and batch_id='"+rdr["batch_id"].ToString()+"'",ref x);
+
+                                /*******Add by vikas 23.06.09***********************/
+
+                                rdr1 = obj1.GetRecordSet("select * from batchno where prod_id=(select prod_id from products where prod_name='" + stockAdjust.Prod1 + "' and Pack_Type='" + stockAdjust.PackType1 + "') and batch_no='" + batch_name + "'");
+                                //23.06.09 rdr1 = obj1.GetRecordSet("select * from batchno where prod_id="+rdr["productid"].ToString()+" and batch_no='"+batch_name+"'");
+                                if (rdr1.HasRows)
+                                {
+                                    dbobj1.Insert_or_Update("update batchno set qty=" + cl_sk + " where prod_id='" + rdr["productid"].ToString() + "' and batch_id='" + rdr["batch_id"].ToString() + "'", ref x);
+                                    dbobj1.Insert_or_Update("update stockmaster_batch set receipt=receipt+" + count + ",closing_stock=closing_stock+" + count + " where productid='" + rdr["productid"].ToString() + "' and batch_id='" + rdr["batch_id"].ToString() + "'", ref x);
+                                }
+                                else
+                                {
+                                    dbobj.Insert_or_Update("insert into BatchNo values(" + (++BatID) + ",'" + batch_name.ToString() + "','" + rdr["productid"].ToString() + "','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "'," + count.ToString() + ",'" + stockAdjust.SAV_ID+ "')", ref x);
+                                    dbobj1.Insert_or_Update("insert into stockmaster_batch values(" + rdr["productid"].ToString() + "," + rdr["batch_id"].ToString() + ",'" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "',0," + count.ToString() + ",0," + count.ToString() + ",0,0", ref x);
+                                }
+                                rdr1.Close();
+                                /*******End***********************/
+
+
+                                if (stockAdjust.SAV_ID_Visible == true)
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (IN)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','" + rdr["Batch_ID"].ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+                                else
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (IN)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','" + rdr["Batch_ID"].ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+
+                                count = 0;
+                                break;
+                            }
+                            else
+                            {
+
+                                cl_sk += count;                                
+
+                                /*******Add by vikas 23.06.09***********************/
+
+                                rdr1 = obj1.GetRecordSet("select * from batchno where prod_id=(select prod_id from products where prod_name='" + stockAdjust.Prod1 + "' and Pack_Type='" + stockAdjust.PackType1 + "') and batch_no='" + batch_name + "'");
+                                //23.06.09 rdr1 = obj1.GetRecordSet("select * from batchno where prod_id="+rdr["productid"].ToString()+" and batch_no='"+batch_name+"'");
+                                if (rdr1.HasRows)
+                                {
+                                    dbobj1.Insert_or_Update("update batchno set qty=" + cl_sk + " where prod_id='" + rdr["productid"].ToString() + "' and batch_id='" + rdr["batch_id"].ToString() + "'", ref x);
+                                    dbobj1.Insert_or_Update("update stockmaster_batch set receipt=receipt+" + count + ",closing_stock=closing_stock+" + count + " where productid='" + rdr["productid"].ToString() + "' and batch_id='" + rdr["batch_id"].ToString() + "'", ref x);
+                                }
+                                else
+                                {
+                                    dbobj.Insert_or_Update("insert into BatchNo values(" + (++BatID) + ",'" + batch_name.ToString() + "','" + rdr["productid"].ToString() + "','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "'," + count.ToString() + ",'" + stockAdjust.SAV_ID + "')", ref x);
+                                    dbobj1.Insert_or_Update("insert into stockmaster_batch values(" + rdr["productid"].ToString() + "," + rdr["batch_id"].ToString() + ",'" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "',0," + count.ToString() + ",0," + count.ToString() + ",0,0", ref x);
+                                }
+                                rdr1.Close();
+                                /*******End***********************/
+
+                                if (stockAdjust.SAV_ID_Visible == true)
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (IN)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','" + rdr["Batch_ID"].ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+                                else
+                                    dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (IN)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + rdr["ProductID"].ToString() + "','" + rdr["Batch_ID"].ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+                            }
+                        }
+                    }
+                }
+                if (!rdr.HasRows)
+                {
+                    rdr1 = obj1.GetRecordSet("select * from batchno where prod_id=(select prod_id from products where prod_name='" + stockAdjust.Prod1 + "' and pack_type='" + stockAdjust.PackType1 + "')");
+                    if (rdr1.Read())
+                    {
+                        batch_name = rdr1.GetValue(1).ToString();
+                    }
+                    rdr1.Close();
+
+                    if (batch_name != "")
+                    {
+                        cl_sk += count;
+
+                        string prod_id = "";
+                        rdr1 = obj1.GetRecordSet("select prod_id from products where prod_name='" + stockAdjust.Prod + "' and pack_type='" + stockAdjust.PackType + "'");
+                        if (rdr1.Read())
+                        {
+                            prod_id = rdr1.GetValue(0).ToString();
+                        }
+                        rdr1.Close();
+
+                        dbobj.Insert_or_Update("insert into BatchNo values(" + (++BatID) + ",'" + batch_name.ToString() + "','" + prod_id.ToString() + "','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "'," + count.ToString() + ",'" + stockAdjust.SAV_ID + "')", ref x);
+                        dbobj1.Insert_or_Update("insert into stockmaster_batch values(" + prod_id.ToString() + "," + BatID.ToString() + ",'" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "',0," + count.ToString() + ",0," + count.ToString() + ",0,0)", ref x);
+
+                        if (stockAdjust.SAV_ID_Visible == true)
+                            dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (IN)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + prod_id.ToString() + "','" + BatID.ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+                        else
+                            dbobj1.Insert_or_Update("insert into batch_transaction values(" + (SNo++) + ",'" + stockAdjust.SAV_ID + "','Stock Adjustment (IN)','" + System.Convert.ToDateTime(GenUtil.str2MMDDYYYY(stockAdjust.Date) + " " + DateTime.Now.TimeOfDay.ToString()) + "','" + prod_id.ToString() + "','" + BatID.ToString() + "','" + count + "'," + cl_sk.ToString() + ")", ref x);
+
+                        count = 0;
+                    }
+                }
+                rdr.Close();
+
+                return Ok(true);
+            }
+            catch
+            {
+                return Content(HttpStatusCode.NotFound, "Could not insert Batch No. In");
             }
         }
 

@@ -16,5 +16,23 @@ namespace Servo_API.Models
         public string product_info1 { get; set; }
 
         public string product_info2 { get; set; }
+
+        public string Prod { get; set; }
+
+        public string PackType { get; set; }
+
+        public string Qty { get; set; }
+
+        public string Prod1 { get; set; }
+
+        public string PackType1 { get; set; }
+
+        public string Qty1 { get; set; }
+
+        public bool SAV_ID_Visible { get; set; }
+
+        public string Date { get; set; }
+
+        public string SAV_ID { get; set; }
     }
 }
