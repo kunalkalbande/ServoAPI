@@ -1,6 +1,8 @@
 ﻿using Servo_API.App_Start;
+using Servosms.Sysitem.Classes;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -63,5 +65,15 @@ namespace Servo_API.Controllers
             SqlDtr.Close();
             return Ok();
         }
-    }
+
+        [HttpGet]
+        [Route("api/EmployeeClass/ShowEmployeeInfo1")]
+        public IHttpActionResult ShowEmployeeInfo1(string ID1, string name1, string desig1)
+        {
+            DataSet ds = new DataSet();
+            EmployeeClass obj = new EmployeeClass();
+            ds = obj.ShowEmployeeInfo(ID1, name1, desig1);
+            return Ok(ds);
+        }
+   }
 }
