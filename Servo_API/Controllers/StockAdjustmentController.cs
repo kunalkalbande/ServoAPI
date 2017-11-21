@@ -11,13 +11,16 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-
+using static Servo_API.App_Start.DbOperations_LATEST;
 
 namespace Servo_API.Controllers
 {
+    
     public class StockAdjustmentController : ApiController
     {        
         App_Start.DbOperations_LATEST.DBUtil dbobj = new App_Start.DbOperations_LATEST.DBUtil(System.Configuration.ConfigurationSettings.AppSettings["Servosms"], true);
+        SqlConnection SqlCon;
+        InventoryClass obj = new InventoryClass();
 
         [HttpGet]
         [Route("api/StockAdjustment/GetFillCombo")]
@@ -726,6 +729,120 @@ namespace Servo_API.Controllers
             {
                 return Content(HttpStatusCode.NotFound, "Route could not update.");
             }
-        }        
+        }
+
+        [HttpGet]
+        [Route("api/StockAdjustment/DeleteStockAdj")]
+        public IHttpActionResult DeleteStockAdj(string sav_id)
+        {
+            try
+            {                
+                string sql;
+                SqlDataReader SqlDtr;                                
+                sql = "delete from stock_adjustment where sav_id = '"+sav_id+"'";
+                SqlDtr = obj.GetRecordSet(sql);                
+                SqlDtr.Close();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Route could not update.");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/StockAdjustment/SaveStockAdj")]
+        public IHttpActionResult SaveStockAdj(string sav_id, string prod_name1 , string pack1 , string store1 , string type1 , string qty1 , string prod_name2 , string pack2 , string store2 , string type2 , string qty2 , string uid , string str1 , string str2)
+        {
+            try
+            {
+                object obj = null;
+                dbobj.ExecProc(OprType.Insert, "ProInsertStockAdjustment", ref obj, "@SAV_ID", sav_id, "@Out_Product", prod_name1, "@pack1", pack1, "@Store1", store1, "@Type1", type1, "@Out_Qty", qty1, "@In_Product", prod_name2, "@Pack2", pack2, "@Store2", store2, "@Type2", type2, "@In_Qty", qty2, "@Entry_By", uid, "@Nar", str1, "@Stock_Date", str2);                
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Route could not update.");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/StockAdjustment/UpdateStockAdj")]
+        public IHttpActionResult UpdateStockAdj(string str1, string str2, string str3, string str4)
+        {
+            try
+            {
+                int x = 0;                
+                dbobj.Insert_or_Update("update stock_master set sales=sales-" + str1 + ",closing_stock=closing_stock+" + str1 + " where productid='" + str2 + "' and cast(floor(cast(stock_date as float)) as datetime)=Convert(datetime,'" + str3 + "',103)", ref x);
+                dbobj.Insert_or_Update("update stock_master set receipt=receipt-" + str4 + ",closing_stock=closing_stock-" + str1 + " where productid='" + str2 + "' and cast(floor(cast(stock_date as float)) as datetime)=Convert(datetime,'" + str3 + "',103)", ref x);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Route could not update.");
+            }
+        }
+        List<string> controlopening_stock = new List<string>();
+        List<string> controlreceipt = new List<string>();
+        List<string> controlsales = new List<string>();
+        List<string> controlsalesfoc = new List<string>();
+        List<string> controlProductid = new List<string>();
+        List<string> controlstock_date = new List<string>();
+
+        [HttpGet]
+        [Route("api/StockAdjustment/SeqStockMaster")]
+        public IHttpActionResult SeqStockMaster(string str1)
+        {
+            try
+            {
+                SqlDataReader SqlDtr;
+                StockAdjustmentModel stkadj = new StockAdjustmentModel();
+                string sql;
+                sql = "select * from Stock_Master where Productid='" + str1 + "' order by Stock_date";
+                SqlDtr = obj.GetRecordSet(sql);
+                while (SqlDtr.Read())
+                {
+                    controlopening_stock.Add(SqlDtr["opening_stock"].ToString());
+                    controlreceipt.Add(SqlDtr["receipt"].ToString());
+                    controlsales.Add(SqlDtr["sales"].ToString());
+                    controlsalesfoc.Add(SqlDtr["salesfoc"].ToString());
+                    controlProductid.Add(SqlDtr["Productid"].ToString());
+                    controlstock_date.Add(SqlDtr["stock_date"].ToString());
+                }
+                SqlDtr.Close();
+
+                stkadj.opening_stock = controlopening_stock;
+                stkadj.receipt = controlreceipt;
+                stkadj.sales = controlsales;
+                stkadj.salesfoc = controlsalesfoc;
+                stkadj.Productid = controlProductid;
+                stkadj.stock_date = controlstock_date;
+                return Ok(stkadj);
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Route could not update.");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/StockAdjustment/UpdateSeqStockMaster")]
+        public IHttpActionResult UpdateSeqStockMaster(string OS,string CS,string str7,string str8)
+        {
+            try
+            {
+                SqlDataReader SqlDtr;
+                StockAdjustmentModel stkadj = new StockAdjustmentModel();
+                string sql;
+                sql = "update Stock_Master set opening_stock='" + OS.ToString() + "', Closing_Stock='" + CS.ToString() + "' where ProductID='" + str7 + "' and Stock_Date=Convert(datetime,'" + str8 + "',103)";
+                SqlDtr = obj.GetRecordSet(sql);
+                SqlDtr.Close();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.NotFound, "Route could not update.");
+            }
+        }
     }
  }
